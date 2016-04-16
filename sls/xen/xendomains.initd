@@ -1,0 +1,162 @@
+#!/sbin/runscript
+# -*- mode: shell-script -*-
+# Copyright 1999-2014 Gentoo Foundation
+# Distributed under the terms of the GNU General Public License v2
+
+
+extra_commands="status bringup"
+
+depend() {
+    need xenstored
+    after dhcp xend xenconsoled
+}
+
+get_domname() {
+    local name_from_file=$(sed -rn 's/^name\W*=\W*\"?([[:alnum:]_\.-]+)\"?\W*;?/\1/p' "${1}" | tail -n 1)
+    
+    if [ -z ${name_from_file} ] ; then
+	basename "${1}"
+    else
+	echo ${name_from_file}	
+    fi
+}
+
+is_running() {
+    /usr/sbin/xl list "${1}" >/dev/null 2>&1
+}
+
+using_screen() {
+    yesno SCREEN
+    use_screen=$?
+    return $use_screen
+}
+
+set_screen_cmd() {
+    screen_cmd="screen -c ${SCREENRC:-/dev/null} -q -r ${SCREEN_NAME:=xen} -X"
+}
+
+set_autodir() {
+    AUTODIR="${AUTODIR:=/etc/xen/auto}"
+}
+
+domain_start() {
+    local conf="${1}"
+    local name="${2}"
+    ebegin "Starting domain ${name}"
+    if [ $use_screen -eq 0 ]; then
+	${screen_cmd} screen -t "${name}" xl create "${conf}" -c
+    else
+	xl create --quiet "${conf}"
+    fi
+    eend $?
+}
+
+domain_stop() {
+    local name="${1}"
+    xl shutdown -w ${name} >/dev/null
+}
+
+bringup() {
+    set_autodir
+    if using_screen; then
+	set_screen_cmd
+    fi
+    # Create all domains with config files in AUTODIR.
+    for conf in $(ls "${AUTODIR}"/*.cfg 2>/dev/null | sort); do
+	name=$(get_domname "${conf}")
+	if ! is_running ${name}; then
+	    eerror "Domain ${name} is not running"
+	    domain_start "${conf}" ${name}
+	fi
+    done
+}
+
+start() {
+    set_autodir
+    einfo "Starting Xen domains from ${AUTODIR}"
+    if using_screen; then
+	set_screen_cmd
+	if ! ${screen_cmd} sleep 0 >/dev/null 2>&1 ; then
+	    ebegin "Creating screen session to hold domain consoles"
+	    (  screen -c ${SCREENRC:-/dev/null} -d -m -S ${SCREEN_NAME} -t dom0 \
+		    && sleep 5 \
+		    && ${screen_cmd} zombie dr \
+		    && logrotate -f /etc/xen/xen-consoles.logrotate \
+		    && ${screen_cmd} logfile /var/log/xen-consoles/%t.log \
+		    && ${screen_cmd} logfile flush ${SCREEN_LOG_INTERVAL:-1} \
+		    && ${screen_cmd} log on \
+		    && ${screen_cmd} deflog on ) >/dev/null
+	fi
+	if [ $? -ne 0 ] ; then
+	    eend 1
+	    return 1
+	else
+	    eend
+	fi
+    fi
+    for conf in $(ls "${AUTODIR}"/*.cfg 2>/dev/null | sort); do
+	name=$(get_domname "${conf}")
+	if is_running "${name}"; then
+	    einfo "Not starting domain ${name} - already running"
+	else
+	    domain_start "${conf}" ${name}
+	fi
+    done
+}
+
+stop() {
+    set_autodir
+    if using_screen; then
+	set_screen_cmd
+    fi
+    einfo "Shutting down Xen domains from ${AUTODIR:=/etc/xen/auto}"
+    # Stop all domains with config files in AUTODIR.
+    DOMAINS="$(ls "${AUTODIR:=/etc/xen/auto}/"* 2>/dev/null | sort -r)"
+
+    if yesno PARALLEL_SHUTDOWN; then
+	for conf in $DOMAINS; do
+	    name=$(get_domname "${conf}")
+	    if is_running ${name} ; then
+		einfo "Asking domain ${name} to shutdown"
+		xl shutdown -w ${name} >/dev/null &
+	    else
+		einfo "Domain ${name} is not running"
+	    fi
+	done
+	ebegin "Waiting for shutdown of domains"
+	wait
+	eend $?
+    else
+	for conf in $DOMAINS; do
+	    name=$(get_domname "${conf}")
+	    if is_running ${name} ; then
+		ebegin "Waiting for domain ${name} to shutdown"
+		xl shutdown -w ${name} >/dev/null
+		eend $?
+	    else
+		einfo "Domain ${name} is not running"
+	    fi
+	done
+    fi
+    if [ $use_screen -eq 0 ]; then
+	if ${screen_cmd} sleep 0 >/dev/null 2>&1 ; then
+	    ebegin "Closing screen session ${SCREEN_NAME}"
+	    ${screen_cmd} quit
+	    eend $?
+	fi
+    fi
+}
+
+status() {
+    ret=0
+    for conf in $(ls "${AUTODIR}"/*.cfg 2>/dev/null | sort); do
+	name=$(get_domname "${conf}")
+	if is_running ${name}; then
+	    einfo "Domain ${name} is running"
+	else
+	    eerror "Domain ${name} is not running"
+	    ret=1
+	fi
+    done
+    return $ret
+}

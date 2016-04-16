@@ -1,0 +1,21 @@
+#!/sbin/runscript
+# Copyright 1999-2016 Gentoo Foundation
+# Distributed under the terms of the GNU General Public License v2
+# $Id$
+
+depend() {
+    use modules
+}
+
+start() {
+    if [ "${INITSENSORS}" = "yes" ]; then
+	if ! [ -f /etc/sensors3.conf ]; then
+	    eerror "/etc/sensors3.conf does not exist!"
+	    return 1
+	fi
+	
+	ebegin "Initializing sensors"
+	/usr/bin/sensors -s >/dev/null 2>&1
+	eend ${?}
+    fi
+}

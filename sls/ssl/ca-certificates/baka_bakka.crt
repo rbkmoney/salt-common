@@ -1,0 +1,61 @@
+Certificate:
+    Data:
+        Version: 3 (0x2)
+        Serial Number: 16322057414284631021 (0xe28398bd85f75bed)
+    Signature Algorithm: ecdsa-with-SHA256
+        Issuer: C=SU, ST=Soviet Union, O=C3R, OU=Security division, CN=Root CA v3 (SHA256)/emailAddress=admin@bakka.su
+        Validity
+            Not Before: Dec 17 16:06:11 2014 GMT
+            Not After : Dec 14 16:06:11 2024 GMT
+        Subject: C=SU, ST=Soviet Union, O=C3R, OU=Security division, CN=Root CA v3 (SHA256)/emailAddress=admin@bakka.su
+        Subject Public Key Info:
+            Public Key Algorithm: id-ecPublicKey
+                Public-Key: (521 bit)
+                pub: 
+                    04:00:41:37:f1:d2:f1:82:59:92:fd:b9:de:bc:31:
+                    40:1a:66:9f:7e:0d:0d:98:67:8b:b6:ec:aa:78:60:
+                    f1:5d:6a:60:38:b4:6b:33:62:e1:b2:8c:d4:9b:3e:
+                    ae:8f:0a:ce:01:4e:fc:ed:8c:e9:62:8c:d3:dc:fd:
+                    dc:c4:0c:46:91:f4:c5:00:75:bb:ac:d2:88:f6:1e:
+                    b8:e3:c7:3c:75:2a:eb:b0:32:ef:51:62:9b:09:c5:
+                    5f:8a:ac:b5:36:3d:af:65:bd:68:d0:12:d2:42:07:
+                    3f:35:60:3d:7d:ed:fd:29:39:bc:9a:67:bb:43:83:
+                    df:22:98:a3:8f:b6:d6:24:de:55:43:52:4c
+                ASN1 OID: secp521r1
+        X509v3 extensions:
+            X509v3 Subject Key Identifier: 
+                89:45:A4:3E:3A:0F:99:59:C4:A9:38:91:25:1E:E2:1E:41:6E:55:D8
+            X509v3 Authority Key Identifier: 
+                keyid:89:45:A4:3E:3A:0F:99:59:C4:A9:38:91:25:1E:E2:1E:41:6E:55:D8
+
+            X509v3 Basic Constraints: 
+                CA:TRUE
+            X509v3 Key Usage: 
+                Certificate Sign, CRL Sign
+    Signature Algorithm: ecdsa-with-SHA256
+         30:81:88:02:42:00:83:02:58:67:70:78:3e:a6:dc:6a:0d:0e:
+         b1:04:b1:02:84:5c:e8:f1:dc:33:83:87:c0:86:45:73:09:ef:
+         7f:65:25:b8:47:8b:83:6e:8c:7b:b5:14:18:00:15:18:19:b1:
+         84:21:ea:a0:e8:59:26:ff:ee:44:a4:e8:a8:2b:fb:6c:03:02:
+         42:01:04:2b:73:36:98:13:43:95:50:2b:87:49:70:00:87:da:
+         51:0a:0d:49:ea:64:42:81:56:e6:5a:df:45:a0:47:dd:7c:d2:
+         fc:50:f8:d6:c3:9d:85:ce:1e:a6:cd:e3:44:48:c3:5c:d0:f7:
+         16:87:ba:4c:8d:d9:d5:8b:05:6b:7d:ab:60
+-----BEGIN CERTIFICATE-----
+MIIC9DCCAlWgAwIBAgIJAOKDmL2F91vtMAoGCCqGSM49BAMCMIGLMQswCQYDVQQG
+EwJTVTEVMBMGA1UECAwMU292aWV0IFVuaW9uMQwwCgYDVQQKDANDM1IxGjAYBgNV
+BAsMEVNlY3VyaXR5IGRpdmlzaW9uMRwwGgYDVQQDDBNSb290IENBIHYzIChTSEEy
+NTYpMR0wGwYJKoZIhvcNAQkBFg5hZG1pbkBiYWtrYS5zdTAeFw0xNDEyMTcxNjA2
+MTFaFw0yNDEyMTQxNjA2MTFaMIGLMQswCQYDVQQGEwJTVTEVMBMGA1UECAwMU292
+aWV0IFVuaW9uMQwwCgYDVQQKDANDM1IxGjAYBgNVBAsMEVNlY3VyaXR5IGRpdmlz
+aW9uMRwwGgYDVQQDDBNSb290IENBIHYzIChTSEEyNTYpMR0wGwYJKoZIhvcNAQkB
+Fg5hZG1pbkBiYWtrYS5zdTCBmzAQBgcqhkjOPQIBBgUrgQQAIwOBhgAEAEE38dLx
+glmS/bnevDFAGmaffg0NmGeLtuyqeGDxXWpgOLRrM2LhsozUmz6ujwrOAU787Yzp
+YozT3P3cxAxGkfTFAHW7rNKI9h6448c8dSrrsDLvUWKbCcVfiqy1Nj2vZb1o0BLS
+Qgc/NWA9fe39KTm8mme7Q4PfIpijj7bWJN5VQ1JMo10wWzAdBgNVHQ4EFgQUiUWk
+PjoPmVnEqTiRJR7iHkFuVdgwHwYDVR0jBBgwFoAUiUWkPjoPmVnEqTiRJR7iHkFu
+VdgwDAYDVR0TBAUwAwEB/zALBgNVHQ8EBAMCAQYwCgYIKoZIzj0EAwIDgYwAMIGI
+AkIAgwJYZ3B4Pqbcag0OsQSxAoRc6PHcM4OHwIZFcwnvf2UluEeLg26Me7UUGAAV
+GBmxhCHqoOhZJv/uRKToqCv7bAMCQgEEK3M2mBNDlVArh0lwAIfaUQoNSepkQoFW
+5lrfRaBH3XzS/FD41sOdhc4eps3jREjDXND3Foe6TI3Z1YsFa32rYA==
+-----END CERTIFICATE-----

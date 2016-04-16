@@ -1,0 +1,10 @@
+# Copyright 1999-2005 Gentoo Foundation
+# Distributed under the terms of the GNU General Public License v2
+# $Header: $
+# -*- mode: shell-script -*-
+
+# for more info, see watchdog(8)
+WATCHDOG_OPTS=""
+
+# # Since it watches for the sshd pid.
+# rc_watchdog_need="sshd"
