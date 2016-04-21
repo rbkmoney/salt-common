@@ -36,6 +36,7 @@ manage-make-conf:
       - set {{ k }} '"{{ v }}"'
       {% endfor %}
       {% endif %}
+      {% endif %}
       - set GENTOO_MIRRORS '"https://{{ mirror_host }}/gentoo-distfiles"'
       {% if arch_conf %}
       - set CHOST '"{{ arch_conf["CHOST"] }}"'
