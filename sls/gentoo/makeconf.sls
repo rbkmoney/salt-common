@@ -34,7 +34,7 @@ manage-make-conf:
       {% if make_conf.get("other", False) %}
       {% for k, v in make_conf["other"] %}
       - set {{ k }} '"{{ v }}"'
-      {% endif %}
+      {% endfor %}
       {% endif %}
       - set GENTOO_MIRRORS '"https://{{ mirror_host }}/gentoo-distfiles"'
       {% if arch_conf %}
