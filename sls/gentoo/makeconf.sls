@@ -2,6 +2,7 @@
 include:
   - augeas.lenses
 {% set mirror_host = salt['pillar.get']('gentoo_mirror_host', 'gentoo.bakka.su') %}
+{% set make_conf = salt['pillar.get']('make_conf', False) %}
 {% set arch_conf = salt['pillar.get']('arch_conf', False) %}
 
 {% set num_jobs = grains['num_cpus'] %}
@@ -18,12 +19,23 @@ manage-make-conf:
       - set PORTDIR '"/usr/portage"'
       - set DISTDIR '"/var/tmp/distfiles"'
       - set PKGDIR '"/var/tmp/packages"'
-      - set PORTAGE_SSH_OPTS '""'
+      - set PORT_LOGDIR '"/var/log/portage"'
+      {% if make_conf %}
+      - set PORTAGE_SSH_OPTS '"{{ make_conf.get("portage_ssh_opts", '') }}"'
+      {% if make_conf.get('makeopts', False) %}
+      - set MAKEOPTS '"{{ make_conf["makeopts"] }}"'
+      {% else %}
       - set MAKEOPTS '"-j{{ num_jobs }} --load-average {{ max_la }}"'
-      - set PYTHON_TARGETS '"python2_7 python3_4"'
-      - set USE_PYTHON '"2.7 3.4"'
-      - set USE_SALT '"smp multitarget efi icu sqlite emacs sctp xattr syslog logrotate ssl openssl vhosts symlink device-mapper bash-completion zsh-completion -gnutls -tcpd"'
-      - set VIDEO_CARDS '""'
+      {% endif %}
+      - set FEATURES '"{{ make_conf.get("features", "xattr sandbox userfetch parallel-fetch parallel-install clean-logs compress-build-logs unmerge-logs splitdebug compressdebug fail-clean unmerge-orphans getbinpkg -news") }}"'
+      - set EMERGE_DEFAULT_OPTS '"{{ make_conf.get("emerge_default_opts", "--quiet-build --verbose --keep-going") }}"'
+      - set VIDEO_CARDS '"{{ make_conf.get("video_cards", "") }}"'
+      - set LANG '"{{ make_conf.get("lang", "en") }}"'
+      {% if make_conf.get("other", False) %}
+      {% for k, v in make_conf["other"] %}
+      - set {{ k }} '"{{ v }}"'
+      {% endif %}
+      {% endif %}
       - set GENTOO_MIRRORS '"https://{{ mirror_host }}/gentoo-distfiles"'
       {% if arch_conf %}
       - set CHOST '"{{ arch_conf["CHOST"] }}"'
@@ -49,5 +61,8 @@ manage-make-conf:
       - set PORTAGE_BINHOST '"https://{{ mirror_host }}/gentoo-packages/{{ arch_conf["mirror_arch"] }}/packages"'
       {% endif %}
       {% endif %}
+      - rm AUTOCLEAN
     - require:
       - file: /usr/share/augeas/lenses/makeconf.aug
+
+
