@@ -28,7 +28,7 @@ manage-make-conf:
       {% else %}
       - set MAKEOPTS '"-j{{ num_jobs }} --load-average {{ max_la }}"'
       {% endif %}
-      - set FEATURES '"{{ make_conf.get("features", default_features).split("\n").join(" ") }}"'
+      - set FEATURES '"{{ " ".join(make_conf.get("features", default_features).split("\n")) }}"'
       - set EMERGE_DEFAULT_OPTS '"{{ make_conf.get("emerge_default_opts", "--quiet-build --verbose --keep-going") }}"'
       - set VIDEO_CARDS '"{{ make_conf.get("video_cards", "") }}"'
       - set LANG '"{{ make_conf.get("lang", "en") }}"'
