@@ -4,6 +4,7 @@ include:
 {% set mirror_host = salt['pillar.get']('gentoo_mirror_host', 'gentoo.bakka.su') %}
 {% set make_conf = salt['pillar.get']('make_conf', False) %}
 {% set arch_conf = salt['pillar.get']('arch_conf', False) %}
+{% set default_features = "xattr sandbox userfetch parallel-fetch parallel-install clean-logs compress-build-logs unmerge-logs splitdebug compressdebug fail-clean unmerge-orphans getbinpkg -news" %}
 
 {% set num_jobs = grains['num_cpus'] %}
 {% set max_la = "%.2f" % (grains['num_cpus'] / 1.5) %}
@@ -27,7 +28,7 @@ manage-make-conf:
       {% else %}
       - set MAKEOPTS '"-j{{ num_jobs }} --load-average {{ max_la }}"'
       {% endif %}
-      - set FEATURES '"{{ make_conf.get("features", "xattr sandbox userfetch parallel-fetch parallel-install clean-logs compress-build-logs unmerge-logs splitdebug compressdebug fail-clean unmerge-orphans getbinpkg -news") }}"'
+      - set FEATURES '"{{ make_conf.get("features", default_features).split("\n").join(" ") }}"'
       - set EMERGE_DEFAULT_OPTS '"{{ make_conf.get("emerge_default_opts", "--quiet-build --verbose --keep-going") }}"'
       - set VIDEO_CARDS '"{{ make_conf.get("video_cards", "") }}"'
       - set LANG '"{{ make_conf.get("lang", "en") }}"'
