@@ -1,7 +1,19 @@
 # -*- mode: yaml -*-
 {% set xen_provided = salt['grains.get']('xen_provided', False) %}
 {% set efi = salt['grains.get']('efi', False) %}
+/etc/portage/env/xen-install-mask:
+  file.managed:
+    - user: root
+    - group: root
+    - mode: 644
+    - content: |
+      INSTALL_MASK='/boot/xen.gz /boot/xen-4.gz /boot/xen-4.6.gz'
 xen:
+  portage_config:
+    - name: app-emulation/xen
+    - use: [{{ 'efi' if efi else '-efi' }}]
+    - env:
+      - xen-install-mask
   pkg.installed:
     - pkgs:
       {% if not xen_provided %}
@@ -12,6 +24,7 @@ xen:
       - dev-libs/libnl
     - require:
       - file: unmask-hvm
+      - portage_config: xen
       {% if xen_provided %}
       - file: xen-provided
       {% endif %}
