@@ -8,6 +8,7 @@
     - mode: 644
     - content: |
       INSTALL_MASK='/boot/xen.gz /boot/xen-4.gz /boot/xen-4.6.gz'
+
 xen:
   portage_config:
     - name: app-emulation/xen
