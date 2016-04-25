@@ -10,7 +10,7 @@
         INSTALL_MASK='/boot/xen.gz /boot/xen-4.gz /boot/xen-4.6.gz'
 
 xen:
-  portage_config:
+  portage_config.flags:
     - name: app-emulation/xen
     - use: [{{ 'efi' if efi else '-efi' }}]
     - env:
