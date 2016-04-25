@@ -6,7 +6,7 @@
     - user: root
     - group: root
     - mode: 644
-    - content: |
+    - contents: |
         INSTALL_MASK='/boot/xen.gz /boot/xen-4.gz /boot/xen-4.6.gz'
 
 xen:
