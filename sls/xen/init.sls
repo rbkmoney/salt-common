@@ -1,4 +1,7 @@
 # -*- mode: yaml -*-
+include:
+  - gentoo.portage
+
 {% set xen_provided = salt['grains.get']('xen_provided', False) %}
 {% set efi = salt['grains.get']('efi', False) %}
 /etc/portage/env/xen-install-mask:
@@ -8,6 +11,8 @@
     - mode: 644
     - contents: |
         INSTALL_MASK='/boot/xen.gz /boot/xen-4.gz /boot/xen-4.6.gz'
+    - require:
+      - file: /etc/portage/env/
 
 xen:
   portage_config.flags:
@@ -15,6 +20,8 @@ xen:
     - use: [{{ 'efi' if efi else '-efi' }}]
     - env:
       - xen-install-mask
+    - require:
+      - file: /etc/portage/env/xen-install-mask
   pkg.installed:
     - pkgs:
       {% if not xen_provided %}
@@ -24,8 +31,8 @@ xen:
       - app-emulation/qemu: "[xen,numa,nfs,xfs]"
       - dev-libs/libnl
     - require:
-      - file: unmask-hvm
       - portage_config: xen
+      - file: unmask-hvm
       {% if xen_provided %}
       - file: xen-provided
       {% endif %}

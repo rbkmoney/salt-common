@@ -73,3 +73,11 @@ emerge-changed-use:
     - mode: 755
     - user: root
     - group: root
+
+/etc/portage/env/:
+  file.directory:
+    - create: True
+    - mode: 755
+    - user: root
+    - group: root
+
