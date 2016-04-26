@@ -36,6 +36,10 @@ manage-make-conf:
       - set {{ k }} '"{{ v }}"'
       {% endfor %}
       {% endif %}
+      {% else %}
+      - set MAKEOPTS '"-j{{ num_jobs }} --load-average {{ max_la }}"'
+      - set FEATURES '"{{ default_features }}"'
+      - set EMERGE_DEFAULT_OPTS '"--quiet-build --verbose --keep-going"'
       {% endif %}
       - set GENTOO_MIRRORS '"https://{{ mirror_host }}/gentoo-distfiles"'
       {% if arch_conf %}
