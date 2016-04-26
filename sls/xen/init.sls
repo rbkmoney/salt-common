@@ -59,7 +59,7 @@ xenconsoled:
   service.running:
     - enable: True
 
-{% for br in pillar.get('xen:xenbrs', []) %}
+{% for br in salt['pillar.get']('xen:xenbrs', []) %}
 /etc/init.d/net.xenbr{{ br.num }}:
   file.symlink:
     - target: /etc/init.d/net.lo
