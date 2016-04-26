@@ -59,15 +59,17 @@ xenconsoled:
   service.running:
     - enable: True
 
-/etc/init.d/net.xenbr0:
+{% for br in pillar.get('xen:xenbrs', []) %}
+/etc/init.d/net.xenbr{{ br.num }}:
   file.symlink:
     - target: /etc/init.d/net.lo
       
-net.xenbr0:
+net.xenbr{{ br.num }}:
   service.running:
     - enable: True
     - require:
-      - file: /etc/init.d/net.xenbr0
+      - file: /etc/init.d/net.xenbr{{ br.num }}
+{% endfor %}
 
 /etc/xen/xl.conf:
   file.managed:
@@ -85,7 +87,8 @@ net.xenbr0:
 
 /etc/conf.d/xendomains:
   file.managed:
-    - source: salt://xen/xendomains.confd
+    - source: salt://xen/xendomains.confd.tpl
+    - template: jinja
     - mode: 644
     - user: root
     - group: root

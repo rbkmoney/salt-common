@@ -13,7 +13,7 @@ PARALLEL_SHUTDOWN=yes
 # named after each domain and written to /var/log/xen-consoles/ . These files
 # are rotated (using app-admin/logrotate) every time xendomains is started.
 
-SCREEN="yes"
+SCREEN="{{ pillar.get("confd:xendomains:screen", 'yes') }}"
 SCREEN_NAME="xen"
 
 # Number of seconds between writes to screen's logfiles.
@@ -24,4 +24,5 @@ SCREEN_NAME="xen"
 
 SCREEN_LOG_INTERVAL="1"
 
-rc_xendomains_need="lvm"
+rc_xendomains_need="{{ pillar.get("confd:rc:xendomains:need", '') }}"
+rc_xendomains_use="{{ pillar.get("confd:rc:xendomains:need", '') }}"
