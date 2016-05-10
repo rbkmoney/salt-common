@@ -32,7 +32,7 @@ manage-make-conf:
       - set EMERGE_DEFAULT_OPTS '"{{ make_conf.get("emerge_default_opts", "--quiet-build --verbose --keep-going") }}"'
       - set VIDEO_CARDS '"{{ make_conf.get("video_cards", "") }}"'
       {% if make_conf.get("other", False) %}
-      {% for k, v in make_conf["other"] %}
+      {% for k, v in make_conf["other"].items() %}
       - set {{ k }} '"{{ v }}"'
       {% endfor %}
       {% endif %}
