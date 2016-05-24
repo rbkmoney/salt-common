@@ -1,9 +1,8 @@
-# -*- mode: yaml -*-
-openrc:
-  pkg.latest:
-    - name: sys-apps/openrc
-  cmd.run:
-    - name: rc
+include:
+  - cron
+  - openrc
+
+openrc_rc_cron_job:
   cron.present:
     - identifier: rc
     - name: "/sbin/rc"
