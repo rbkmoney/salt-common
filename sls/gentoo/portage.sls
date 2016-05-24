@@ -4,25 +4,12 @@ include:
 
 sys-apps/portage:
   pkg.latest:
+    - pkgs:
+      - sys-apps/portage: "[xattr,git]"
     - watch:
       - portage_config: sys-apps/portage
   portage_config.flags:
-    - accept_keywords:
-      - ~ARCH
-    - use:
-      - python3
-      - xattr
-      - git
-    - watch_in:
-      - cmd: emerge-changed-use
-
-app-portage:
-  pkg.latest:
-    - pkgs:
-      - app-portage/portage-utils
-      - app-portage/gentoolkit
-      - app-portage/eix
-      - app-admin/webapp-config
+    - accept_keywords: []
 
 app-portage-purged:
   pkg.purged:
@@ -54,10 +41,6 @@ app-portage-purged:
     - rev: master
     - force_clone: True
     - force_checkout: True
-
-emerge-changed-use:
-  cmd.wait:
-    - name: '/usr/bin/emerge --quiet --changed-use @world'
 
 # emerge-preserved-rebuild:
 #   cmd.run:
