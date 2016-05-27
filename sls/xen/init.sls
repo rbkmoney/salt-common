@@ -1,9 +1,16 @@
 # -*- mode: yaml -*-
+{% set efi = salt['grains.get']('efi', False) %}
+{% set xen_provided = salt['grains.get']('xen_provided', False) %}
+{% set xen_version = salt['grains.get']('xen_version', '4.6.1-r2' %}
+{% set xen_version_short = xen_version.split('-')[0] %}
+
 include:
   - gentoo.portage
+  - qemu
+  {% if efi %}
+  - fs.efi
+  {% endif %}
 
-{% set xen_provided = salt['grains.get']('xen_provided', False) %}
-{% set efi = salt['grains.get']('efi', False) %}
 /etc/portage/env/xen-install-mask:
   file.managed:
     - user: root
@@ -25,23 +32,37 @@ xen:
   pkg.installed:
     - pkgs:
       {% if not xen_provided %}
-      - app-emulation/xen: "~>=4.6.0-r8[{{ 'efi' if efi else '-efi' }}]"
+      - app-emulation/xen: "~={{ xen_version }}[{{ 'efi' if efi else '-efi' }}]"
       {% endif %}
-      - app-emulation/xen-tools: "~>=4.6.0-r7[api,hvm,screen,system-qemu,system-seabios]"
-      - app-emulation/qemu: "[xen,numa,nfs,xfs]"
+      - app-emulation/xen-tools: "~>=4.6.1[api,hvm,screen,system-qemu,system-seabios]"
       - dev-libs/libnl
     - require:
+      - pkg: qemu
       - portage_config: xen
       - file: unmask-hvm
       {% if xen_provided %}
       - file: xen-provided
       {% endif %}
+
 {% if xen_provided %}
 xen-provided:
   file.append:
     - name: /etc/portage/profile/package.provided
-    - text: "app-emulation/xen-4.6.0-r7"
+    - text: "app-emulation/xen-{{ xen_version }}"
+{% else %}
+{% if efi %}
+xen.efi:
+  file.copy:
+    - name: /boot/efi/gentoo/xen.efi
+    - source: /boot/efi/gentoo/xen-{{ xen_version_short }}.efi
+{% else %}
+xen.gz:
+  file.copy:
+    - name: /boot/xen.gz
+    - source: /boot/xen-{{ xen_version_short }}.gz
 {% endif %}
+{% endif %}
+
 unmask-hvm:
   file.append:
     - name: /etc/portage/profile/use.mask
