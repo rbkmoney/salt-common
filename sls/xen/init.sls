@@ -1,7 +1,7 @@
 # -*- mode: yaml -*-
 {% set efi = salt['grains.get']('efi', False) %}
 {% set xen_provided = salt['grains.get']('xen_provided', False) %}
-{% set xen_version = salt['grains.get']('xen_version', '4.6.1-r2' %}
+{% set xen_version = salt['grains.get']('xen_version', '4.6.1-r2') %}
 {% set xen_version_short = xen_version.split('-')[0] %}
 
 include:
