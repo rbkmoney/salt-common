@@ -1,7 +1,7 @@
 # -*- mode: yaml -*-
 {% set machine_type = salt['grains.get']('machine_type', 'nil') %}
 include:
-  - core.modules
+  - gentoo.modules
 
 /etc/watchdog.conf:
   file.managed:
