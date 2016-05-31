@@ -1,6 +1,6 @@
 # -*- mode: yaml -*-
 include:
-  - core.git
+  - vcs.git
 
 sys-apps/portage:
   pkg.latest:
