@@ -18,7 +18,13 @@ _is_tayga()
 tayga_pre_start()
 {
     local rc=
-
+    # ALL interfaces run pre_start blocks, not just those with something
+    # assigned, so we must check if we need to run on this interface before we
+    # do so.
+    local tayga
+    eval tayga=\$tayga_${IFVAR}
+    test "${tayga}" = 'true' || return 0
+    
     if [ ! -e /dev/net/tun ]; then
 	if ! modprobe tun; then
 	    eerror "TUN/TAP support is not present in this kernel"

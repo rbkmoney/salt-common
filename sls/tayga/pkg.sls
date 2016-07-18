@@ -12,19 +12,19 @@ tayga_user:
   file.managed:
     - source: salt://tayga/tayga.initd
     - mode: 755
-    - owner: root
+    - user: root
     - group: root
 
 /lib/netifrc/net/tayga.sh:
   file.managed:
     - source: salt://tayga/tayga.sh
     - mode: 644
-    - owner: root
+    - user: root
     - group: root
 
 /var/db/tayga/:
   file.directory:
     - create: True
     - mode: 750
-    - owner: tayga
+    - user: tayga
     - group: tayga

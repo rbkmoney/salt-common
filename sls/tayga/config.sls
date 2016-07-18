@@ -1,18 +1,16 @@
 #!pydsl
 include("augeas.lenses")
 
-tayga_conf = """# Managed by Salt
+tayga_conf = '''# Managed by Salt
 tun-device nat64
-data-dir /var/db/tayga
-
-"""
+data-dir /var/db/tayga'''
 
 p_tayga = __salt__['pillar.get']('network:nat64:tayga', False)
 if not p_tayga:
   raise ValueError('Isufficent pillar data')
 
 def ca(*s):
-  config = ' '.join(s) + '\n'
+  tayga_conf = ' '.join(s) + '\n'
 
 ca('ipv4-addr', p_tayga['ipv4-addr'])
 ca('ipv6-addr', p_tayga['ipv6-addr'])
@@ -28,7 +26,7 @@ state('/etc/tayga.conf').file.managed(
   contents=tayga_conf)
 
 changes = [
-  'set modules_nat64 \'"tayga"\'',
+  'set tayga_nat64 \'"true"\'',
 ]
 
 def mlchap(key, values):
@@ -36,7 +34,7 @@ def mlchap(key, values):
 
 mlchap('config_nat64', (p_tayga['ipv6-addr'], p_tayga['ipv4-addr']))
 mlchap('routes_nat64', (p_tayga['prefix'], p_tayga['dynamic-pool']))
-mlchap('rc_net_nat64_provide', ('!net',))
+# mlchap('rc_net_nat64_provide', ('!net',))
 
 state('append-nat64-config').augeas.change(
   context='/files/etc/conf.d/net',
