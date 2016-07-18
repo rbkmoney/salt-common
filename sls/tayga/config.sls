@@ -8,13 +8,15 @@ data-dir /var/db/tayga
 
 p_tayga = __salt__['pillar.get']('network:nat64:tayga', False)
 if not p_tayga:
-  raise ValueError('Isufficent pillar data')
+  raise ValueError('Insufficent pillar data')
 
 def ca(*s):
+  global tayga_conf
   tayga_conf += ' '.join(s) + '\n'
 
-ca('ipv4-addr', p_tayga['ipv4-addr'])
-ca('ipv6-addr', p_tayga['ipv6-addr'])
+ca('ipv4-addr', p_tayga['ipv4-addr'].split('/')[0])
+if not p_tayga['ipv6-addr'].startswith(p_tayga['prefix'].split(':/')[0]):
+  ca('ipv6-addr', p_tayga['ipv6-addr'].split('/')[0])
 ca('prefix', p_tayga['prefix'])
 ca('dynamic-pool', p_tayga['dynamic-pool'])
 
