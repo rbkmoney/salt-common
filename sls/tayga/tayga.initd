@@ -1,0 +1,30 @@
+#!/sbin/runscript
+# Copyright 1999-2004 Gentoo Foundation
+# Distributed under the terms of the GNU General Public License v2
+# $Header: /var/cvsroot/gentoo-x86/sys-libs/gpm/files/gpm.rc6,v 1.12 2004/07/15 01:02:02 agriffis Exp $
+# -*- mode: shell-script -*-
+
+depend() {
+    need net.nat64
+}
+
+PIDFILE="/run/tayga.pid"
+start() {
+    ebegin "Starting tayga"
+    start-stop-daemon --start --quiet -p "${PIDFILE}" \
+	              --exec /usr/sbin/tayga -- \
+		      -u tayga -g tayga \
+		      --pidfile "${PIDFILE}"
+    eend ${?}
+}
+
+stop() {
+    ebegin "Stopping tayga"
+    start-stop-daemon --stop --quiet --pidfile "${PIDFILE}"
+    eend ${?}
+}
+
+
+
+
+
