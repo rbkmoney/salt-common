@@ -7,7 +7,9 @@ data-dir /var/db/tayga
 
 """
 
-p_tayga = __salt__['pillar.get']('network:nat64:tayga')
+p_tayga = __salt__['pillar.get']('network:nat64:tayga', False)
+if not p_tayga:
+  raise ValueError('Isufficent pillar data')
 
 def ca(*s):
   config = ' '.join(s) + '\n'
@@ -40,4 +42,4 @@ state('append-nat64-config').augeas.change(
   context='/files/etc/conf.d/net',
   changes=changes).require(file='/usr/share/augeas/lenses/confd.aug')
 
-state('/etc/init.d/net.nat64').file.symlink(target='net.lo').require('append-nat64-config')
+state('/etc/init.d/net.nat64').file.symlink(target='net.lo').require(augeas='append-nat64-config')
