@@ -22,6 +22,7 @@ app-portage-purged:
     - replace: False
 
 # rewrite this with consideration of read-only portage (on nfs)
+ {% if not 'hwclass' in grains or grains['hwclass'] != 'container' %}
 /usr/portage:
   git.latest:
     - name: "git://git.bakka.su/gentoo-mirror"
@@ -29,18 +30,13 @@ app-portage-purged:
     - rev: master
     - force_clone: True
     - force_checkout: True
+ {% endif %}
 
 /etc/portage/repos.conf/:
   file.directory:
     - mode: 755
     - user: root
     - group: root
-  git.latest:
-    - name: "git://git.bakka.su/server-repos.conf"
-    - target: /etc/portage/repos.conf
-    - rev: master
-    - force_clone: True
-    - force_checkout: True
 
 # emerge-preserved-rebuild:
 #   cmd.run:
