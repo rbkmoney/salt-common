@@ -4,7 +4,7 @@ include:
   - vcs.git
 
 {% set repo_name = 'tengine-overlay' %}
-{% set sync_uri = 'https://github.com/damex/tengine-overlay' }
+{% set sync_uri = 'https://github.com/damex/tengine-overlay' %}
 
 {{ repo_name }}:
   file.directory:

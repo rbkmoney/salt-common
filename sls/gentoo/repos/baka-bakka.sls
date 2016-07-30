@@ -4,7 +4,7 @@ include:
   - vcs.git
 
 {% set repo_name = 'baka-bakka' %}
-{% set sync_uri = 'git://git.bakka.su/baka-bakka' }
+{% set sync_uri = 'git://git.bakka.su/baka-bakka' %}
 
 {{ repo_name }}:
   file.directory:

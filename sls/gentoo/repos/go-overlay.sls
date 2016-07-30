@@ -4,7 +4,7 @@ include:
   - vcs.git
 
 {% set repo_name = 'go-overlay' %}
-{% set sync_uri = 'https://github.com/Dr-Terrible/go-overlay.git' }
+{% set sync_uri = 'https://github.com/Dr-Terrible/go-overlay.git' %}
 
 {{ repo_name }}:
   file.directory:

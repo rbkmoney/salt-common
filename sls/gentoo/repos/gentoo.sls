@@ -3,7 +3,7 @@ include:
   - gentoo.portage
   - vcs.git
 
-{% set sync_uri = 'git://git.bakka.su/gentoo-mirror' }
+{% set sync_uri = 'git://git.bakka.su/gentoo-mirror' %}
 
 gentoo:
   file.directory:
