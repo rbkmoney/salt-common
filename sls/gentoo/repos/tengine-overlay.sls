@@ -16,7 +16,7 @@ include:
     - rev: master
     - force_clone: True
     - force_checkout: True
-  ini_manage.options_present:
+  ini.options_present:
     - name: '/etc/portage/repos.conf/{{ repo_name }}.conf'
     - sections:
         {{ repo_name }}:
