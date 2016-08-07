@@ -1,8 +1,8 @@
 # Defaults compiled into the binary
-watchdog-device	= /dev/{{ salt['grains.get']('watchdog_device', 'watchdog') }}
+watchdog-device	= /dev/{{ salt['pillar.get']('watchdog_device', 'watchdog') }}
 admin = root
-interval = 1
-logtick = 1
+interval = 10
+logtick = 10
 log-dir	= /var/log/watchdog
 
 # This greatly decreases the chance that watchdog won't be scheduled before
