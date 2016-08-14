@@ -27,6 +27,3 @@ include:
           sync-type: git
           sync-depth: 1
           sync-uri: '{{ sync_uri }}'
-
-
-
