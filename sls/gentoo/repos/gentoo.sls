@@ -9,7 +9,7 @@ gentoo:
   file.directory:
     - name: '/usr/portage'
     - create: True
-  {% if ('read-only-repos' in grains and grains['read-only-repos'] == True) %}
+  {% if not ('read-only-repos' in grains and grains['read-only-repos'] == True) %}
   git.latest:
     - name: '{{ sync_uri }}'
     - target: '/usr/portage'

@@ -10,7 +10,7 @@ include:
   file.directory:
     - name: '/var/lib/layman/{{ repo_name }}'
     - create: True
-  {% if ('read-only-repos' in grains and grains['read-only-repos'] == True) %}
+  {% if not ('read-only-repos' in grains and grains['read-only-repos'] == True) %}
   git.latest:
     - name: '{{ sync_uri }}'
     - target: '/var/lib/layman/{{ repo_name }}'
