@@ -1,6 +1,6 @@
 include:
-  - core.ldns
-  - core.sctp
+  - lib.ldns
+  - lib.sctp
 
 openssh:
   pkg.installed:
