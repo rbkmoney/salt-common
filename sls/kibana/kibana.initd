@@ -1,0 +1,24 @@
+#!/sbin/openrc-run
+# Copyright 1999-2016 Gentoo Foundation
+# Distributed under the terms of the GNU General Public License v2
+
+KIBANA_USER=${KIBANA_USER:-kibana}
+KIBANA_CONFIG=${KIBANA_CONFIG:-/etc/kibana/kibana.yml}
+
+pidfile="/run/kibana/kibana.pid"
+command="/opt/kibana/bin/kibana"
+command_args="--config ${KIBANA_CONFIG} --log-file /var/log/kibana/kibana.json"
+start_stop_daemon_args="--user=\"${KIBANA_USER}\" --background --pidfile=\"${pidfile}\""
+
+start_pre() {
+        checkpath -d -o "${KIBANA_USER}" -m750 "/var/log/kibana"
+        checkpath -d -o "${KIBANA_USER}" -m755 "/run/kibana"
+        checkpath -f -o "${KIBANA_USER}" -m644 "/opt/kibana/optimize/.babelcache.json"
+}
+
+stop() {
+       ebegin "Stopping ${SVCNAME}"
+       start-stop-daemon --stop --pidfile "${pidfile}" --wait 10 --progress
+       eend $?
+
+}
