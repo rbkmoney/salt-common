@@ -19,4 +19,3 @@ app-misc/c_rehash:
   portage_config.flags:
     - accept_keywords:
       - ~*
-
