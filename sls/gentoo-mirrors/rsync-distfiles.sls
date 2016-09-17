@@ -109,6 +109,7 @@ rsync-gentoo-distfiles:
     - identifier: rsync-gentoo-distfiles
     - name: /opt/gentoo-rsync/rsync-gentoo-distfiles.sh
     - user: root
+    - minute: 0
     - hour: '*/4'
     - require:
       - file: /etc/rsync/rsync-gentoo-distfiles.conf
@@ -151,6 +152,7 @@ rsync-gentoo-portage:
     - identifier: rsync-gentoo-portage
     - name: /opt/gentoo-rsync/rsync-gentoo-portage.sh
     - user: root
+    - minute: 0
     - hour: '*/4'
     - require:
       - file: /etc/rsync/rsync-gentoo-portage.conf
