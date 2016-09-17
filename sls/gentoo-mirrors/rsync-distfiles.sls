@@ -198,7 +198,7 @@ rsync-gentoo-{{ inst['arch'] }}-{{ inst['cpu_arch'] }}-packages:
     - identifier: rsync-gentoo-{{ inst['arch'] }}-{{ inst['cpu_arch'] }}-packages
     - name: /opt/gentoo-rsync/rsync-gentoo-{{ inst['arch'] }}-{{ inst['cpu_arch'] }}-packages.sh
     - user: root
-    - day: "{{ inst.get('day','*') }}"
+    - dayweek: "{{ inst.get('day','*') }}"
     - hour: "{{ inst.get('hour','*/4') }}"
     - minute: "{{ inst.get('minute','0') }}"
     - require:
