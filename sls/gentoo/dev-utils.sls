@@ -7,6 +7,7 @@ app-portage/repoman:
       - ~*
   pkg.latest:
     - pkgs:
+      - dev-python/lxml: "~>=3.6.4"
       - sys-apps/portage: "~>=2.3.0"
       - app-portage/repoman: "~>=2.3.0"
     - require:
