@@ -12,7 +12,7 @@ manage-rc-conf:
       {% set container_type = salt['grains.get']('container_type', False) %}
       {% if container_type == 'docker' %}
       - set rc_sys docker
-      {% elif container_type 'rkt' %}
+      {% elif container_type == 'rkt' %}
       - set rc_sys rkt
       {% endif %}
       {% elif grains['virtual'] %}
