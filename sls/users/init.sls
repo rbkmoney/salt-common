@@ -10,8 +10,6 @@
     {% endif %}
     {% if data.get('gid', False) != False %}
     - gid: {{ data['gid'] }}
-    {% else %}
-    - gid_from_name: True
     {% endif %}
     - home: "{{ homedir }}"
     - createhome: {{ data.get('createhome', True) }}
