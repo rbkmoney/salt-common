@@ -5,3 +5,4 @@ app-portage:
       - app-portage/gentoolkit
       - app-portage/eix
       - app-admin/webapp-config
+      - app-portage/genlop
