@@ -1,7 +1,11 @@
-# -*- mode: yaml -*-
+# -*- mode: yaml -p*-
+# This definitely should be set
 {% set efi = salt['grains.get']('efi', False) %}
+# This should be set when we can not install xen from here;
+# For example: machine is PXE booted, and you need to modify file on tftp server;
 {% set xen_provided = salt['grains.get']('xen_provided', False) %}
-{% set xen_version = salt['grains.get']('xen_version', '4.6.1-r2') %}
+{% set xen_version = salt['pillar.get']('xen_version', '4.7.0-r2') %}
+{% set xen_tools_version = salt['pillar.get']('xen_version', '4.7.0-r1') %}
 {% set xen_version_short = xen_version.split('-')[0] %}
 
 include:
@@ -34,7 +38,7 @@ xen:
       {% if not xen_provided %}
       - app-emulation/xen: "~={{ xen_version }}[{{ 'efi' if efi else '-efi' }}]"
       {% endif %}
-      - app-emulation/xen-tools: "~>=4.6.1[api,hvm,screen,system-qemu,system-seabios]"
+      - app-emulation/xen-tools: "~={{ xen_tools_version }}[api,hvm,screen,system-qemu,system-seabios]"
       - dev-libs/libnl
     - require:
       - pkg: qemu
