@@ -28,9 +28,15 @@ kibana:
     - name: 'paxctl -cm /opt/kibana/node/bin/node'
     - onchange:
       - pkg: kibana
+    - watch_in:
+      - service: kibana
 
 'paxctl-ng-kibana-onfail':
   cmd.run:
-    - name: 'service kibana stop; paxctl -cm /opt/kibana/node/bin/node'
+    - name: 'service kibana stop; sleep 10; paxctl -cm /opt/kibana/node/bin/node'
     - onfail:
       - cmd: paxctl-ng-kibana
+    - watch_in:
+      - service: kibana
+
+
