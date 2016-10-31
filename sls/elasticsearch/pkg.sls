@@ -4,4 +4,4 @@ include:
 elasticsearch_pkg:
   pkg.installed:
     - pkgs:
-      - app-misc/elasticsearch: '~>=2.3.3'
+      - app-misc/elasticsearch: '~<5.0'
