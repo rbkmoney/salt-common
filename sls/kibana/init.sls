@@ -6,7 +6,7 @@ kibana:
     - name: www-apps/kibana-bin
     - accept_keywords:
       - ~*
-  pkg.latest:
+  pkg.installed:
     - pkgs:
       - www-apps/kibana-bin: "~<5.0.0"
     - require:
@@ -25,6 +25,12 @@ kibana:
 
 'paxctl-ng-kibana':
   cmd.run:
-    - name: 'paxctl -cm /opt/kibana/node/bin/npm'
+    - name: 'paxctl -cm /opt/kibana/node/bin/node'
     - onchange:
       - pkg: kibana
+
+'paxctl-ng-kibana-onfail':
+  cmd.run:
+    - name: 'service kibana stop; paxctl -cm /opt/kibana/node/bin/node'
+    - onfail:
+      - cmd: paxctl-ng-kibana
