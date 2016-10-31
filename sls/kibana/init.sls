@@ -7,7 +7,8 @@ kibana:
     - accept_keywords:
       - ~*
   pkg.latest:
-    - name: www-apps/kibana-bin
+    - pkgs:
+      - www-apps/kibana-bin: "~<5.0.0"
     - require:
       - portage_config: kibana
   service.running:
@@ -21,3 +22,9 @@ kibana:
   file.managed:
     - source: salt://kibana/kibana.initd
     - mode: 755
+
+'paxctl-ng-kibana':
+  cmd.run:
+    - name: 'paxctl -cm /opt/kibana/node/bin/npm'
+    - onchange:
+      - pkg: kibana
