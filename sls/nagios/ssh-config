@@ -1,0 +1,7 @@
+Host *
+ User nagios
+ IdentityFile ~/.ssh/nagios-hosts-access-key
+ ForwardAgent no
+ StrictHostKeyChecking no
+ VerifyHostKeyDNS yes
+ HashKnownHosts no
