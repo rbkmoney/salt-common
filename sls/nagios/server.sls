@@ -2,6 +2,7 @@
 {% set objects_remote_uri = salt['pillar.get']('nagios:objects:remote') -%}
 include:
   - users
+  - nagios.server-pkg
 
 /etc/nagios/:
   file.directory:
@@ -87,6 +88,7 @@ nagios:
   service.running:
     - enable: True
     - watch:
+      - pkg: nagios_pkg
       - user: nagios
       - file: /etc/nagios/
       - file: /etc/nagios/nagios.cfg
