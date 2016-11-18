@@ -10,7 +10,8 @@ include:
 {% if machine_type == 'raspberry pi' %}
 {% set makeconf_collectd_plugins = '''aggregation apcups contextswitch cpu cpufreq csv curl curl_json curl_xml dbi df disk entropy ethstat exec filecount fscache interface iptables load logfile memcached memory nfs netlink network nginx processes python snmp syslog statsd table tail tcpconns unixsock uptime users vmem''' %}
 {% else %}
-{% set makeconf_collectd_plugins = 'aggregation apcups bind cgroups chrony conntrack contextswitch cpu cpufreq cpusleep csv curl curl_json curl_xml dbi df disk entropy ethstat exec filecount fscache interface iptables ipmi ipvs irq load logfile lvm md memcached memory nfs netlink network nginx numa hddtemp processes python sensors snmp swap syslog statsd table tail tcpconns target_notification thermal treshold unixsock uptime users uuid vmem write_graphite write_riemann' +
+{% set makeconf_collectd_plugins = 'aggregation apcups bind cgroups chrony conntrack contextswitch cpu cpufreq cpusleep csv curl curl_json curl_xml dbi df disk entropy ethstat exec filecount fscache interface iptables ipmi ipvs irq load logfile md memcached memory nfs netlink network nginx numa hddtemp processes python sensors snmp swap syslog statsd table tail tcpconns target_notification thermal treshold unixsock uptime users uuid vmem write_graphite write_riemann' +
+(' lvm' if 'lvm' in collectd else '') +
 (' ceph' if 'ceph' in collectd else '') +
 (' mysql' if 'mysql' in collectd else '') +
 (' smart' if 'smart' in collectd else '') +
