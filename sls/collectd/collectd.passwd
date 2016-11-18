@@ -1,0 +1,4 @@
+{% set p_network = salt['pillar.get']('collectd:network', False) -%}
+{% for data in p_network.get('users') -%}
+{{ data['username'] }}: {{ data['password'] }}
+{% endfor %}
