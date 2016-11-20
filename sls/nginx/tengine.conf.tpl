@@ -14,6 +14,10 @@ http {
     ' "$request" [$status] $upstream_cache_status $bytes_sent $request_time'
     ' "$http_referer" "$http_user_agent" "$http_cookie"';
 
+    log_format tls_client '[$time_local] $http_host $remote_addr $ssl_client_s_dn_cn'
+    ' "$request" [$status] $upstream_cache_status $bytes_sent $request_time'
+    ' "$http_referer" "$http_user_agent" "$http_cookie"';
+
     access_log /var/log/tengine/access_log common;
     error_log /var/log/tengine/error_log info;
 
@@ -53,9 +57,12 @@ http {
     #ssl_session_ticket_key
     #ssl_stapling on;
 
-    index index.html;
+    map  $ssl_client_s_dn  $ssl_client_s_dn_cn {
+    	 default "-";
+	 ~[/,]?CN=(?<CN>[^/,]+) $CN;
+    }
 
-    include cf_real_ip.conf;
+    include /etc/nginx/vhosts.d/*.conf;
     include /etc/tengine/vhosts.d/*.conf;
-}
 
+}

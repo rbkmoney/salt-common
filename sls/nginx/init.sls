@@ -132,7 +132,15 @@ nginx-reload:
     - user: root
     - group: root
 
-/etc/tengine/cf_real_ip.conf:
+/etc/tengine/includes/:
+  file.recurse:
+    - source: salt://nginx/includes
+    - dir_mode: 755
+    - file_mode: 644
+    - user: root
+    - group: root
+
+/etc/tengine/includes/cf-real-ip.conf:
   file.managed:
     - source: salt://nginx/real_ip.conf.tpl
     - template: jinja
@@ -161,14 +169,8 @@ nginx-reload:
     - mode: 755
     - user: root
     - group: root
-
-/etc/tengine/includes/:
-  file.recurse:
-    - source: salt://nginx/includes
-    - dir_mode: 755
-    - file_mode: 644
-    - user: root
-    - group: root
+    - require:
+      - file: /etc/tengine/includes/
 
 /etc/tengine/vhosts.d/:
   file.directory:
