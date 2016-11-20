@@ -57,19 +57,6 @@ libpcre:
 
 {% if tengine %}
 tengine:
-  service.running:
-    - enable: True
-    - watch:
-      - pkg: tengine
-      - pkg: openssl
-      - file: /etc/tengine/tengine.conf
-  pkg.latest:
-    - name: www-servers/tengine
-    - require:
-      - portage_config: libpcre
-    - watch:
-      - portage_config: tengine
-      - augeas: manage-tengine-modules
   portage_config.flags:
     - name: www-servers/tengine
     - accept_keywords:
@@ -84,6 +71,23 @@ tengine:
       - jemalloc
       - luajit
       - pcre-jit
+  pkg.latest:
+    - name: www-servers/tengine
+    - require:
+      - portage_config: libpcre
+    - watch:
+      - portage_config: tengine
+      - augeas: manage-tengine-modules
+  service.running:
+    - enable: True
+    - watch:
+      - pkg: tengine
+      - pkg: openssl
+      - file: /etc/tengine/tengine.conf
+      - file: /etc/tengine/listen
+      - file: /etc/tengine/listen_ssl
+      - file: /etc/tengine/includes/
+      - file: /etc/tengine/vhosts.d/
 
 nginx-reload:
   # This is for watch_in reloads
@@ -93,7 +97,8 @@ nginx-reload:
     - require:
       - pkg: tengine
       - file: /etc/tengine/tengine.conf
-
+    - watch:
+      - file: /etc/tengine/includes/cf-real-ip.conf
   
 /etc/tengine/tengine.conf:
   file.managed:
@@ -111,12 +116,6 @@ nginx-reload:
     - mode: 755
     - user: root
     - group: root
-    - require:
-      - file: /etc/tengine/listen
-      - file: /etc/tengine/listen_ssl
-      - file: /etc/tengine/cf_real_ip.conf
-      - file: /etc/tengine/includes/
-      - file: /etc/tengine/vhosts.d/
 
 /etc/tengine/listen:
     file.managed:
