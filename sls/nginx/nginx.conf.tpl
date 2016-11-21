@@ -50,12 +50,16 @@ http {
     ssl_session_cache {{ ssl_session_cache }};
     ssl_session_timeout {{ ssl_session_timeout }};
     ssl_session_tickets on;
-    #ssl_session_ticket_key
-    #ssl_stapling on;
 
-    index index.html;
+    map  $ssl_client_s_dn  $ssl_client_s_dn_cn {
+    	 default "";
+	 ~[/,]?CN=(?<CN>[^/,]+) $CN;
+    }
 
-    include cf_real_ip.conf;
+    log_format tls_client '[$time_local] $http_host $remote_addr $ssl_client_s_dn_cn'
+    ' "$request" [$status] $upstream_cache_status $bytes_sent $request_time'
+    ' "$http_referer" "$http_user_agent" "$http_cookie"';
+
     include /etc/nginx/vhosts.d/*.conf;
 }
 
