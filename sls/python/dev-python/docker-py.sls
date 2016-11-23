@@ -1,6 +1,7 @@
 include:
   - python.dev-python.websocket-client
   - python.dev-python.backports-ssl-match-hostname
+  - python.dev-python.docker-pycreds
 
 docker-py:
   pkg.installed:
