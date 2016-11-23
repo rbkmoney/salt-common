@@ -5,7 +5,7 @@ include:
 docker-py:
   pkg.installed:
     - pkgs:
-      - dev-python/docker-py: "~1.9.0"
+      - dev-python/docker-py: "~>=1.10.6"
     - require:
       - portage_config: docker-py
   portage_config.flags:
