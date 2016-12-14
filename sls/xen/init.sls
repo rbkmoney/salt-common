@@ -38,7 +38,7 @@ xen:
       {% if not xen_provided %}
       - app-emulation/xen: "={{ xen_version }}[{{ 'efi' if efi else '-efi' }}]"
       {% endif %}
-      - app-emulation/xen-tools: "={{ xen_tools_version }}[api,hvm,ovmf,screen,system-qemu,-qemu,system-seabios]"
+      - app-emulation/xen-tools: "={{ xen_tools_version }}[api,hvm,screen,system-qemu,-qemu,system-seabios]"
       - dev-libs/libnl
     - require:
       - pkg: qemu
