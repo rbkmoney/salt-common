@@ -4,11 +4,11 @@ include:
   - rsyncd
   - cron
 
-{% set dst_host = salt['pillar.get']('mirror:dst_host',
+{% set mirror_host = salt['pillar.get']('gentoo-mirror:mirror-host', 'gentoo.bakka.su') %}
+{% set dst_host = salt['pillar.get']('gentoo-mirror:dst_host',
       'gentoo'+salt['grains.get']('domain', 'localdomain')) %}
-{% set mirror_host = salt['pillar.get']('gentoo:mirror_host', 'gentoo.bakka.su') %}
 {% set default_root = "/var/storage/mirrors" %}
-{% set mirror_types = salt['pillar.get']('mirror:types', []) %}
+{% set mirror_types = salt['pillar.get']('gentoo-mirror:types', []) %}
 
 # TODO: cron jobs randomizaton/pillar
 
@@ -175,7 +175,7 @@ rsync-gentoo-portage:
     - create: True
     - makedirs: True
 
-{% for inst in salt['pillar.get']('mirror:gentoo_package_repos', []) %}
+{% for inst in salt['pillar.get']('mirror:gentoo-package-repos', []) %}
 /opt/gentoo-rsync/rsync-gentoo-{{ inst['arch'] }}-{{ inst['cpu_arch'] }}-packages.sh:
   file.symlink:
     - target: /opt/gentoo-rsync/rsync-base.sh
