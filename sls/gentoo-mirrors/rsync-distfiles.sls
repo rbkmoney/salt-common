@@ -5,8 +5,8 @@ include:
   - cron
 
 {% set mirror_host = salt['pillar.get']('gentoo-mirror:mirror-host', 'gentoo.bakka.su') %}
-{% set dst_host = salt['pillar.get']('gentoo-mirror:dst_host',
-      'gentoo'+salt['grains.get']('domain', 'localdomain')) %}
+{% set dst_host = salt['pillar.get']('gentoo-mirror:dst-host',
+      'gentoo.'+salt['grains.get']('domain', 'localdomain')) %}
 {% set default_root = "/var/storage/mirrors" %}
 {% set mirror_types = salt['pillar.get']('gentoo-mirror:types', []) %}
 
