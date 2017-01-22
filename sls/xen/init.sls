@@ -4,8 +4,8 @@
 # This should be set when we can not install xen from here;
 # For example: machine is PXE booted, and you need to modify file on tftp server;
 {% set xen_provided = salt['grains.get']('xen_provided', False) %}
-{% set xen_version = salt['pillar.get']('xen_version', '4.6.4-r3') %}
-{% set xen_tools_version = salt['pillar.get']('xen_version', '4.6.4-r4') %}
+{% set xen_version = salt['pillar.get']('xen_version', '4.7.1-r4') %}
+{% set xen_tools_version = salt['pillar.get']('xen_version', '4.7.1-r4') %}
 {% set xen_version_short = xen_version.split('-')[0] %}
 
 include:
@@ -21,7 +21,7 @@ include:
     - group: root
     - mode: 644
     - contents: |
-        INSTALL_MASK='/boot/xen.gz /boot/xen-4.gz /boot/xen-4.6.gz'
+        INSTALL_MASK='/boot/xen.gz /boot/xen-4.gz /boot/xen-4.6.gz /boot/xen-4.7.gz'
     - require:
       - file: /etc/portage/env/
 

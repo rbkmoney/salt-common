@@ -4,7 +4,7 @@
 efi_directory:
   mount.mounted:
     - name: {{ efi['mountpoint'] }}
-    - device: {{ efi['device'] }}
+    # - device: {{ efi['device'] }}
     - fstype: vfat
     - mkmnt: True
 
