@@ -3,11 +3,10 @@ include:
   - python.dev-python.backports-ssl-match-hostname
   - python.dev-python.docker-pycreds
 
-
 mask-docker-py-2.x:
   portage_config.flags:
     - name: '>=dev-python/docker-py-2.0'
-    - mask: True
+    - mask: False
 
 docker-py:
   pkg.installed:
