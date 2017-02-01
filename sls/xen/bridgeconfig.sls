@@ -21,6 +21,7 @@ state('set-xenbridges-conf').file.blockreplace(
   name='/etc/conf.d/net',
   marker_start='#-- start Salt xenbrs zone',
   marker_end='#-- end Salt xenbrs zone',
+  append_if_not_found=True,
   content='\n'.join(content))
 
 
