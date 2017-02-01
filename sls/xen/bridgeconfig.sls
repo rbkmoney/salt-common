@@ -1,8 +1,8 @@
 #!pydsl
-changes = []
+content = []
 
 def mlchap(key, values):
-  changes.append(key + '="' + '''\n\t'''.join(values) + '"\n')
+  content.append(key + '="' + '''\n\t'''.join(values) + '"')
 
 for br in __salt__['pillar.get']('xen:xenbrs', []):
   num = str(br['num'])
@@ -21,6 +21,6 @@ state('set-xenbridges-conf').file.blockreplace(
   name='/etc/conf.d/net',
   marker_start='#-- start Salt xenbrs zone',
   marker_end='#-- end Salt xenbrs zone',
-  changes=content)
+  content='\n'.join(content))
 
 
