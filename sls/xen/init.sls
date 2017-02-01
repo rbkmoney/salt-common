@@ -1,4 +1,3 @@
-# -*- mode: yaml -p*-
 # This definitely should be set
 {% set efi = salt['grains.get']('efi', False) %}
 # This should be set when we can not install xen from here;
@@ -11,9 +10,7 @@
 include:
   - gentoo.portage
   - qemu
-  {% if efi %}
-  - fs.efi
-  {% endif %}
+  - xen.bridgeconfig
 
 /etc/portage/env/xen-install-mask:
   file.managed:
@@ -72,30 +69,6 @@ unmask-hvm:
     - name: /etc/portage/profile/use.mask
     - text: "-hvm"
 
-xencommons:
-  service.running:
-    - enable: True
-
-xenstored:
-  service.running:
-    - enable: True
-
-xenconsoled:
-  service.running:
-    - enable: True
-
-{% for br in salt['pillar.get']('xen:xenbrs', []) %}
-/etc/init.d/net.xenbr{{ br.num }}:
-  file.symlink:
-    - target: /etc/init.d/net.lo
-      
-net.xenbr{{ br.num }}:
-  service.running:
-    - enable: True
-    - require:
-      - file: /etc/init.d/net.xenbr{{ br.num }}
-{% endfor %}
-
 /etc/xen/xl.conf:
   file.managed:
     - source: salt://xen/xl.conf
@@ -146,12 +119,27 @@ net.xenbr{{ br.num }}:
     - user: root
     - group: root    
 
+xencommons:
+  service.running:
+    - enable: True
+
+xenstored:
+  service.running:
+    - enable: True
+
+xenconsoled:
+  service.running:
+    - enable: True
+
 xendomains:
   service.running:
     - enable: True
     - watch:
       - file: /etc/init.d/xendomains
       - file: /etc/conf.d/xendomains
+    - require:
+      - file: /etc/xen/scripts/block-rbd
+      - file: set-xenbridges-conf
 
 bringup-xendomains:
   cron.present:
