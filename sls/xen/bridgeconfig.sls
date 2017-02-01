@@ -4,7 +4,7 @@ changes = []
 def mlchap(key, values):
   changes.append(key + '="' + '''\n\t'''.join(values) + '"\n')
 
-for br in salt['pillar.get']('xen:xenbrs', []):
+for br in __salt__['pillar.get']('xen:xenbrs', []):
   mlchap('bridge_xenbr' + br['num'], br['ifaces'])
   mlchap('config_xenbr' + br['num'], (br['config'],))
   mlchap('config_brctl' + br['num'], (br['brctl'],))
