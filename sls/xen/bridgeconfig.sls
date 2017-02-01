@@ -7,8 +7,8 @@ def mlchap(key, values):
 for br in __salt__['pillar.get']('xen:xenbrs', []):
   num = str(br['num'])
   mlchap('bridge_xenbr' + num, br['ifaces'])
-  mlchap('config_xenbr' + num, (br['config'],))
-  mlchap('config_brctl' + num, (br['brctl'],))
+  mlchap('config_xenbr' + num, br['config'])
+  mlchap('brctl_xenbr' + num, br['brctl'])
   mlchap('rc_net_xenbr' + num + '_provide', ('!net',))
   mlchap('rc_net_xenbr' + num + '_need', (br['need'],))
   mlchap('rc_xendomains_use', ('net.xenbr' + num,))
