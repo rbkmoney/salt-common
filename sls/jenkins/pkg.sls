@@ -4,6 +4,6 @@ include:
 jenkins_pkg:
   pkg.installed:
     - pkgs:
-      - dev-util/jenkins-bin: '~>=2.26::gentoo'
+      - dev-util/jenkins-bin: '~>=2.44'
     - require:
       - pkg: icedtea3
