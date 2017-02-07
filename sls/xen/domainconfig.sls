@@ -27,7 +27,7 @@ for guest in __salt__['pillar.get']('xen:guests', []):
   capkv(content, 'extra', guest['extra'] if 'extra' in guest else 'raid=noautodetect quiet panic=30')
   for k,v in guest.get('extra-config', []):
     capkv(content, k, v)
-  state('/etc/xen/domains/'+ name + '.cfg').file.managed(content=content)
+  state('/etc/xen/domains/'+ name + '.cfg').file.managed(contents=content.join('\n'))
   if ('pinning' in guest
       and 'auto' in guest['pinning']
       and guest['pinning']['auto'] == __grains__['id']):
