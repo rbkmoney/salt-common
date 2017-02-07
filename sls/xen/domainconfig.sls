@@ -14,9 +14,9 @@ for guest in __salt__['pillar.get']('xen:guests', []):
     content.append('# uuid = "genme"')
   memory = guest['memory']
   maxmem = guest['maxmem'] if 'maxmem' in guest else memory
-  capkv(content, 'memory', memory)
-  capkv(content, 'maxmem', maxmem)
-  capkv(content, 'vcpus', guest['vcpus'])
+  capkv(content, 'memory', str(memory))
+  capkv(content, 'maxmem', str(maxmem))
+  capkv(content, 'vcpus', str(guest['vcpus']))
   content.append('vif = ' + repr(guest['vifs']))
   content.append('disk = ' + repr(guest['disks']))
   capkv(content, 'on_crash', guest['on_crash'] if 'on_crash' in guest else 'restart')
