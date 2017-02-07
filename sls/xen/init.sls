@@ -11,6 +11,7 @@ include:
   - gentoo.portage
   - qemu
   - xen.bridgeconfig
+  - xen.domainconfig
 
 /etc/portage/env/xen-install-mask:
   file.managed:
