@@ -1,7 +1,7 @@
 #!pydsl
 
 def capkv(c, key, values):
-  c.append(key + '="' + '''\n\t'''.join(values) + '"')
+  c.append(key + '="' + values + '"')
 
 for guest in __salt__['pillar.get']('xen:guests', []):
   content = []
