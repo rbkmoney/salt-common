@@ -28,6 +28,8 @@ include:
     - mode: 644
     - user: root
     - group: nginx
+    - watch_in:
+      - service: nginx-reload
 
 /etc/ssl/nginx/gentoo-mirror/privkey.pem:
   file.managed:
@@ -38,6 +40,8 @@ include:
     - mode: 600
     - user: root
     - group: root
+    - watch_in:
+      - service: nginx-reload
 
 /etc/nginx/vhosts.d/gentoo-mirror.conf:
   file.managed:
@@ -58,7 +62,7 @@ include:
       - file: /etc/ssl/nginx/gentoo-mirror/certificate.pem
       - file: /etc/ssl/nginx/gentoo-mirror/certificate.pem
     - watch_in:
-      - cmd: nginx-reload
+      - service: nginx-reload
 
 /opt/gentoo-rsync/:
   file.directory:
