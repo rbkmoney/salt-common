@@ -3,8 +3,8 @@
 # This should be set when we can not install xen from here;
 # For example: machine is PXE booted, and you need to modify file on tftp server;
 {% set xen_provided = salt['grains.get']('xen_provided', False) %}
-{% set xen_version = salt['pillar.get']('xen_version', '4.7.1-r4') %}
-{% set xen_tools_version = salt['pillar.get']('xen_version', '4.7.1-r4') %}
+{% set xen_version = salt['pillar.get']('xen_version', '4.7.1-r5') %}
+{% set xen_tools_version = salt['pillar.get']('xen_version', '4.7.1-r6') %}
 {% set xen_version_short = xen_version.split('-')[0] %}
 
 include:
