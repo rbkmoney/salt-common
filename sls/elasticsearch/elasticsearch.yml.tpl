@@ -20,8 +20,6 @@ path:
   data: /var/lib/elasticsearch
   logs: /var/log/elasticsearch
 
-bootstrap.mlockall: true
-
 network.host: {{ salt['pillar.get']('elastic:config:network:host', '${HOSTNAME}') }}
 
 http.port: {{ salt['pillar.get']('elastic:config:http:port', 9200) }}
