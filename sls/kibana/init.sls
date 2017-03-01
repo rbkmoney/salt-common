@@ -8,7 +8,7 @@ kibana:
       - ~*
   pkg.installed:
     - pkgs:
-      - www-apps/kibana-bin: "~<5.0.0"
+      - www-apps/kibana-bin: "~>=5.1.0"
     - require:
       - portage_config: kibana
   service.running:
