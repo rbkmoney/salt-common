@@ -21,7 +21,6 @@ config = {
     'data': '/var/lib/elasticsearch',
     'logs': '/var/log/elasticsearch',
   },
-  'bootstrap': { 'mlockall': True },
   'network': { 'host': '${HOSTNAME}' },
   'http': { 'port': 9200 },
   'gateway': { 'recover_after_nodes': len(hosts)/2 },
