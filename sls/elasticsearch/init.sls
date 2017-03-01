@@ -10,3 +10,4 @@ elasticsearch:
       - pkg: icedtea3
       - pkg: elasticsearch_pkg
       - file: /etc/elasticsearch/elasticsearch.yml
+      - file: /etc/security/limits.d/elasticsearch.conf
