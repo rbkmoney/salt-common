@@ -1,6 +1,6 @@
 # Managed by Salt
 # Additional Java OPTS
-ES_JAVA_OPTS="{{ es_java_opts }}"
+ES_JAVA_OPTS="{{ es_java_opts if es_java_opts is defined else '' }}"
 
 ES_USER=elasticsearch
 ES_GROUP=elasticsearch

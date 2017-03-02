@@ -47,7 +47,7 @@ state('/etc/elasticsearch/elasticsearch.yml').file.managed(
 state('/etc/conf.d/elasticsearch').file.managed(
   mode=644, user='root', group='root',
   template='jinja', source="salt://elasticsearch/files/elasticsearch.confd.tpl",
-  default={'es_java_opts': '', 'l_nofile': l_nofile, 'l_memlock': l_memlock,
+  default={'l_nofile': l_nofile, 'l_memlock': l_memlock,
            'max_map_count': max_map_count, 'es_startup_sleep_time': 10})
 
 state('/etc/security/limits.d/elasticsearch.conf').file.managed(
