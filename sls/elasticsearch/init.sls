@@ -11,3 +11,4 @@ elasticsearch:
       - pkg: elasticsearch_pkg
       - file: /etc/elasticsearch/elasticsearch.yml
       - file: /etc/security/limits.d/elasticsearch.conf
+      - file: /etc/conf.d/elasticsearch
