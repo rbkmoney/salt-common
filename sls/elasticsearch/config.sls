@@ -55,4 +55,4 @@ state('/etc/security/limits.d/elasticsearch.conf').file.managed(
   contents='\n'.join([
     "elasticsearch soft nofile {0}".format(l_nofile),
     "elasticsearch hard nofile {0}".format(l_nofile),
-    "memlock {0}".format(l_memlock)]))
+    "elasticsearch memlock {0}".format(l_memlock)]))
