@@ -17,7 +17,7 @@ include:
 {% set worker_connections = 4096 -%}
 {% set worker_rlimit_nofile = worker_processes*worker_connections*2 -%}
 
-{% set makeconf_nginx_modules_http = '''access auth_basic autoindex browser charset empty_gif fastcgi geo geoip gzip gzip_static limit_req limit_zone lua map memcached proxy realip referer rewrite scgi spdy split_clients ssi ssl reqstat upstream_keepalive upstream_least_conn upstream_rbtree limit_conn upstream_session_sticky stub_status upstream_check upstream_consistent_hash upstream_ip_hash userid uwsgi''' -%}
+{% set makeconf_nginx_modules_http = '''access auth_basic autoindex browser charset empty_gif fastcgi geo geoip gzip gzip_static limit_req limit_zone lua map memcached proxy realip referer rewrite scgi split_clients ssi ssl reqstat upstream_keepalive upstream_least_conn upstream_rbtree limit_conn upstream_session_sticky stub_status upstream_check upstream_consistent_hash upstream_ip_hash userid uwsgi''' -%}
 {% set makeconf_nginx_modules_mail = 'smtp imap pop3' -%}
 {% set ssl_ciphers = ':'.join([
 'ECDHE-ECDSA-AES256-GCM-SHA384', 'ECDHE-ECDSA-AES128-GCM-SHA256',
@@ -218,7 +218,7 @@ nginx:
       - http-cache
       - ipv6
       - pcre
-      - libatomic
+      - "-libatomic"
       - ssl
       - threads
 
