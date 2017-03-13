@@ -60,8 +60,7 @@ http {
     ' "$request" [$status] $upstream_cache_status $bytes_sent $request_time'
     ' "$http_referer" "$http_user_agent" "$http_cookie"';
 
-    log_format elastic_json escape=json '{ "@timestamp": "$time_iso8601", '
-        '"@fields": { '
+    log_format elastic_json escape=json '{"@timestamp": "$time_iso8601", "@version": "1", '
             '"remote_addr": "$remote_addr", '
             '"remote_user": "$remote_user", '
             '"body_bytes_sent": "$body_bytes_sent", '
@@ -70,7 +69,7 @@ http {
             '"request": "$request", '
             '"request_method": "$request_method", '
             '"http_referrer": "$http_referer", '
-            '"http_user_agent": "$http_user_agent" } }';
+            '"http_user_agent": "$http_user_agent"}';
             
     include /etc/nginx/conf.d/*.conf;
     include /etc/nginx/vhosts.d/*.conf;
