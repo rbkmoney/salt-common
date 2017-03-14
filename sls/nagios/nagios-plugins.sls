@@ -1,4 +1,3 @@
-# -*- mode: yaml -*-
 nagios-plugins:
   pkg.purged:
     - name: net-analyzer/nagios-plugins
@@ -18,13 +17,13 @@ monitoring-plugins:
       - portage_config: monitoring-plugins
       - pkg: nagios-plugins
   portage_config.flags:
+    {% set extra_use = salt['pillar.get']('monitoring-plugins:extra_use') %}
     - use:
-      - mysql
-      - nagios-dns
-      - nagios-ping
-      - nagios-ssh
-      - smart
-      - snmp
+      - ssh
       - ssl
-      - sudo
-      - suid
+      - dns
+      - fping
+      - snmp
+      {% for use in ('mysql', 'postgres', 'samba', 'ldap', 'game') -%}
+      {% if use in extra_use -%} - {{ use }} {%- endif %}
+      {% endfor %}
