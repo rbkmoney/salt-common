@@ -25,5 +25,7 @@ monitoring-plugins:
       - fping
       - snmp
       {% for use in ('mysql', 'postgres', 'samba', 'ldap', 'game') %}
-      {% if use in extra_use %} - {{ use }}{% endif %}
+      {% if use in extra_use %}
+      - {{ use }}
+      {% endif %}
       {% endfor %}
