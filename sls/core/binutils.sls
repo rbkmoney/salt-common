@@ -3,7 +3,7 @@
 
 sys-devel/binutils:
   pkg.installed:
-    pkgs:
+   - pkgs:
       - sys-devel/binutils: "{{ binutils_version }}[cxx,multitarget,nls,zlib]"
       - sys-devel/binutils-config: ">=5-r3"
 
