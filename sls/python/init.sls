@@ -4,10 +4,14 @@ include:
   - python.python3
 
 app-eselect/eselect-python:
-  pkg.latest:
-    - pkgs:
-      - app-eselect/eselect-python
-      - dev-lang/python-exec
+  portage_config.flags:
+    - accept_keywords: []
+  pkg.latest
+
+dev-lang/python-exec:
+  portage_config.flags:
+    - accept_keywords: []
+  pkg.latest
 
 eselect-python3:
   eselect.set:
