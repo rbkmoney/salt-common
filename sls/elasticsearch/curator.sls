@@ -36,5 +36,5 @@ if cron:
   state('curator-cron').cron.present(
     identifier='curator-cron', hour=cron.get('hour', '1'), minute=cron.get('minute', '0'),
     user=cron.get('user', 'elasticsearch'),
-    name='curator --config /etc/elasticsenarch/curator.yml /etc/elasticsearch/curator-actions.yml').\
+    name='curator --config /etc/elasticsearch/curator.yml /etc/elasticsearch/curator-actions.yml').\
     require(pkg='dev-python/elasticsearch-curator')
