@@ -12,4 +12,3 @@ dev-python/elasticsearch-curator:
   portage_config.flags:
     - accept_keywords:
       - "~*"
-

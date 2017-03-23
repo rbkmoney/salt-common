@@ -9,6 +9,6 @@ dev-python/elasticsearch-py:
     - accept_keywords:
       - "~*"
 
->=dev-python/elasticsearch-py-3.0:
+">=dev-python/elasticsearch-py-3.0":
   portage_config.flags:
     - mask: True
