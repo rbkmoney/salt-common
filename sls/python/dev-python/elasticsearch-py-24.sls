@@ -1,5 +1,5 @@
 dev-python/elasticsearch-py:
-  pkg.installed:
+  pkg.latest:
     - pkgs:
       - dev-python/elasticsearch-py: "~>=2.4"
     - require:
