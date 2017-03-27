@@ -13,3 +13,9 @@ eselect-binutils:
     - target: {{ arch_conf['CHOST'] }}-{{ binutils_version }}
     - require:
       - pkg: sys-devel/binutils
+  cmd.run:
+    - name: 'eselect binutils set {{ arch_conf['CHOST'] }}-{{ binutils_version }}'
+    - onfail:
+      - eselect: eselect-binutils
+    - require:
+      - pkg: sys-devel/binutils
