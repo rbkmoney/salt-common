@@ -38,7 +38,7 @@ if make_conf:
       chap(k, v)
 else:
   chap('FEATURES', ' '.join(default_features))
-  chap('EMERGE_DEFAULT_OPTS', '--quiet-build --verbose --keep-going --binpkg-changed-deps=n')
+  chap('EMERGE_DEFAULT_OPTS', '--quiet-build --verbose --keep-going')
 
 
 if arch_conf:
