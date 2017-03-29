@@ -31,7 +31,7 @@ if make_conf:
     chap('MAKEOPTS', make_conf['makeopts'])
   else:
     chap('FEATURES', ' '.join(make_conf.get('features', default_features)))
-    chap('EMERGE_DEFAULT_OPTS', make_conf.get('emerge_default_opts', '--quiet-build --verbose --keep-going --binpkg-changed-deps=n'))
+    chap('EMERGE_DEFAULT_OPTS', make_conf.get('emerge_default_opts', '--quiet-build --verbose --keep-going'))
     chap('VIDEO_CARDS', make_conf.get('video_cards', ''))
   if make_conf.get('other', False):
     for k, v in make_conf['other'].items():
