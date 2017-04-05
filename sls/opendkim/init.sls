@@ -5,7 +5,7 @@ include:
 
 opendkim:
   service.running:
-    - enabled: True
+    - enable: True
     - watch:
       - file: /etc/opendkim/opendkim.conf
       - file: /etc/opendkim/signing-table
