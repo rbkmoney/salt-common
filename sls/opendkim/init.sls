@@ -63,7 +63,7 @@ opendkim:
     - group: root
     - require:
       - file: /etc/opendkim/
-    - contents:
+    - contents: |
         # Managed by Salt
         {% for cidr in conf['internal-hosts'] %}
         {{ cidr }}
@@ -76,7 +76,7 @@ opendkim:
     - group: root
     - require:
       - file: /etc/opendkim/
-    - contents:
+    - contents: |
         # Managed by Salt
         {% for cidr in conf['external-ignore-list'] %}
         {{ cidr }}
