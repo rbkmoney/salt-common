@@ -4,14 +4,14 @@ include:
 {% set conf = salt['pillar.get']('opendkim:conf') %}
 
 opendkim:
-  - service.running:
+  service.running:
     - enabled: True
-  - watch:
-    - file: /etc/opendkim/opendkim.conf
-    - file: /etc/opendkim/signingtable
-    - file: /etc/opendkim/keytable
-    - file: /etc/opendkim/internalhosts
-    - file: /etc/opendkim/externalignorelist
+    - watch:
+      - file: /etc/opendkim/opendkim.conf
+      - file: /etc/opendkim/signingtable
+      - file: /etc/opendkim/keytable
+      - file: /etc/opendkim/internalhosts
+      - file: /etc/opendkim/externalignorelist
 
 /etc/opendkim/:
   file.directory:
