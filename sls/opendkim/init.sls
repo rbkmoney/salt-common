@@ -8,10 +8,10 @@ opendkim:
     - enabled: True
     - watch:
       - file: /etc/opendkim/opendkim.conf
-      - file: /etc/opendkim/signingtable
-      - file: /etc/opendkim/keytable
-      - file: /etc/opendkim/internalhosts
-      - file: /etc/opendkim/externalignorelist
+      - file: /etc/opendkim/signing-table
+      - file: /etc/opendkim/key-table
+      - file: /etc/opendkim/internal-hosts
+      - file: /etc/opendkim/external-ignore-list
 
 /etc/opendkim/:
   file.directory:
