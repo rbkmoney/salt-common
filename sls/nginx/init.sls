@@ -1,5 +1,4 @@
 # -*- mode: yaml -*-
-{% set tengine = salt['pillar.get']('tengine', False) %}
 include:
   - ssl.openssl
   - augeas.lenses
@@ -27,18 +26,6 @@ include:
 'DHE-RSA-AES128-SHA', 'AES128-SHA256', 'AES128-SHA',
 '!3DES', '!MD5', '!aNULL', '!EDH']) -%}
 
-{% if tengine %}
-manage-tengine-modules:
-  augeas.change:
-    - context: /files/etc/portage/make.conf
-    - changes:
-      - set TENGINE_STATIC_MODULES_HTTP '"{{ makeconf_nginx_modules_http }}"'
-      - set TENGINE_SHARED_MODULES_HTTP '""'
-      - set TENGINE_EXTERNAL_MODULES_HTTP '""'
-      - set TENGINE_MODULES_MAIL '"{{ makeconf_nginx_modules_mail }}"'
-    - require:
-      - file: augeas-makeconf
-{% else %}
 manage-nginx-modules:
   augeas.change:
     - context: /files/etc/portage/make.conf
@@ -47,7 +34,6 @@ manage-nginx-modules:
       - set NGINX_MODULES_MAIL '"{{ makeconf_nginx_modules_mail }}"'
     - require:
       - file: augeas-makeconf
-{% endif %}
 
 libpcre:
   portage_config.flags:
@@ -55,146 +41,6 @@ libpcre:
     - use:
       - jit
 
-{% if tengine %}
-tengine:
-  portage_config.flags:
-    - name: www-servers/tengine
-    - accept_keywords:
-      - ~*
-    - use:
-      - aio
-      - http
-      - http-cache
-      - ipv6
-      - pcre
-      - "-libatomic"
-      - jemalloc
-      - luajit
-      - pcre-jit
-  pkg.latest:
-    - name: www-servers/tengine
-    - require:
-      - portage_config: libpcre
-    - watch:
-      - portage_config: tengine
-      - augeas: manage-tengine-modules
-  service.running:
-    - enable: True
-    - watch:
-      - pkg: tengine
-      - pkg: openssl
-      - file: /etc/tengine/tengine.conf
-      - file: /etc/tengine/listen
-      - file: /etc/tengine/listen_ssl
-      - file: /etc/tengine/includes/
-      - file: /etc/tengine/vhosts.d/
-
-nginx-reload:
-  # This is for watch_in reloads
-  service.running:
-    - name: tengine
-    - reload: True
-    - require:
-      - pkg: tengine
-      - file: /etc/tengine/tengine.conf
-    - watch:
-      - file: /etc/tengine/includes/cf-real-ip.conf
-  
-/etc/tengine/tengine.conf:
-  file.managed:
-    - source: salt://nginx/tengine.conf.tpl
-    - template: jinja
-    - defaults:
-        worker_processes: {{ worker_processes }}
-        worker_connections: {{ worker_connections }}
-        worker_rlimit_nofile: {{ worker_rlimit_nofile }}
-        ssl_protocols: 'TLSv1.1 TLSv1.2'
-        ssl_ciphers: {{ ssl_ciphers }}
-        ssl_ecdh_curve: prime256v1
-        ssl_session_cache: 'shared:SSL:20m'
-        ssl_session_timeout: 120m
-    - mode: 755
-    - user: root
-    - group: root
-
-/etc/tengine/listen:
-    file.managed:
-    - source: salt://nginx/listen.conf
-    - mode: 755
-    - user: root
-    - group: root
-
-/etc/tengine/listen_ssl:
-    file.managed:
-    - source: salt://nginx/listen_ssl.conf
-    - mode: 755
-    - user: root
-    - group: root
-
-/etc/tengine/includes/:
-  file.recurse:
-    - source: salt://nginx/includes
-    - dir_mode: 755
-    - file_mode: 644
-    - user: root
-    - group: root
-
-/etc/tengine/includes/cf-real-ip.conf:
-  file.managed:
-    - source: salt://nginx/real_ip.conf.tpl
-    - template: jinja
-    - defaults:
-        ips:
-          -  204.93.240.0/24
-          -  204.93.177.0/24
-          -  199.27.128.0/21
-          -  173.245.48.0/20
-          -  103.21.244.0/22
-          -  103.22.200.0/22
-          -  103.31.4.0/22
-          -  141.101.64.0/18
-          -  108.162.192.0/18
-          -  190.93.240.0/20
-          -  188.114.96.0/20
-          -  197.234.240.0/22
-          -  198.41.128.0/17
-          -  162.158.0.0/15
-          -  2400:cb00::/32
-          -  2606:4700::/32
-          -  2803:f800::/32
-          -  2405:b500::/32
-          -  2405:8100::/32
-        header: CF-Connecting-IP
-    - mode: 755
-    - user: root
-    - group: root
-    - require:
-      - file: /etc/tengine/includes/
-
-/etc/tengine/vhosts.d/:
-  file.directory:
-    - create: True
-    - mode: 755
-    - user: root
-    - group: root
-
-/var/cache/tengine/:
-  file.directory:
-    - create: True
-    - mode: 755
-    - user: tengine
-    - group: tengine
-
-/etc/logrotate.d/tengine:
-  file.managed:
-    - source: salt://nginx/tengine.logrotate
-    - mode: 644
-    - user: root
-    - group: root
-    - require:
-      - file: /etc/logrotate.d/
-
-{% else %}
 nginx:
   service.running:
     - enable: True
@@ -306,6 +152,20 @@ nginx-reload:
     - user: root
     - group: root
 
+/etc/nginx/main.d/:
+  file.directory:
+    - create: True
+    - mode: 755
+    - user: root
+    - group: root
+
+/etc/nginx/conf.d/:
+  file.directory:
+    - create: True
+    - mode: 755
+    - user: root
+    - group: root
+
 /etc/nginx/vhosts.d/:
   file.directory:
     - create: True
@@ -328,4 +188,3 @@ nginx-reload:
     - group: root
     - require:
       - file: /etc/logrotate.d/
-{% endif %}

@@ -6,6 +6,8 @@ events {
     use epoll;
 }
 
+include /etc/nginx/main.d/*.conf;
+
 http {
     include /etc/nginx/mime.types;
     default_type application/octet-stream;
