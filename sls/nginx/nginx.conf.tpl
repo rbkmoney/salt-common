@@ -1,12 +1,13 @@
 user nginx nginx;
 worker_processes {{ worker_processes }};
 worker_rlimit_nofile {{ worker_rlimit_nofile }};
+
+include /etc/nginx/main.d/*.conf;
+
 events {
     worker_connections {{ worker_connections }};
     use epoll;
 }
-
-include /etc/nginx/main.d/*.conf;
 
 http {
     include /etc/nginx/mime.types;
