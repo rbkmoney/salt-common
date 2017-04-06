@@ -3,9 +3,6 @@ include:
   - ssl.openssl
   - augeas.lenses
   - logrotate
-  {% if tengine %}
-  - gentoo.portage
-  {% endif %}
 
 {% set worker_processes = salt['grains.get']('num_cpus', 2) -%}
 {% if worker_processes < 1 -%}
