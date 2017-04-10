@@ -33,7 +33,7 @@ if make_conf:
     chap('FEATURES', ' '.join(make_conf.get('features', default_features)))
     chap('EMERGE_DEFAULT_OPTS', make_conf.get('emerge_default_opts', '--quiet-build --verbose --keep-going'))
     chap('VIDEO_CARDS', make_conf.get('video_cards', ''))
-  if make_conf.get('other', False):
+  if make_conf.get('other', {'USE_SALT': ''}):
     for k, v in make_conf['other'].items():
       chap(k, v)
 else:
