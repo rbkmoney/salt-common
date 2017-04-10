@@ -4,8 +4,6 @@ include("augeas.lenses")
 mirror_host = __salt__['pillar.get']('gentoo_mirror_host', 'gentoo.bakka.su')
 make_conf = __salt__['pillar.get']('make_conf', False)
 arch_conf = __salt__['pillar.get']('arch_conf', False)
-default_features = ["xattr sandbox userfetch parallel-fetch parallel-install clean-logs",
-"compress-build-logs unmerge-logs splitdebug compressdebug fail-clean unmerge-orphans getbinpkg -news"]
 
 num_jobs = __grains__['num_cpus']
 max_la = "%.2f" % (__grains__['num_cpus'] / 1.5)
@@ -23,32 +21,29 @@ changes = [
 def chap(key, value):
   changes.append('set ' + key + ' \'"' + value + '"\'')
 
-chap('MAKEOPTS', '-j'+str(num_jobs)+' --load-average '+str(max_la))
-    
+default_features = ["xattr sandbox userfetch parallel-fetch parallel-install clean-logs",
+                    "compress-build-logs unmerge-logs splitdebug compressdebug fail-clean",
+                    "unmerge-orphans getbinpkg -news"]
+emerge_default_opts = '--quiet-build --verbose --keep-going'
+default_makeopts = ('-j'+str(num_jobs)+' --load-average '+str(max_la))
+
 if make_conf:
-  chap('PORTAGE_SSH_OPTS', make_conf.get('portage_ssh_opts', ''))
-  if make_conf.get('makeopts', False):
-    chap('MAKEOPTS', make_conf['makeopts'])
-  else:
-    chap('FEATURES', ' '.join(make_conf.get('features', default_features)))
-    chap('EMERGE_DEFAULT_OPTS', make_conf.get('emerge_default_opts', '--quiet-build --verbose --keep-going'))
-    chap('VIDEO_CARDS', make_conf.get('video_cards', ''))
+  chap('MAKEOPTS', make_conf.get('makeopts', default_makeopts))
+  chap('FEATURES', ' '.join(make_conf.get('features', default_features)))
+  chap('EMERGE_DEFAULT_OPTS', make_conf.get('emerge_default_opts', emerge_default_opts))
   if make_conf.get('other', {'USE_SALT': ''}):
     for k, v in make_conf['other'].items():
       chap(k, v)
 else:
+  chap('MAKEOPTS', default_makeopts)
   chap('FEATURES', ' '.join(default_features))
-  chap('EMERGE_DEFAULT_OPTS', '--quiet-build --verbose --keep-going')
-
+  chap('EMERGE_DEFAULT_OPTS', emerge_default_opts)
+  chap('USE_SALT', '')
 
 if arch_conf:
   chap('CHOST', arch_conf['CHOST'])
   chap('CFLAGS', arch_conf['CFLAGS'])
-  if arch_conf.get('CXXFLAGS', False):
-    l_cxxflags = arch_conf['CXXFLAGS']
-  else:
-    l_cxxflags = '${CFLAGS}'
-  chap('CXXFLAGS', l_cxxflags)
+  chap('CXXFLAGS', arch_conf.get('CXXFLAGS', '${CFLAGS}'))
   # Should I also check for osarch here?
   if (__grains__['cpuarch'] == 'x86_64' or __grains__['cpuarch'] == 'amd64'
       or __grains__['cpuarch'] == 'i686' or __grains__['cpuarch'] == 'x86'):
