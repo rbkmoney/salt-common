@@ -20,10 +20,9 @@ php:
   pkg.installed:
     - pkgs:
 {% if grains['os_family'] == 'Gentoo' %}
-      - dev-lang/php: ">=5.6.17:{{ php_version }}[fpm,curl,bcmath,embed,gd,inifile,mysql,mysqli,pcntl,pdo,snmp,sysvipc,xmlrpc,xmlreader,xmlwriter,xslt]"
-      - app-eselect/eselect-php: ">=0.7.1-r4[fpm]"
+      - dev-lang/php: ">=5.6.30:{{ php_version }}[fpm,curl,bcmath,embed,gd,inifile,mysql,mysqli,pcntl,pdo,sqlite,snmp,sysvipc,xmlrpc,xmlreader,xmlwriter,xslt]"
+      - app-eselect/eselect-php: ">=0.9.2[fpm]"
       - virtual/httpd-php: ">=5.6:{{ php_version }}"
-      - app-emacs/php-mode
     - watch:
       - augeas: manage-php-ini-version
 {% endif %}
