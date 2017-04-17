@@ -17,8 +17,9 @@ gentoo:
     - force_clone: True
     - force_checkout: True
   {% endif %}
+
+/etc/portage/repos.conf/gentoo.conf:
   ini.options_present:
-    - name: '/etc/portage/repos.conf/gentoo.conf'
     - sections:
         DEFAULT:
           main-repo: gentoo
@@ -28,3 +29,7 @@ gentoo:
           sync-type: git
           clone-depth: 1
           sync-uri: '{{ sync_uri }}'
+  ini.options_absent:
+    - sections:
+        gentoo:
+          - sync-depth

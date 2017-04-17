@@ -18,8 +18,9 @@ include:
     - force_clone: True
     - force_checkout: True
   {% endif %}
+
+/etc/portage/repos.conf/{{ repo_name }}.conf:
   ini.options_present:
-    - name: '/etc/portage/repos.conf/{{ repo_name }}.conf'
     - sections:
         {{ repo_name }}:
           location: '/var/lib/layman/{{ repo_name }}'
@@ -27,3 +28,7 @@ include:
           sync-type: git
           clone-depth: 1
           sync-uri: '{{ sync_uri }}'
+  ini.options_absent:
+    - sections:
+        {{ repo_name }}:
+          - sync-depth
