@@ -28,7 +28,10 @@ include:
           sync-type: git
           clone-depth: 1
           sync-uri: '{{ sync_uri }}'
+
+/etc/portage/repos.conf/{{ repo_name }}.conf-absent:
   ini.options_absent:
+    - name: /etc/portage/repos.conf/{{ repo_name }}.conf
     - sections:
         {{ repo_name }}:
           - sync-depth

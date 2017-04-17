@@ -29,7 +29,10 @@ gentoo:
           sync-type: git
           clone-depth: 1
           sync-uri: '{{ sync_uri }}'
+
+/etc/portage/repos.conf/gentoo.conf-absent:
   ini.options_absent:
+    - name: /etc/portage/repos.conf/gentoo.conf
     - sections:
         gentoo:
           - sync-depth
