@@ -26,5 +26,5 @@ gentoo:
           location: '/usr/portage'
           auto-sync: {{ 'false' if ('read-only-repos' in grains and grains['read-only-repos'] == True) else 'true' }}
           sync-type: git
-          sync-depth: 1
+          clone-depth: 1
           sync-uri: '{{ sync_uri }}'
