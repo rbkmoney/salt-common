@@ -17,6 +17,8 @@ util-linux:
       - tty-helpers
       - fdformat
 
+# Add mailutils here
+
 utils-latest:
   pkg.latest:
     - require:

@@ -1,21 +1,9 @@
-# -*- mode: yaml -*-
 
 openssl:
   pkg.installed:
     - refresh: False
-    - name: dev-libs/openssl
-    - version: "~>=1.0.2d[-bindist,static-libs,tls-heartbeat,zlib]"
+    - pkgs:
+      - dev-libs/openssl: "~>=1.0.2k[-bindist,sctp,static-libs,tls-heartbeat,zlib]"
+      - sys-libs/zlib: ">=1.2.11[static-libs,minizip]"
     - require:
-      - portage_config: sys-libs/zlib
       - portage_config: app-misc/c_rehash
-
-sys-libs/zlib:
-  portage_config.flags:
-    - use:
-      - static-libs
-      - minizip
-
-app-misc/c_rehash:
-  portage_config.flags:
-    - accept_keywords:
-      - ~*
