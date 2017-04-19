@@ -1,13 +1,14 @@
 {% set arch_conf = salt['pillar.get']('arch_conf', False) %}
-{% set gcc_version = salt['pillar.get']('gcc:version', '4.9.4') %}
-
+{% set gcc_version = salt['pillar.get']('gcc:version', '5.4.0-r3') %}
+{% set gcc_profile = arch_conf['CHOST'] + '-' + gcc_version.split('-')[0] %}
 gcc:
   pkg.installed:
     - pkgs:
       - sys-devel/gcc: '~={{ gcc_version }}[graphite,vtv,go]'
 
 gcc-profile:
-  cmd.wait:
-    - name: gcc-config -f {{ arch_conf['CHOST'] + '-' + gcc_version }}
+  cmd.run:
+    - name: gcc-config -f {{ gcc_profile }}
+    - onlyif: "test \"$(gcc-config -c)\" != {{ gcc_profile }}"
     - watch:
       - pkg: gcc
