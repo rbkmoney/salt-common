@@ -4,6 +4,7 @@ include:
   - augeas.lenses
   - logrotate
 
+# TODO: fixed nginx version from pillar data, other configuration options from there too.
 {% set worker_processes = salt['grains.get']('num_cpus', 2) -%}
 {% if worker_processes < 1 -%}
 {% set worker_processes = 2 -%}
@@ -32,6 +33,7 @@ manage-nginx-modules:
     - require:
       - file: augeas-makeconf
 
+# TODO: move this to separate file
 libpcre:
   portage_config.flags:
     - name: dev-libs/libpcre
@@ -76,7 +78,7 @@ nginx-reload:
   
 /etc/nginx/nginx.conf:
   file.managed:
-    - source: salt://nginx/nginx.conf.tpl
+    - source: salt://nginx/files/nginx.conf.tpl
     - template: jinja
     - defaults:
         worker_processes: {{ worker_processes }}
@@ -90,30 +92,28 @@ nginx-reload:
     - mode: 755
     - user: root
     - group: root
-    - require:
-      - file: /etc/nginx/listen
-      - file: /etc/nginx/listen_ssl
-      - file: /etc/nginx/cf_real_ip.conf
-      - file: /etc/nginx/includes/
-      - file: /etc/nginx/vhosts.d/
 
 /etc/nginx/listen:
     file.managed:
-    - source: salt://nginx/listen.conf
+    - source: salt://nginx/files/listen.conf
     - mode: 755
     - user: root
     - group: root
+    - watch_in:
+      - service: nginx
 
 /etc/nginx/listen_ssl:
     file.managed:
-    - source: salt://nginx/listen_ssl.conf
+    - source: salt://nginx/files/listen_ssl.conf
     - mode: 755
     - user: root
     - group: root
+    - watch_in:
+      - service: nginx
 
 /etc/nginx/cf_real_ip.conf:
   file.managed:
-    - source: salt://nginx/real_ip.conf.tpl
+    - source: salt://nginx/files/real_ip.conf.tpl
     - template: jinja
     - defaults:
         ips:
@@ -140,14 +140,18 @@ nginx-reload:
     - mode: 755
     - user: root
     - group: root
+    - watch_in:
+      - service: nginx-reload
 
 /etc/nginx/includes/:
   file.recurse:
-    - source: salt://nginx/includes
+    - source: salt://nginx/files/includes
     - dir_mode: 755
     - file_mode: 644
     - user: root
     - group: root
+    - watch_in:
+      - service: nginx-reload
 
 /etc/nginx/main.d/:
   file.directory:
@@ -155,6 +159,8 @@ nginx-reload:
     - mode: 755
     - user: root
     - group: root
+    - watch_in:
+      - service: nginx
 
 /etc/nginx/conf.d/:
   file.directory:
@@ -162,6 +168,21 @@ nginx-reload:
     - mode: 755
     - user: root
     - group: root
+    - watch_in:
+      - service: nginx
+
+{% for f in ('tls-client', 'elastic-json-log')%}
+/etc/nginx/conf.d/{{ f }}.conf:
+  file.managed:
+    - source: salt://nginx/files/conf.d/{{ f }}.conf
+    - mode: 644
+    - user: root
+    - group: root
+    - require:
+      - file: /etc/nginx/conf.d/
+    - watch_in:
+      - service: nginx-reload
+{% endfor %}
 
 /etc/nginx/vhosts.d/:
   file.directory:
@@ -176,10 +197,12 @@ nginx-reload:
     - mode: 755
     - user: nginx
     - group: nginx
+    - watch_in:
+      - service: nginx
 
 /etc/logrotate.d/nginx:
   file.managed:
-    - source: salt://nginx/nginx.logrotate
+    - source: salt://nginx/files/nginx.logrotate
     - mode: 644
     - user: root
     - group: root
