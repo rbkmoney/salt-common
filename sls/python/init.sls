@@ -1,4 +1,3 @@
-# -*- mode: yaml -*-
 include:
   - python.python2
   - python.python3

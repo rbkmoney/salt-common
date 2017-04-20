@@ -27,5 +27,7 @@ monitoring-plugins:
       {% for use in ('mysql', 'postgres', 'samba', 'ldap', 'game') %}
       {% if use in extra_use %}
       - {{ use }}
+      {% else %}
+      - "-{{ use }}"
       {% endif %}
       {% endfor %}
