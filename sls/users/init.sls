@@ -5,6 +5,7 @@
   user.present:
     - name: {{ username }}
     - fullname: {{ data.get('fullname', '') }}
+    - system: {{ data.get('system', False) }}
     {% if data.get('uid', False) != False %}
     - uid: {{ data['uid'] }}
     {% endif %}
