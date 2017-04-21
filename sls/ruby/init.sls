@@ -10,7 +10,7 @@ set-ruby-targets:
     - changes:
       - set RUBY_TARGETS '"ruby21"'
     - require:
-      - augeas: augeas-makeconf
+      - file: augeas-makeconf
 
 pkg_rubytools:
   pkg.latest:
