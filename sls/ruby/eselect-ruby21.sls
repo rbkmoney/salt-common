@@ -5,4 +5,4 @@ include:
 eselect-ruby21:
   eselect.set:
     - name: ruby
-    - target: 'ruby21 (with Rubygems)'
+    - target: 'ruby21'
