@@ -37,6 +37,7 @@ collectd:
       - file: /etc/conf.d/collectd
       - file: /etc/collectd/collectd.conf
       - file: /etc/collectd/types.db
+      - file: /etc/collectd/conf.d/
   pkg.latest:
     - pkgs:
       - app-admin/collectd: '~[udev,xfs]'
@@ -100,3 +101,11 @@ collectd:
     - watch_in:
       - service: collectd
 {% endif %}
+
+/etc/collectd/conf.d/:
+  file.directory:
+    - create: True
+    - mode: 755
+    - user: root
+    - group: collectd
+

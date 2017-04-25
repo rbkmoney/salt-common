@@ -1,10 +1,11 @@
+{% set collectd_conf = salt['pillar.get']('collectd:conf', {}) %}
 {% set configured_plugins = salt['pillar.get']('collectd:configured-plugins', '') %}
 {% set p_aggregation = salt['pillar.get']('collectd:aggregation', False) -%}
 {% set p_network = salt['pillar.get']('collectd:network', False) -%}
 {% set p_mysql = salt['pillar.get']('collectd:mysql', False) -%}
 {% set p_write_graphite = salt['pillar.get']('collectd:write_graphite', False) -%}
 {% set p_write_riemann = salt['pillar.get']('collectd:write_riemann', False) -%}
-FQDNLookup   true
+FQDNLookup {{ collectd_conf.get('FQDNLookup', 'true') }}
 BaseDir     "/var/lib/collectd"
 PIDFile     "/run/collectd/collectd.pid"
 TypesDB     "/etc/collectd/types.db"
@@ -15,7 +16,7 @@ TypesDB     "/etc/collectd/types.db"
 # when an appropriate <Plugin ...> block is encountered.                     #
 # Disabled by default.                                                       #
 #----------------------------------------------------------------------------#
-AutoLoadPlugin false
+AutoLoadPlugin {{ 'true' if 'include' in configured_plugins else 'false' }}
 
 #----------------------------------------------------------------------------#
 # Interval at which to query values. This may be overwritten on a per-plugin #
@@ -26,9 +27,9 @@ AutoLoadPlugin false
 #----------------------------------------------------------------------------#
 Interval     10
 
-# Timeout      2
-# ReadThreads  5
-# WriteThreads 5
+Timeout {{ collectd_conf.get('Timeout', 2) }}
+ReadThreads {{ collectd_conf.get('ReadThreads', 5) }}
+WriteThreads {{ collectd_conf.get('WriteThreads', 5) }}
 
 # Limit the size of the write queue. Default is no limit. Setting up a limit is
 # recommended for servers handling a high volume of traffic.
@@ -45,6 +46,10 @@ Interval     10
 LoadPlugin syslog
 ##LoadPlugin logfile
 
+<Plugin syslog>
+  LogLevel info
+</Plugin>
+
 #<Plugin logfile>
 #	LogLevel info
 #	File STDOUT
@@ -52,9 +57,6 @@ LoadPlugin syslog
 #	PrintSeverity false
 #</Plugin>
 
-<Plugin syslog>
-	LogLevel info
-</Plugin>
 ##############################################################################
 # LoadPlugin section                                                         #
 #----------------------------------------------------------------------------#
@@ -157,18 +159,22 @@ LoadPlugin nginx
 ##LoadPlugin onewire
 ##LoadPlugin openvpn
 ##LoadPlugin oracle
-##<LoadPlugin perl>
-##  Globals true
-##</LoadPlugin>
+{% if "perl" in configured_plugins %}
+<LoadPlugin perl>
+  Globals true
+</LoadPlugin>
+{% endif %}
 ##LoadPlugin pinba
 # LoadPlugin ping
 ##LoadPlugin postgresql
 ##LoadPlugin powerdns
 LoadPlugin processes
 ##LoadPlugin protocols
-# <LoadPlugin python>
-#   Globals true
-# </LoadPlugin>
+{% if "python" in configured_plugins %}
+<LoadPlugin python>
+  Globals true
+</LoadPlugin>
+{% endif %}
 ##LoadPlugin redis
 ##LoadPlugin routeros
 #LoadPlugin rrdcached
@@ -366,48 +372,6 @@ LoadPlugin xencpu
 #    </XPath>
 #  </URL>
 #</Plugin>
-{% endif %}
-{% if "dbi" in configured_plugins %}
-<Plugin dbi>
-#	<Query "num_of_customers">
-#		Statement "SELECT 'customers' AS c_key, COUNT(*) AS c_value FROM customers_tbl"
-#		<Result>
-#			Type "gauge"
-#			InstancesFrom "c_key"
-#			ValuesFrom "c_value"
-#		</Result>
-#	</Query>
-	# <Query "jabberd-online">
-	# 	Statement "SELECT `collection-owner`, COUNT(*) AS c_value
-	# 	 FROM `status` WHERE status='online'"
-	# 	<Result>
-	# 		Type "gauge"
-	# 		InstancePrefix "jabberd-online"
-	# 		#InstancesFrom "collection-owner"
-	# 		ValuesFrom "c_value"
-	# 	</Result>
-	# </Query>
-	# <Database "jabberdb">
-	# 	Driver "mysql"
-	# 	DriverOption "host" "localhost"
-	# 	DriverOption "username" "jabberd"
-	# 	DriverOption "password" "VdUB5H5VASvHnHpn"
-	# 	DriverOption "dbname" "jabberdb"
-	# 	SelectDB "jabberdb"
-	# 	Query "jabberd-online"
-	# 	#Query "..."
-	# </Database>
-#	<Database "customers_db">
-#		Driver "mysql"
-#		DriverOption "host" "localhost"
-#		DriverOption "username" "collectd"
-#		DriverOption "password" "AeXohy0O"
-#		DriverOption "dbname" "custdb0"
-#		#SelectDB "custdb0"
-#		Query "num_of_customers"
-#		#Query "..."
-#	</Database>
-</Plugin>
 {% endif %}
 
 <Plugin df>
@@ -1487,4 +1451,10 @@ LoadPlugin xencpu
 #    </Type>
 #  </Host>
 #</Plugin>
+{% endif %}
+
+{% if 'include' in configured_plugins %}
+<Include "/etc/collectd/conf.d">
+  Filter "*.conf"
+</Include>
 {% endif %}
