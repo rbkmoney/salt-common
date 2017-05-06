@@ -25,7 +25,7 @@ AutoLoadPlugin {{ 'true' if 'include' in configured_plugins else 'false' }}
 #       Interval 60                                                          #
 #   </LoadPlugin>                                                            #
 #----------------------------------------------------------------------------#
-Interval     10
+Interval 10
 
 Timeout {{ collectd_conf.get('Timeout', 2) }}
 ReadThreads {{ collectd_conf.get('ReadThreads', 5) }}
