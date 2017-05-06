@@ -1,5 +1,5 @@
 include:
-  - openssl
+  - ssl.openssl
 
 erlang:
   pkg.installed:

@@ -1,5 +1,5 @@
 include:
-  - openssl
+  - ssl.openssl
 
 ">=dev-lang/erlang-18":
   portage_config.flags:
