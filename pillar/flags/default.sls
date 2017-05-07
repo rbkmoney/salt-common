@@ -15,4 +15,4 @@ make_conf:
     - getbinpkg
     - -news
   other:
-      USE_SALT: "efi emacs smp multitarget sqlite sctp xattr syslog logrotate ssl openssl vhosts symlink device-mapper bash-completion -gnutls -tcpd"
+      USE_SALT: "smp multitarget sqlite sctp xattr syslog logrotate ssl openssl vhosts device-mapper bash-completion -gnutls -tcpd"
