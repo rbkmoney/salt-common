@@ -2,7 +2,7 @@
 {% set mirror_types = salt['pillar.get']('gentoo-mirror:types', []) %}
 {% set mirror_cache = salt['pillar.get']('gentoo-mirror:proxy-cache', {}) %}
 {% set mirror_servers = mirror_cache['servers'] %}
-{% set package_repos = salt['pillar.get']('gento-mirror:gentoo-package-repos', []) %}
+{% set package_repos = salt['pillar.get']('gentoo-mirror:gentoo-package-repos', []) %}
 {% set proxy_scheme = 'https' if ssl else 'http' %}
 proxy_cache_path /var/cache/nginx/gentoo-mirror levels=1:2
 keys_zone=gentoo-mirror:{{ mirror_cache.get('hash-size', '32m') }}
