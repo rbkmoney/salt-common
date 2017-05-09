@@ -8,16 +8,18 @@ include:
 
 /etc/nginx/includes/gentoo-miror-proxy-params.conf:
   file.managed:
-    - source: salt://gentoo-mirrors/files/gentoo-miror-proxy-params.conf
+    - source: salt://gentoo-mirrors/files/gentoo-mirror-proxy-params.conf
     - mode: 644
     - user: root
     - group: root
+    - require:
+      - file: /etc/nginx/includes/
     - watch_in:
       - service: nginx-reload
 
 /etc/nginx/vhosts.d/gentoo-mirror-cache.conf:
   file.managed:
-    - source: salt://gentoo-mirrors/files/gentoo_mirror-cache.nginx.conf.tpl
+    - source: salt://gentoo-mirrors/files/gentoo-mirror-cache.nginx.conf.tpl
     - template: jinja
     - defaults:
         ssl: True
