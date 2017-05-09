@@ -1,7 +1,7 @@
 #!pydsl
 # -*- mode: python -*-
 include("augeas.lenses")
-mirror_host = __salt__['pillar.get']('gentoo_mirror_host', 'gentoo.bakka.su')
+mirror_host = __salt__['pillar.get']('gentoo_mirror_host', 'gentoo-mirror.bakka.su')
 make_conf = __salt__['pillar.get']('make_conf', False)
 arch_conf = __salt__['pillar.get']('arch_conf', False)
 
