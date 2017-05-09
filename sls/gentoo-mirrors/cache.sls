@@ -32,6 +32,6 @@ include:
     - require:
       - file: /etc/ssl/nginx/gentoo-mirror/certificate.pem
       - file: /etc/ssl/nginx/gentoo-mirror/privkey.pem
-      - file: /etc/nginx/includes/gentoo-miror-proxy-params.conf
+      - file: /etc/nginx/includes/gentoo-mirror-proxy-params.conf
     - watch_in:
       - service: nginx-reload
