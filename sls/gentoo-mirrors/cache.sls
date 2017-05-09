@@ -6,7 +6,7 @@ include:
 {% set dst_host = salt['pillar.get']('gentoo-mirror:dst-host',
       'gentoo.'+salt['grains.get']('domain', 'localdomain')) %}
 
-/etc/nginx/includes/gentoo-miror-proxy-params.conf:
+/etc/nginx/includes/gentoo-mirror-proxy-params.conf:
   file.managed:
     - source: salt://gentoo-mirrors/files/gentoo-mirror-proxy-params.conf
     - mode: 644

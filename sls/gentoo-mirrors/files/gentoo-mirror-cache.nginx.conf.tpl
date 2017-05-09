@@ -3,7 +3,7 @@
 {% set mirror_cache = salt['pillar.get']('gentoo-mirror:proxy-cache', {}) %}
 {% set mirror_servers = mirror_cache['servers'] %}
 {% set proxy_scheme = 'https' if ssl else 'http' %}
-proxy_cache_path /var/cache/nginx/gentoo-mirror levels=1:3
+proxy_cache_path /var/cache/nginx/gentoo-mirror levels=1:2
 keys_zone=gentoo-mirror:{{ mirror_cache.get('hash-size', '32m') }}
 inactive={{ mirror_cache.get('inactive', '1d') }}
 max_size={{ mirror_cache.get('max-size', '8192m') }};
