@@ -40,14 +40,14 @@ server {
     
     {% if 'gentoo-distfiles' in mirror_types %}
     location ^~ /gentoo-distfiles/ {
-        include includes/gentoo-miror-proxy-params.conf;
+        include includes/gentoo-mirror-proxy-params.conf;
         proxy_pass {{ proxy_scheme }}://gentoo-distfiles-servers;
     }
     {% endif %}
     {% if 'packages' in mirror_types %}
     {% for inst in package_repos %}
     location ^~ /gentoo-packages/{{ inst['arch']+'/'+inst['cpu_arch'] }}/packages/ {
-        include includes/gentoo-miror-proxy-params.conf;
+        include includes/gentoo-mirror-proxy-params.conf;
         proxy_pass {{ proxy_scheme }}://gentoo-{{ inst['arch']+'-'+inst['cpu_arch'] }}-packages-servers;
     }
     {% endfor %}
