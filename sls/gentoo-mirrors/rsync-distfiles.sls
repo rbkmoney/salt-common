@@ -1,7 +1,7 @@
 # -*- mode: yaml -*-
 include:
   - nginx
-  - gentoo-mirror.ssl-nginx
+  - gentoo-mirrors.ssl-nginx
   - rsyncd
   - cron
 

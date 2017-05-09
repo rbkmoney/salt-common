@@ -1,7 +1,7 @@
 # -*- mode: yaml -*-
 include:
   - nginx
-  - gentoo-mirror.ssl-nginx
+  - gentoo-mirrors.ssl-nginx
 
 {% set dst_host = salt['pillar.get']('gentoo-mirror:dst-host',
       'gentoo.'+salt['grains.get']('domain', 'localdomain')) %}
