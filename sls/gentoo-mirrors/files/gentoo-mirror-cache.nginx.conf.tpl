@@ -46,6 +46,7 @@ server {
     
     {% if 'gentoo-distfiles' in mirror_types %}
     location ^~ /gentoo-distfiles/ {
+        proxy_set_header Host {{ src_host }};
         include includes/gentoo-mirror-proxy-params.conf;
         proxy_pass {{ proxy_scheme }}://gentoo-distfiles-servers;
     }
