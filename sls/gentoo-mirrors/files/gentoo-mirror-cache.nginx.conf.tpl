@@ -1,4 +1,10 @@
 # -*- mode: nginx -*-
+{% set src_host = salt['pillar.get']('gentoo-mirror:src-host',
+    'gentoo.'+salt['grains.get']('domain', 'localdomain')) %}
+
+{% set server_name = salt['pillar.get']('gentoo-mirror:server-name',
+      ['gentoo.'+salt['grains.get']('domain', 'localdomain')]) %}
+
 {% set mirror_types = salt['pillar.get']('gentoo-mirror:types', []) %}
 {% set mirror_cache = salt['pillar.get']('gentoo-mirror:proxy-cache', {}) %}
 {% set mirror_servers = mirror_cache['servers'] %}
@@ -34,7 +40,7 @@ server {
     ssl_certificate {{ ssl_cert_path }};
     ssl_certificate_key {{ ssl_key_path }};
     {% endif %}
-    server_name {{ server_name }};
+    server_name {% for name in server_name %}{{ name }} {% endfor %};
     
     include includes/errors.conf;
     
@@ -47,6 +53,7 @@ server {
     {% if 'packages' in mirror_types %}
     {% for inst in package_repos %}
     location ^~ /gentoo-packages/{{ inst['arch']+'/'+inst['cpu_arch'] }}/packages/ {
+        proxy_set_header Host {{ src_host }};
         include includes/gentoo-mirror-proxy-params.conf;
         proxy_pass {{ proxy_scheme }}://gentoo-{{ inst['arch']+'-'+inst['cpu_arch'] }}-packages-servers;
     }
