@@ -1,0 +1,6 @@
+# -*- mode: sh -*-
+UWSGI_LOG_FILE="/var/log/uwsgi.log"
+UWSGI_DIR=""
+UWSGI_USER="root"
+UWSGI_EMPEROR_PATH="/etc/uwsgi.d"
+UWSGI_EXTRA_OPTIONS="--ksm=10 --cap setgid,setuid" #--vassals-inherit /etc/uwsgi.d/layout.skel"
