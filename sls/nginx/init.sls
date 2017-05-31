@@ -191,6 +191,13 @@ nginx-reload:
     - user: root
     - group: root
 
+/usr/lib/nginx/modules/:
+  file.directory:
+    - create: True
+    - mode: 755
+    - user: root
+    - group: root
+
 /var/cache/nginx/:
   file.directory:
     - create: True

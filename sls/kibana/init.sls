@@ -25,7 +25,8 @@ kibana:
 
 'paxctl-ng-kibana':
   cmd.run:
-    - name: 'paxctl -cm /opt/kibana/node/bin/node'
+    - name: 'setfattr -n user.pax.flags -v "em" /opt/kibana/node/bin/node'
+    - unless: 'test $(getfattr -n user.pax.flags /opt/kibana/node/bin/node --only-values) == "em"'
     - onchange:
       - pkg: kibana
     - watch_in:
@@ -33,10 +34,8 @@ kibana:
 
 'paxctl-ng-kibana-onfail':
   cmd.run:
-    - name: 'service kibana stop; sleep 10; paxctl -cm /opt/kibana/node/bin/node'
+    - name: 'service kibana stop; sleep 10; paxctl-ng -em /opt/kibana/node/bin/node'
     - onfail:
       - cmd: paxctl-ng-kibana
     - watch_in:
       - service: kibana
-
-
