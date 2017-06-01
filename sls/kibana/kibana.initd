@@ -11,9 +11,14 @@ command_args="--config ${KIBANA_CONFIG} --log-file /var/log/kibana/kibana.json"
 start_stop_daemon_args="--user=\"${KIBANA_USER}\" --background --pidfile=\"${pidfile}\""
 
 start_pre() {
-        checkpath -d -o "${KIBANA_USER}" -m750 "/var/log/kibana"
         checkpath -d -o "${KIBANA_USER}" -m755 "/run/kibana"
-        checkpath -f -o "${KIBANA_USER}" -m644 "/opt/kibana/optimize/.babelcache.json"
+        checkpath -d -o "${KIBANA_USER}" -m750 "/var/log/kibana" \
+		  "/opt/kibana/optimize" \
+		  "/opt/kibana/optimize/bundles"
+	checkpath -d -o "${KIBANA_USER}" -m755
+        checkpath -f -o "${KIBANA_USER}" -m644 \
+		  "/opt/kibana/optimize/.babelcache.json" \
+		  /opt/kibana/optimize/bundles/*
 }
 
 stop() {
