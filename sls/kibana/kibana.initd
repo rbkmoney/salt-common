@@ -18,7 +18,7 @@ start_pre() {
 	checkpath -d -o "${KIBANA_USER}" -m755
         checkpath -f -o "${KIBANA_USER}" -m644 \
 		  "/opt/kibana/optimize/.babelcache.json" \
-		  /opt/kibana/optimize/bundles/*
+		  /opt/kibana/optimize/bundles/*.{js,json,css}
 }
 
 stop() {
