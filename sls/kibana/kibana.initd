@@ -13,11 +13,10 @@ start_stop_daemon_args="--user=\"${KIBANA_USER}\" --background --pidfile=\"${pid
 start_pre() {
         checkpath -d -o "${KIBANA_USER}" -m755 "/run/kibana"
         checkpath -d -o "${KIBANA_USER}" -m750 "/var/log/kibana" \
-		  "/opt/kibana/optimize" \
-		  "/opt/kibana/optimize/bundles"
+		  "/opt/kibana/optimize" "/opt/kibana/optimize/bundles"
         checkpath -f -o "${KIBANA_USER}" -m644 \
 		  "/opt/kibana/optimize/.babelcache.json" \
-		  /opt/kibana/optimize/bundles/*.{js,css,eot}
+		  $(find /opt/kibana/optimize/bundles -type f -maxdepth 1)
 }
 
 stop() {
