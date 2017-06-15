@@ -1,7 +1,7 @@
 include:
   - ceph.pkg
 
-/etc/init.d/ragosgw:
+/etc/init.d/radosgw:
   file.managed:
     - source: salt://ceph/files/radosgw.initd
     - mode: 755
