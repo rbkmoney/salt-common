@@ -188,7 +188,7 @@ osd op threads = {{ ceph_osd.get('op-threads', 4) }}
 osd crush update on start = {{ 'true' if ceph_osd.get('crush-update-on-start', True) else 'false' }}
 {% endif %}
 
-{% for id,data in ceph_conf['osd-table'].items() %}
+{% for id,data in ceph_conf.get('osd-table', {}).items() %}
 [osd.{{ id }}]
   {% for k,v in data.items() %}
   {{ k }} = {{ v }}
@@ -223,7 +223,7 @@ rbd cache writethrough until flush = true
 {% endif %}
 {% endif %}
 
-{% for id,data in ceph_conf['client-table'].items() %}
+{% for id,data in ceph_conf('client-table', {}).items() %}
 [client.{{ id }}]
   {% for k,v in data.items() %}
   {{ k }} = {{ v }}
