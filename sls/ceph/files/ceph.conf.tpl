@@ -33,7 +33,7 @@
 ### http://ceph.com/docs/master/rados/configuration/general-config-ref/
 fsid = {{ ceph_conf['fsid'] }}
 public network = {{ ceph_conf['public-network'] }}
-cluster network = {{ ceph_conf['private-network'] }}
+cluster network = {{ ceph_conf['cluster-network'] }}
 
 # If set, when the Ceph Storage Cluster starts, Ceph sets the max open fds
 # at the OS level (i.e., the max # of file descriptors).
