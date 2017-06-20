@@ -11,3 +11,9 @@ include:
     - require:
       - pkg: ceph
 
+radosgw:
+  service.running:
+    - enable: True
+    - watch:
+      - file: /etc/ceph/ceph.conf
+      - file: /etc/init.d/radosgw
