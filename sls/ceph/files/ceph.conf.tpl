@@ -223,7 +223,7 @@ rbd cache writethrough until flush = true
 {% endif %}
 {% endif %}
 
-{% for id,data in ceph_conf('client-table', {}).items() %}
+{% for id,data in ceph_conf.get('client-table', {}).items() %}
 [client.{{ id }}]
   {% for k,v in data.items() %}
   {{ k }} = {{ v }}
