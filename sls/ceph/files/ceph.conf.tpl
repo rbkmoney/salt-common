@@ -195,7 +195,7 @@ osd crush update on start = {{ 'true' if ceph_osd.get('crush-update-on-start', T
   {% endfor %}
 {% endfor %}
 
-{% set ceph_cilent = ceph_conf.get('client', False) %}
+{% set ceph_client = ceph_conf.get('client', False) %}
 {% if ceph_client %}
 [client]
 
