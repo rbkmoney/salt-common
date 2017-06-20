@@ -11,9 +11,17 @@ include:
     - require:
       - pkg: ceph
 
-radosgw:
+
+{% for client in salt['pillar.get']('ceph:radosgw:clients', []) %}
+/etc/init.d/radosgw.{{ client }}:
+  file.symlink:
+    - target: /etc/init.d/radosgw
+
+radosgw.{{ client }}:
   service.running:
     - enable: True
     - watch:
       - file: /etc/ceph/ceph.conf
       - file: /etc/init.d/radosgw
+      - file: /etc/init.d/radosgw.{{ client }}
+{% endfor %}
