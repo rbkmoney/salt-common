@@ -108,6 +108,7 @@ debug mon = {{ ceph_mon_debug.get('mon', 20) }}
 debug paxos = {{ ceph_mon_debug.get('paxos', 20) }}
 debug auth = {{ ceph_mon_debug.get('auth', 20) }}
 {% endif %}
+{% endif %}
 
 {% for id,data in ceph_conf['mon-table'].items() %}
 [mon.{{ id }}]
