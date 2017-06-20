@@ -1,5 +1,6 @@
 include:
   - ceph.pkg
+  - ceph.conf
 
 /etc/init.d/radosgw:
   file.managed:
