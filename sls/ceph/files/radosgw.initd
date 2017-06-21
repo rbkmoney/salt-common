@@ -6,7 +6,7 @@ daemon_id="${RC_SVCNAME#radosgw.}"
 command="/usr/bin/radosgw"
 pidfile="/run/ceph/client.${daemon_id}.pid"
 command_args="-n client.${daemon_id} --pid-file ${pidfile} -c ${ceph_conf}"
-start_stop_daemon_args="--user ceph --group ceph"
+start_stop_daemon_args="--user ceph --group ceph -b -1 /var/log/ceph/stdout.log -2 /var/log/ceph/stderr.log"
 
 depend() {
         after net ntpd ntp-client chronyd
