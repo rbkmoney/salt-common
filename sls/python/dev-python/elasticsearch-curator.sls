@@ -1,11 +1,12 @@
 include:
-  - python.dev-python.elasticsearch-py-24
+  - python.dev-python.click
+  - python.dev-python.elasticsearch-py
 
 dev-python/elasticsearch-curator:
   pkg.latest:
     - pkgs:
-      - dev-python/elasticsearch-curator: "~>=4.2.6"
-      - dev-python/elasticsearch-py: "~>=2.4"
+      - dev-python/elasticsearch-curator: "~>=5.0.4"
+      - dev-python/elasticsearch-py: "~>=5.4.0"
     - require:
       - pkg: dev-python/elasticsearch-py
       - portage_config: dev-python/elasticsearch-curator
