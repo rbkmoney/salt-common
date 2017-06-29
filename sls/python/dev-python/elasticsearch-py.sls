@@ -8,7 +8,7 @@ dev-python/elasticsearch-py:
     - require:
       - portage_config: dev-python/elasticsearch-py
   portage_config.flags:
-    - name: >=dev-python/elasticsearch-py-5.2.0
+    - name: ">=dev-python/elasticsearch-py-5.4.0"
     - accept_keywords:
       - "~*"
 
