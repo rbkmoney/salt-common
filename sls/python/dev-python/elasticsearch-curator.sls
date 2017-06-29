@@ -8,7 +8,6 @@ dev-python/elasticsearch-curator:
       - dev-python/elasticsearch-curator: "~>=5.0.4"
       - dev-python/elasticsearch-py: "~>=5.4.0"
     - require:
-      - pkg: dev-python/elasticsearch-py
       - portage_config: dev-python/elasticsearch-curator
   portage_config.flags:
     - accept_keywords:
