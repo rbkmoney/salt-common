@@ -507,6 +507,9 @@ LoadPlugin xencpu
   IgnoreSelected true
 </Plugin>
 {% endif %}
+<Plugin memory>
+  ValuesPercentage true
+</Plugin>
 {% if "memcachec" in configured_plugins %}
 <Plugin memcachec>
 	<Page "plugin_instance">
