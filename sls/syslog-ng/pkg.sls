@@ -4,4 +4,4 @@ include:
 pkg_syslog-ng:
   pkg.installed:
     - pkgs:
-      - app-admin/syslog-ng: ">=3.7.3[caps,pact,json]"
+      - app-admin/syslog-ng: ">=3.7.3[caps,pacct,json]"
