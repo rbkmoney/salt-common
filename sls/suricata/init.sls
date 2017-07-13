@@ -16,7 +16,7 @@ include:
         {% for name,data in instances.items() %}
         {% for key in ('OPTS','LOG_FILE','USER','GROUP') %}
         {% if 'SURICATA_' + key in data %}
-        SURICATA_{{ key }}_{{ name }} = "{{ data['SURICATA_' + key] }}"
+        SURICATA_{{ key }}_{{ name }}="{{ data['SURICATA_' + key] }}"
         {% endif %}{% endfor %}{% endfor %}
 
 {% for name,data in instances.items() %}
@@ -38,7 +38,7 @@ include:
 
 suricata.{{ name }}:
   service.running:
-    - enabled: True
+    - enable: True
     - watch:
       - pkg: net-analyzer/suricata
       - file: /etc/conf.d/suricata
