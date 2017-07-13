@@ -1,47 +1,34 @@
-{% set suricata = salt['pillar.get']('suricata', {}) -%}
-{% set instances = suricata.get('instances', {}) -%}
+#!pydsl
+import yaml
 
-include:
-  - suricata.pkg
-  - augeas.lenses
+suricata = __salt__['pillar.get']('suricata', {})
+instances = suricata.get('instances', {})
 
-/etc/conf.d/suricata:
-  file.managed:
-    - mode: 644
-    - user: root
-    - group: root
-    - contents: |
-        # Managed by Salt
-        # Config file for /etc/init.d/suricata
-        {% for name,data in instances.items() %}
-        {% for key in ('OPTS','LOG_FILE','USER','GROUP') %}
-        {% if 'SURICATA_' + key in data %}
-        SURICATA_{{ key }}_{{ name }}="{{ data['SURICATA_' + key] }}"
-        {% endif %}{% endfor %}{% endfor %}
+include('suricata.pkg')
 
-{% for name,data in instances.items() %}
-/etc/suricata/suricata-{{ name }}.yaml:
-  file.serialize:
-    {% if data.get('conf', False) %}
-    - dataset_pillar: 'suricata:' + {{ instance }} + ':conf'
-    {% else %}
-    - dataset_pillar: 'suricata:conf'
-    {% endif %}
-    - formatter: yaml
-    - mode: 644
-    - user: root
-    - group: root
+confd_suricata = state('/etc/conf.d/suricata').file
+confd_contents="""# Managed by Salt
+# Config file for /etc/init.d/suricata"""
 
-/etc/init.d/suricata.{{ name }}:
-  file.symlink:
-    - target: /etc/init.d/suricata
+for name,data in instances.items():
+  for key in ('OPTS','LOG_FILE','USER','GROUP'):
+    if 'SURICATA_' + key in data:
+      confd_contents += '_'.join(('SURICATA', key, name)) + '="' + data['SURICATA_' + key] + '"\n'
 
-suricata.{{ name }}:
-  service.running:
-    - enable: True
-    - watch:
-      - pkg: net-analyzer/suricata
-      - file: /etc/conf.d/suricata
-      - file: /etc/init.d/suricata.{{ name }}
-      - file: /etc/suricata/suricata-{{ name }}.yaml
-{% endfor %}
+confd_suricata.managed(mode=644, user='root', group='root', contents=confd_contents)
+
+for name,data in instances.items():
+  suricata_yaml = state('/etc/suricata/suricata-' + name + '.yaml').file
+  initd_symlink = state('/etc/init.d/suricata.' + name).file
+  
+  suricata_yaml.managed(
+    mode=644, user='root', group='root',
+    contents='%YAML 1.1\n---\n' + yaml.dump(data['conf'] if 'conf' in data
+                                            else suricata['conf']))
+
+  initd_symlink.symlink(target='/etc/init.d/suricata')
+
+  state('suricata.' + name).\
+    service.running(enable=True).\
+    watch(state('net-analyzer/suricata').pkg,
+          confd_suricata, suricata_yaml, initd_symlink)
