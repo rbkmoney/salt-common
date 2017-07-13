@@ -30,26 +30,5 @@ for name,data in instances.items():
 
   state('suricata.' + name).\
     service.running(enable=True).\
-    watch(pkg='net-analyzer/suricata',
-          confd_suricata, suricata_yaml, initd_symlink)
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+    watch(confd_suricata, suricata_yaml, initd_symlink,
+          pkg='net-analyzer/suricata')
