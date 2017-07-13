@@ -8,7 +8,8 @@ include('suricata.pkg')
 
 confd_suricata = state('/etc/conf.d/suricata').file
 confd_contents="""# Managed by Salt
-# Config file for /etc/init.d/suricata"""
+# Config file for /etc/init.d/suricata
+"""
 
 for name,data in instances.items():
   for key in ('OPTS','LOG_FILE','USER','GROUP'):
