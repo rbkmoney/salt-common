@@ -32,11 +32,16 @@ include:
     - user: root
     - group: root
 
+/etc/init.d/suricata.{{ name }}:
+  file.symlink:
+    - target: /etc/init.d/suricata
+
 suricata.{{ name }}:
   service.running:
     - enabled: True
     - watch:
       - pkg: net-analyzer/suricata
       - file: /etc/conf.d/suricata
+      - file: /etc/init.d/suricata.{{ name }}
       - file: /etc/suricata/suricata-{{ name }}.yaml
 {% endfor %}
