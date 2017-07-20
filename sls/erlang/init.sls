@@ -4,4 +4,4 @@ include:
 erlang:
   pkg.installed:
     - pkgs:
-      - dev-lang/erlang: ">=19.1[smp,hipe,kpoll,sctp,odbc]"
+      - dev-lang/erlang: "~<20.0[smp,hipe,kpoll,sctp,odbc]"
