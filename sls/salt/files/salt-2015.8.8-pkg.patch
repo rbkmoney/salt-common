@@ -1,0 +1,145 @@
+--- /usr/lib/python2.7/site-packages/salt/states/pkg.py	2016-03-23 01:55:42.000000000 +0300
++++ pkg.py	2016-05-19 13:29:10.751952641 +0300
+@@ -130,7 +130,7 @@
+     comparison operator was passed, the comparison is assumed to be an "equals"
+     comparison, and "==" will be the operator returned.
+     '''
+-    match = re.match('^([<>])?(=)?([^<>=]+)$', pkgver)
++    match = re.match('^~?([<>])?(=)?([^<>=]+)$', pkgver)
+     if not match:
+         raise CommandExecutionError(
+             'Invalid version specification \'{0}\'.'.format(pkgver)
+@@ -1402,25 +1382,28 @@
+                 'changes': {},
+                 'result': False,
+                 'comment': 'The "sources" parameter is not supported.'}
+-    elif pkgs:
+-        desired_pkgs = list(_repack_pkgs(pkgs).keys())
+-        if not desired_pkgs:
++    
++    if pkgs:
++        pkgs = _repack_pkgs(pkgs)
++        if not pkgs:
+             # Badly-formatted SLS
+             return {'name': name,
+                     'changes': {},
+                     'result': False,
+                     'comment': 'Invalidly formatted "pkgs" parameter. See '
+                                'minion log.'}
++        desired_pkgs = pkgs.keys()
+     else:
+-        if isinstance(pkgs, list) and len(pkgs) == 0:
+-            return {
+-                'name': name,
+-                'changes': {},
+-                'result': True,
+-                'comment': 'No packages to install provided'
+-            }
+-        else:
+-            desired_pkgs = [name]
++        if isinstance(pkgs, list) and len(pkgs) == 0:
++            return {
++                'name': name,
++                'changes': {},
++                'result': True,
++                'comment': 'No packages to install provided'
++            }
++        else:
++            pkgs = {name: None}
++            desired_pkgs = [name]
+ 
+     cur = __salt__['pkg.version'](*desired_pkgs, **kwargs)
+     try:
+@@ -1453,49 +1428,60 @@
+     minion_os = __salt__['grains.item']('os')['os']
+ 
+     if minion_os == 'Gentoo' and watch_flags:
+-        for pkg in desired_pkgs:
+-            if not avail[pkg] and not cur[pkg]:
+-                msg = 'No information found for {0!r}.'.format(pkg)
+-                log.error(msg)
+-                problems.append(msg)
+-            else:
+-                if salt.utils.compare_versions(ver1=cur[pkg], oper='!=', ver2=avail[pkg], cmp_func=cmp_func):
++        for pkg, version in pkgs.items():
++            if cur[pkg]:
++                if salt.utils.compare_versions(ver1=cur[pkg], oper='!=', ver2=avail[pkg], cmp_func=cmp_func):
+                     targets[pkg] = avail[pkg]
+                 else:
++                    if version:
++                        target, flag_changes = __salt__['pkg.process_target'](pkg, version)
+                     if not cur[pkg] or __salt__['portage_config.is_changed_uses'](pkg):
+                         targets[pkg] = avail[pkg]
++                    
++                    
++            elif avail[pkg]:
++                targets[pkg] = avail[pkg]
++            else:
++                msg = 'No information found for {0!r}.'.format(pkg)
++                log.error(msg)
++                problems.append(msg)
+     else:
+         for pkg in desired_pkgs:
+             if pkg not in avail:
+                 if not cur.get(pkg):
+                     msg = 'No information found for \'{0}\'.'.format(pkg)
+                     log.error(msg)
+                     problems.append(msg)
+             elif not cur.get(pkg) \
+                     or salt.utils.compare_versions(ver1=cur[pkg], oper='<', ver2=avail[pkg], cmp_func=cmp_func):
+                 targets[pkg] = avail[pkg]
+ 
+     if problems:
+         return {
+             'name': name,
+             'changes': {},
+             'result': False,
+             'comment': ' '.join(problems)
+         }
+ 
+     if targets:
+         # Find up-to-date packages
+-        if not pkgs:
+-            # There couldn't have been any up-to-date packages if this state
+-            # only targeted a single package and is being allowed to proceed to
+-            # the install step.
+-            up_to_date = []
+-        else:
+-            up_to_date = [x for x in pkgs if x not in targets]
++        up_to_date = []
++        if pkgs:
++            for x in pkgs:
++                if not isinstance(x, basestring):
++                    # For the awful list of dicts case.
++                    x = x.keys()[0]
++                if x not in targets:
++                    up_to_date += x
++
++        # There couldn't have been any up-to-date packages if this state
++        # only targeted a single package and is being allowed to proceed to
++        # the install step.
+ 
+         if __opts__['test']:
+             to_be_upgraded = ', '.join(sorted(targets))
+             comment = ['The following packages are set to be installed/upgraded: {0}'.format(to_be_upgraded)]
+             if up_to_date:
+                 up_to_date_nb = len(up_to_date)
+                 if up_to_date_nb <= 10:
+@@ -1521,12 +1516,15 @@
+         try:
+             # No need to refresh, if a refresh was necessary it would have been
+             # performed above when pkg.latest_version was run.
+-            changes = __salt__['pkg.install'](name,
++            changes = {}
++            if 'flag_changes' in locals():
++                changes.update(flag_changes)
++            changes.update(__salt__['pkg.install'](name,
+                                               refresh=False,
+                                               fromrepo=fromrepo,
+                                               skip_verify=skip_verify,
+                                               pkgs=targeted_pkgs,
+-                                              **kwargs)
++                                              **kwargs))
+         except CommandExecutionError as exc:
+             return {'name': name,
+                     'changes': {},
