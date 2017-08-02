@@ -8,11 +8,11 @@ pidfile /run/chronyd.pid
 dumpdir /var/lib/chrony
 dumponexit
 
-{% for h,c in conf.get('server', {}).items() %}
-peer {{ h }} {{ c }}
-{% endfor %}
 {% for h,c in conf.get('server', {'ntp.bakka.su': 'iburst'}).items() %}
 server {{ h }} {{ c }}
+{% endfor %}
+{% for h,c in conf.get('peer', {}).items() %}
+peer {{ h }} {{ c }}
 {% endfor %}
 {% for h,c in conf.get('pool', {}).items() %}
 pool {{ h }} {{ c }}
