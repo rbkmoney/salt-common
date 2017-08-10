@@ -15,20 +15,13 @@
 #ListenAddress 0.0.0.0
 #ListenAddress ::
 Transport all
-# The default requires explicit activation of protocol 1
-#Protocol 2
+Protocol 2
 
-# HostKey for protocol version 1
-#HostKey /etc/ssh/ssh_host_key
 # HostKeys for protocol version 2
 #HostKey /etc/ssh/ssh_host_rsa_key
 #HostKey /etc/ssh/ssh_host_dsa_key
 #HostKey /etc/ssh/ssh_host_ecdsa_key
 #HostKey /etc/ssh/ssh_host_ed25519_key
-
-# Lifetime and size of ephemeral version 1 server key
-#KeyRegenerationInterval 1h
-#ServerKeyBits 1024
 
 # Logging
 # obsoletes QuietMode and FascistLogging
@@ -37,10 +30,10 @@ Transport all
 
 # Authentication:
 
-#LoginGraceTime 2m
-#PermitRootLogin no
+LoginGraceTime 2m
 #StrictModes yes
-#MaxAuthTries 6
+MaxAuthTries 3
+MaxStartups 10:30:100
 #MaxSessions 10
 
 #RSAAuthentication yes
@@ -52,25 +45,21 @@ Transport all
 
 #AuthorizedPrincipalsFile none
 
-#AuthorizedKeysCommand none
-#AuthorizedKeysCommandUser nobody
-
-# For this to work you will also need host keys in /etc/ssh/ssh_known_hosts
-#RhostsRSAAuthentication no
 # similar for protocol version 2
-#HostbasedAuthentication no
+HostbasedAuthentication no
 # Change to yes if you don't trust ~/.ssh/known_hosts for
 # RhostsRSAAuthentication and HostbasedAuthentication
 #IgnoreUserKnownHosts no
-# Don't read the user's ~/.rhosts and ~/.shosts files
-#IgnoreRhosts yes
+
+IgnoreRhosts yes
 
 # To disable tunneled clear text passwords, change to no here!
 PasswordAuthentication no
-#PermitEmptyPasswords no
+PermitEmptyPasswords no
+PermitRootLogin without-password
 
 # Change to no to disable s/key passwords
-#ChallengeResponseAuthentication yes
+ChallengeResponseAuthentication yes
 
 # Kerberos options
 #KerberosAuthentication no
@@ -93,9 +82,10 @@ PasswordAuthentication no
 # and ChallengeResponseAuthentication to 'no'.
 UsePAM yes
 
-#AllowAgentForwarding yes
-#AllowTcpForwarding yes
+AllowAgentForwarding yes
+AllowTcpForwarding yes
 #GatewayPorts no
+X11Forwarding no
 #PermitTTY yes
 PrintMotd no
 PrintLastLog no
@@ -106,28 +96,20 @@ PrintLastLog no
 #ClientAliveCountMax 3
 #UseDNS no
 #PidFile /run/sshd.pid
-#MaxStartups 10:30:100
 #PermitTunnel no
 
 # no default banner path
 #Banner none
 
 # override default of no subsystems
-Subsystem	sftp	/usr/lib64/misc/sftp-server
+Subsystem sftp internal-sftp
 
 # the following are HPN related configuration options
 # tcp receive buffer polling. disable in non autotuning kernels
 #TcpRcvBufPoll yes
 
-# disable hpn performance boosts
-#HPNDisabled no
-
 # buffer size for hpn to non-hpn connections
 #HPNBufferSize 2048
-
-
-# allow the use of the none cipher
-#NoneEnabled no
 
 # Example of overriding settings on a per-user basis
 #Match User anoncvs
@@ -136,11 +118,13 @@ Subsystem	sftp	/usr/lib64/misc/sftp-server
 #	PermitTTY no
 #	ForceCommand cvs server
 
+Match group sftponly
+     ChrootDirectory /home/%u
+     X11Forwarding no
+     AllowTcpForwarding no
+     ForceCommand internal-sftp
+
 # Allow client to pass locale environment variables #367017
 AcceptEnv LANG LC_*
-Ciphers aes256-gcm@openssh.com,aes256-cbc
-PermitEmptyPasswords no
-IgnoreRhosts yes
-PermitRootLogin without-password
 PermitUserEnvironment no
-X11Forwarding no
+Ciphers aes256-gcm@openssh.com,aes256-cbc
