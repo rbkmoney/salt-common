@@ -16,13 +16,14 @@ include:
 
 {% set makeconf_nginx_modules_http = '''access auth_basic autoindex browser charset empty_gif fastcgi geo geoip gzip gzip_static limit_req limit_zone lua map memcached proxy realip referer rewrite scgi split_clients ssi ssl reqstat upstream_keepalive upstream_least_conn upstream_rbtree limit_conn upstream_session_sticky stub_status upstream_check upstream_consistent_hash upstream_ip_hash userid uwsgi''' -%}
 {% set makeconf_nginx_modules_mail = 'smtp imap pop3' -%}
-{% set ssl_ciphers = ':'.join([
+{% set ssl_protocols = salt['pillar.get']('nginx:ssl:protocols', 'TLSv1.1 TLSv1.2') %}
+{% set ssl_ciphers = salt['pillar.get']('nginx:ssl:ciphers', ':'.join([
 'ECDHE-ECDSA-AES256-GCM-SHA384', 'ECDHE-ECDSA-AES128-GCM-SHA256',
 'ECDHE-RSA-AES256-GCM-SHA384', 'ECDHE-RSA-AES128-GCM-SHA256',
 'ECDHE-ECDSA-AES128-SHA', 'ECDHE-RSA-AES128-SHA',
 'ECDH-ECDSA-AES128-SHA', 'ECDH-RSA-AES128-SHA',
 'DHE-RSA-AES128-SHA', 'AES128-SHA256', 'AES128-SHA',
-'!3DES', '!MD5', '!aNULL', '!EDH']) -%}
+'!3DES', '!MD5', '!aNULL', '!EDH'])) -%}
 
 manage-nginx-modules:
   augeas.change:
@@ -84,7 +85,7 @@ nginx-reload:
         worker_processes: {{ worker_processes }}
         worker_connections: {{ worker_connections }}
         worker_rlimit_nofile: {{ worker_rlimit_nofile }}
-        ssl_protocols: 'TLSv1.1 TLSv1.2'
+        ssl_protocols: {{ ssl_protocols }}
         ssl_ciphers: {{ ssl_ciphers }}
         ssl_ecdh_curve: prime256v1
         ssl_session_cache: 'shared:SSL:20m'
