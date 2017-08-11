@@ -111,12 +111,10 @@ Subsystem sftp internal-sftp
 # buffer size for hpn to non-hpn connections
 #HPNBufferSize 2048
 
-# Example of overriding settings on a per-user basis
-#Match User anoncvs
-#	X11Forwarding no
-#	AllowTcpForwarding no
-#	PermitTTY no
-#	ForceCommand cvs server
+# Allow client to pass locale environment variables #367017
+AcceptEnv LANG LC_*
+PermitUserEnvironment no
+Ciphers aes256-gcm@openssh.com,aes256-cbc
 
 Match group sftponly
      ChrootDirectory /home/%u
@@ -124,7 +122,9 @@ Match group sftponly
      AllowTcpForwarding no
      ForceCommand internal-sftp
 
-# Allow client to pass locale environment variables #367017
-AcceptEnv LANG LC_*
-PermitUserEnvironment no
-Ciphers aes256-gcm@openssh.com,aes256-cbc
+# Example of overriding settings on a per-user basis
+#Match User anoncvs
+#	X11Forwarding no
+#	AllowTcpForwarding no
+#	PermitTTY no
+#	ForceCommand cvs server
