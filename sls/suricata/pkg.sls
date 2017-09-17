@@ -1,4 +1,5 @@
 include:
+  - logrotate
   - lib.libhtp
 # net-libs/libnet
 # dev-libs/nss
@@ -12,6 +13,7 @@ net-analyzer/suricata:
       - ~*
   pkg.latest:
     - pkgs:
-      - net-analyzer/suricata: '[af-packet,control-socket]'
+      - net-analyzer/suricata: '[af-packet,nfqueue,control-socket,logrotate]'
     - require:
+      - pkg: logrotate
       - pkg: net-libs/libhtp
