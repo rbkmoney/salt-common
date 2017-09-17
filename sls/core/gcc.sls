@@ -4,7 +4,7 @@
 gcc:
   pkg.installed:
     - pkgs:
-      - sys-devel/gcc: '~={{ gcc_version }}[graphite,vtv,go]'
+      - sys-devel/gcc: '{{ gcc_version }}[graphite,vtv,go]'
 
 gcc-profile:
   cmd.run:
