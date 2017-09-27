@@ -18,7 +18,7 @@ max_map_count = __salt__['pillar.get']('elastic:limits:max_map_count', 262144)
 config = {
   'node': {
     'name': '${HOSTNAME}',
-    'master': False, 'data': False,
+    'master': False, 'data': False, 'ingest': False,
     'max_local_storage_nodes': 1,
   },
   'path': {
