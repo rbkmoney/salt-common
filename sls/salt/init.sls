@@ -3,6 +3,7 @@ include:
   - python.python2
   - salt.patch
 
+# TODO: move cython to another state
 cython:
   pkg.latest:
     - refresh: False
@@ -20,26 +21,21 @@ salt-deps:
 app-admin/salt:
   pkg.installed:
     - refresh: False
-    - version: "2015.8.13"
+    - version: "2017.7.1"
     - watch:
       - portage_config: app-admin/salt
     - require:
       - pkg: cython
       - pkg: python2
       - pkg: salt-deps
-    - watch_in:
-      - file: /usr/lib/python2.7/site-packages/salt/states/pkg.py
-      - file: /usr/lib/python2.7/site-packages/salt/modules/ebuild.py
   portage_config.flags:
-    - name: '=app-admin/salt-2015.8.13'
+    - name: '=app-admin/salt-2017.7.1'
     - accept_keywords:
       - ~*
     - use:
       - openssl
-{% if salt['grains.get']('mysql_server', False) %}
-      - mysql
-{% endif %}
       - mako
+      - -mysql
       - "-raet"
 
 /etc/logrotate.d/salt:
