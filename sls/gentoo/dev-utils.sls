@@ -12,4 +12,4 @@ app-portage/overlint:
   pkg.latest
 
 app-portage/gentoolkit-dev:
-  pkg.latest
+  pkg.purged
