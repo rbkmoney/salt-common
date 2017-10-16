@@ -29,7 +29,7 @@ app-admin/salt:
       - pkg: python2
       - pkg: salt-deps
   portage_config.flags:
-    - name: '=app-admin/salt-2017.7.1'
+    - name: '=app-admin/salt-2017.7.2'
     - accept_keywords:
       - ~*
     - use:
