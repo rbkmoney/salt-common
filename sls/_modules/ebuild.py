@@ -525,7 +525,7 @@ def process_target(param, version_num):
 
     if installed and not changes:
         # Check if package has some changed use.
-        all_uses = __salt__['portage_config.get_cleared_flags'](pv_target)
+        all_uses = __salt__['portage_config.get_cleared_flags'](param)
         if _flags_changed(*all_uses):
             changes[pv_target] = {'old': {'use': all_uses[0]},
                                   'new': {'use': all_uses[1]}}
