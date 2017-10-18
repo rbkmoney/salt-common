@@ -1,7 +1,6 @@
 # -*- mode: yaml -*-
 include:
   - python.python2
-  - salt.patch
 
 # TODO: move cython to another state
 cython:
