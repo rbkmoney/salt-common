@@ -21,7 +21,7 @@ salt-deps:
 app-admin/salt:
   pkg.installed:
     - refresh: False
-    - version: "2017.7.1"
+    - version: "2017.7.2"
     - watch:
       - portage_config: app-admin/salt
     - require:
