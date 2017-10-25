@@ -158,7 +158,7 @@ def _get_comparison_spec(pkgver):
     comparison operator was passed, the comparison is assumed to be an "equals"
     comparison, and "==" will be the operator returned.
     '''
-    match = re.match('^~?([<>])?(=)?([^<>=]+)$', pkgver)
+    match = re.match('^~?([<>])?(=)?([^<>=]+?)(?:\[.+\])?$', pkgver)
     if not match:
         raise CommandExecutionError(
             'Invalid version specification \'{0}\'.'.format(pkgver)
