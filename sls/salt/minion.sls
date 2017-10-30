@@ -2,7 +2,6 @@
 include:
   - ssl.openssl
   - salt
-  - salt.croncall
 
 salt-minion:
   service.running:
