@@ -23,5 +23,3 @@ salt-minion:
     - user: root
     - group: root
     - mode: 640
-    - watch_in:
-      - cron: salt-call
