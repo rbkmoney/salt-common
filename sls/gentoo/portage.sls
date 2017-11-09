@@ -16,11 +16,6 @@ app-portage-purged:
     - pkgs:
       - app-portage/epkg
 
-/etc/portage/postsync.d/q-reinitialize:
-  file.managed:
-    - mode: 755
-    - replace: False
-
 /etc/portage/repos.conf/:
   file.directory:
     - mode: 755
