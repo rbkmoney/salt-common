@@ -19,7 +19,14 @@ gentoo:
   {% endif %}
 
 /etc/portage/repos.conf/gentoo.conf:
+  file.managed:
+    - create: True
+    - replace: False
+    - user: root
+    - mode: 644
   ini.options_present:
+    - require:
+      - file: /etc/portage/repos.conf/gentoo.conf
     - sections:
         DEFAULT:
           main-repo: gentoo

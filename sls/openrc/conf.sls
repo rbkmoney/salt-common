@@ -4,6 +4,7 @@ include:
 manage-rc-conf:
   augeas.change:
     - name: /etc/rc.conf
+    - context: /files/etc/rc.conf
     - changes:
       - set rc_parallel {{ 'YES' if salt['pillar.get']('rc:parallel', True) else 'NO' }}
       - set rc_logger YES

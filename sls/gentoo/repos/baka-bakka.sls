@@ -20,7 +20,14 @@ include:
   {% endif %}
 
 /etc/portage/repos.conf/{{ repo_name }}.conf:
+  file.managed:
+    - create: True
+    - replace: False
+    - user: root
+    - mode: 644
   ini.options_present:
+    - require:
+      - file: /etc/portage/repos.conf/{{ repo_name }}.conf
     - sections:
         {{ repo_name }}:
           location: '/var/lib/layman/{{ repo_name }}'
