@@ -1,6 +1,6 @@
 # -*- mode: conf -*-
 # Managed by Salt
-{% set conf = salt['pillar.get']('carbon:grafana:conf', {}) %}
+{% set conf = salt['pillar.get']('grafana:conf', {}) %}
 
 app_mode = production
 instance_name = {{ grains['fqdn'] }}
