@@ -1,9 +1,12 @@
 include:
+  - python.dev-python.django-tagging
   - uwsgi
 
 net-analyzer/graphite-web:
   pkg.installed:
     - version: '~>=0.9.13-r3[carbon,memcached,mysql]'
+    - require:
+      - pkg: dev-python/django-tagging
 
 /etc/graphite-web/local_settings.py:
   file.managed:
