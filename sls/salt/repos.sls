@@ -46,7 +46,7 @@ include:
 
 # Delete directories of deleted main branches, since we're looking at all main remote branches
 {% for reponame in sync_reponames %}
-{% for dir in salt['file.find']('/var/salt/' + reponame, type='d', maxdepth=0)
+{% for dir in salt['file.find']('/var/salt/' + reponame, type='d', maxdepth=1)
    if dir.split('/')[-1] != reponame and dir.split('/')[-1] not in sync_branches %}
 {{ dir }}:
   file.absent:
