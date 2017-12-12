@@ -382,12 +382,15 @@ LoadPlugin xencpu
   Device "cgroup_root"
   Device "devtmpfs"
   Device "rootfs"
+  Device "/^docker-.+/"
+  Device "/^mapper_docker-.+/"
   IgnoreSelected true
   ReportByDevice true
   ReportInodes true
 </Plugin>
 <Plugin disk>
-  Disk "/^[hs]d[a-z](:?[0-9]+)?$/"
+  Disk "/^[hs]d[a-z]$/"
+  Disk "/^xvd[a-z]$/"
   Disk "/^md[0-9]+$/"
   IgnoreSelected false
 </Plugin>
@@ -440,7 +443,8 @@ LoadPlugin xencpu
 {% endif %}
 
 <Plugin interface>
-# IgnoreSelected false
+  Interface "/^veth/"
+  IgnoreSelected true
 </Plugin>
 
 {% if "ipmi" in configured_plugins %}
@@ -1318,7 +1322,7 @@ LoadPlugin xencpu
     Port "{{ carbon.get('port', '2003') }}"
     Prefix "{{ carbon.get('prefix', 'collectd.') }}"
     Postfix "{{ carbon.get('postfix', '') }}"
-    StoreRates {{ 'true' if carbon.get('store-rates', False) else 'false' }}
+    StoreRates {{ 'true' if carbon.get('store-rates', True) else 'false' }}
     EscapeCharacter "{{ carbon.get('escape-character', '_') }}"
   </Carbon>
   {% endfor %}
