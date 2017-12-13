@@ -1,6 +1,7 @@
 {% set collectd_conf = salt['pillar.get']('collectd:conf', {}) %}
 {% set configured_plugins = salt['pillar.get']('collectd:configured-plugins', '') %}
 {% set p_aggregation = salt['pillar.get']('collectd:aggregation', False) -%}
+{% set p_ceph = salt['pillar.get']('collectd:ceph', False) -%}
 {% set p_network = salt['pillar.get']('collectd:network', False) -%}
 {% set p_mysql = salt['pillar.get']('collectd:mysql', False) -%}
 {% set p_write_graphite = salt['pillar.get']('collectd:write_graphite', False) -%}
@@ -80,6 +81,9 @@ LoadPlugin apcups
 ##LoadPlugin battery
 # LoadPlugin bind
 #LoadPlugin conntrack
+{% if p_ceph %}
+LoadPlugin ceph
+{% endif %}
 LoadPlugin contextswitch
 LoadPlugin cpu
 {% if not virtual_machine and machine_type not in ('raspberrypi') %}
@@ -373,7 +377,17 @@ LoadPlugin xencpu
 #  </URL>
 #</Plugin>
 {% endif %}
-
+{% if p_ceph %}
+<Plugin ceph>
+  {% for cluster in p_ceph['cluster'] %}
+  {% for daemon in p_ceph['cluster'][cluster] %}
+  <Daemon "{{ daemon }}">
+    SocketPath "/var/run/ceph/{{ cluster }}-{{ daemon }}.asok"
+  </Daemon>
+  {% endfor %}
+  {% endfor %}
+</Plugin>
+{% endif %}
 <Plugin df>
 #	Device "/dev/hda1"
 #	Device "192.168.0.2:/mnt/nfs"
