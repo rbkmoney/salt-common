@@ -443,7 +443,7 @@ LoadPlugin xencpu
 {% endif %}
 
 <Plugin interface>
-  Interface "/^veth/"
+  Interface "/^veth.+/"
   IgnoreSelected true
 </Plugin>
 
