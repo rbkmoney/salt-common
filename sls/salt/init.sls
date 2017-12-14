@@ -15,7 +15,7 @@ salt-deps:
       - net-libs/zeromq: ">=4.1.4"
       - dev-python/pyzmq: ">=14.4"
       - dev-python/pyopenssl: ">=0.15.1"
-      - dev-python/psutil: "=2.1.3"
+      - dev-python/psutil: ">=5.2.2"
 
 app-admin/salt:
   pkg.installed:
