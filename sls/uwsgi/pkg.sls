@@ -24,7 +24,7 @@ www-servers/uwsgi:
       - portage_config: www-servers/uwsgi
       - augeas: manage-uwsgi-plugins
   portage_config.flags:
-    - use: [caps,cgi,embedded,jemalloc,lua,pcre,perl,python,python_gevent,python_asyncio,-ruby,routing,ssl,xml,zeromq]
+    - use: [caps,cgi,embedded,jemalloc,lua,pcre,perl,python,python_gevent,-ruby,routing,ssl,xml,zeromq]
 
 /etc/conf.d/uwsgi:
   file.managed:
