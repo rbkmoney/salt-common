@@ -41,7 +41,8 @@ include:
 {% if not sync_reponames or sync_branches == [] %}
 {% set sync_reponames = [main_reponame] + extra_reponames %}
 {% for origin_branch in salt['git.ls_remote'](remote=main_remote_uri, opts='--heads', user='root') %}
-{% set i = sync_branches.append(origin_branch.replace('refs/heads/', '')) %}
+{% set branch_name = origin_branch.replace('refs/heads/', '') %}
+{% if not '/' in branch_name %}{% do sync_branches.append(branch_name) %}{% endif %}
 {% endfor %}
 
 # Delete directories of deleted main branches, since we're looking at all main remote branches
