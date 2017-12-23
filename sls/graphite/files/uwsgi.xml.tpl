@@ -4,10 +4,12 @@
   <master/>
   <single-interpreter/>
   <!-- TODO: take number of processes from some variable -->
-  <processes>8</processes>
-  <socket>/run/%n.sock</socket>
+  <processes>${processes}</processes>
+  <socket>${socket}</socket>
+  % if # startswith?
   <chown-socket>nginx:nginx</chown-socket>
   <chmod-socket>640</chmod-socket>
+  % endif
   <user>carbon</user>
   <uid>carbon</uid>
   <chdir>/etc/%n</chdir>

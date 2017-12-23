@@ -153,9 +153,22 @@ class SendMsgBot(_ClientXMPP):
 
         self.disconnect(wait=True)
 
+
 def _filter_return(data):
-    return data
-    
+    if not isinstance(data, dict):
+        return data
+    ret = {}
+    for k,v in data.items():
+        if (('changes' in v and v['changes'])
+            or ('pchanges' in v and v['pchanges'])):
+            ret[k] = v
+            continue
+
+        if 'result' in v and v['result'] is True:
+            continue
+        ret[k] = v
+    return ret
+
     
 def returner(ret):
     '''
@@ -180,12 +193,16 @@ def returner(ret):
         log.error('xmpp.recipient not defined in salt config')
         return
 
-    msg = []
-    msg.append('{0}: {1}'.format(ret['id'], ret['jid']))
-    msg.append('{0}{2}'.format(ret['fun'], ret['fun_args']))
-    msg.append(repr(_filter_return(ret['return'])))
+    data = _filter_return(ret['return'])
+    if not data:
+        return True
 
-    xmpp = SendMsgBot(from_jid, password, recipient_jid, msg)
+    msg = []
+    msg.append('{0}: {1}'.format(ret['jid'], ret['id']))
+    msg.append('{0}{1}'.format(ret['fun'], ret['fun_args']))
+    msg.append(pprint.pformat(data))
+
+    xmpp = SendMsgBot(from_jid, password, recipient_jid, '\r\n'.join(msg))
     xmpp.register_plugin('xep_0030')  # Service Discovery
     xmpp.register_plugin('xep_0199')  # XMPP Ping
 

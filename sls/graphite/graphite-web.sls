@@ -26,6 +26,7 @@ net-analyzer/graphite-web:
 /etc/uwsgi.d/graphite-web.xml:
   file.managed:
     - source: salt://graphite/files/uwsgi.xml.tpl
+    - template: mako
     - mode: 644
     - user: root
     - group: root
