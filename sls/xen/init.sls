@@ -3,9 +3,9 @@
 # This should be set when we can not install xen from here;
 # For example: machine is PXE booted, and you need to modify file on tftp server;
 {% set xen_provided = salt['grains.get']('xen_provided', False) %}
-{% set xen_version = salt['pillar.get']('xen:version', '~4.9.1-r1') %}
-{% set xen_tools_version = salt['pillar.get']('xen:tools_version', '~4.9.1-r1') %}
-{% set xen_version_short = xen_version.split('-')[0] %}
+{% set xen_version = salt['pillar.get']('xen:version', '~=4.9.1-r1') %}
+{% set xen_tools_version = salt['pillar.get']('xen:tools_version', '~=4.9.1-r1') %}
+{% set xen_version_short = xen_version.rsplit('-', 1)[0].lstrip('-~*<>=') %}
 
 include:
   - gentoo.portage
@@ -34,9 +34,9 @@ xen:
   pkg.installed:
     - pkgs:
       {% if not xen_provided %}
-      - app-emulation/xen: "={{ xen_version }}[{{ 'efi' if efi else '-efi' }}]"
+      - app-emulation/xen: "{{ xen_version }}[{{ 'efi' if efi else '-efi' }}]"
       {% endif %}
-      - app-emulation/xen-tools: "={{ xen_tools_version }}[api,hvm,screen,system-qemu,-qemu,system-seabios]"
+      - app-emulation/xen-tools: "{{ xen_tools_version }}[api,hvm,screen,system-qemu,-qemu,system-seabios]"
       - dev-libs/libnl
     - require:
       - pkg: qemu
