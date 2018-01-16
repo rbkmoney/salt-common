@@ -1,5 +1,5 @@
 include:
-  - ruby.ruby21
+  - ruby.ruby22
 
 app-eselect/eselect-ruby:
   pkg.latest
@@ -8,7 +8,7 @@ set-ruby-targets:
   augeas.change:
     - context: /files/etc/portage/make.conf
     - changes:
-      - set RUBY_TARGETS '"ruby21"'
+      - set RUBY_TARGETS '"ruby22"'
     - require:
       - file: augeas-makeconf
 
