@@ -1,8 +1,8 @@
 include:
   - ruby
-  - ruby.ruby21
+  - ruby.ruby22
 
 eselect-ruby21:
   eselect.set:
     - name: ruby
-    - target: 'ruby21'
+    - target: 'ruby22'
