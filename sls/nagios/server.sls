@@ -15,7 +15,7 @@ include:
     
 /etc/nagios/nagios.cfg:
   file.managed:
-    - source: salt://nagios/nagios.cfg
+    - source: salt://nagios/files/nagios.cfg
     - template: jinja
     - mode: 644
     - user: nagios
@@ -25,7 +25,7 @@ include:
     
 /etc/nagios/resource.cfg:
   file.managed:
-    - source: salt://nagios/resource.cfg
+    - source: salt://nagios/files/resource.cfg
     - mode: 600
     - user: nagios
     - group: nagios
@@ -69,7 +69,7 @@ include:
 
 /var/nagios/home/.ssh/config:
   file.managed:
-    - source: salt://nagios/ssh-config
+    - source: salt://nagios/files/ssh-config
     - mode: 750
     - user: nagios
     - group: nagios

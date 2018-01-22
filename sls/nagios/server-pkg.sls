@@ -3,4 +3,3 @@ nagios_pkg:
     - pkgs:
         - net-analyzer/nagios-core: "~>=4.2.2[web,perl]"
         - media-libs/gd: ">=2.2.3[jpeg,png]"
-        - app-emacs/nagios-mode
