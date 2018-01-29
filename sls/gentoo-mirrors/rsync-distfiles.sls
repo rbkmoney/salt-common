@@ -147,7 +147,7 @@ rsync-gentoo-portage:
     - create: True
     - makedirs: True
 
-{% for inst in salt['pillar.get']('mirror:gentoo-package-repos', []) %}
+{% for inst in salt['pillar.get']('gentoo-mirror:gentoo-package-repos', []) %}
 /opt/gentoo-rsync/rsync-gentoo-{{ inst['arch'] }}-{{ inst['cpu_arch'] }}-packages.sh:
   file.symlink:
     - target: /opt/gentoo-rsync/rsync-base.sh
