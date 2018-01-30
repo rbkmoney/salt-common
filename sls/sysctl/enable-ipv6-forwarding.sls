@@ -3,7 +3,13 @@ net.ipv6.conf.all.forwarding:
     - config: /etc/sysctl.d/ipv6_forwarding.conf
     - value: 1
 
-net.ipv6.conf.default.forwarding:
+{% set net_ipv6_conf = salt['pillar.get']('sysctl:net:ipv6:conf', {'default': {}}) %}
+{% for name, conf in net_ipv6_conf.items() %}
+{% if 'forwarding' in conf %}
+# This clears a router bit in neighbor advertisement flags
+net.ipv6.conf.{{ name }}.forwarding:
   sysctl.present:
     - config: /etc/sysctl.d/ipv6_forwarding.conf
-    - value: 1
+    - value: {{ conf['forwarding'] }}
+{% endif %}
+{% endfor %}
