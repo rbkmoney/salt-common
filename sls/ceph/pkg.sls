@@ -1,8 +1,9 @@
-{% set ceph_version = salt['pillar.get']('ceph:version', '~=12.2.2') %}
+{% set ceph_version = salt['pillar.get']('ceph:version', '~=12.2.2-r1') %}
+{% set ceph_use = salt['pillar.get']('ceph:use', ('radosgw', 'tcmalloc', 'xfs')) %}
 ceph:
   pkg.installed:
     - pkgs:
-      - sys-cluster/ceph: "{{ ceph_version }}[-nss,cryptopp,radosgw,tcmalloc,xfs]"
+      - sys-cluster/ceph: "{{ ceph_version }}[{{ ','.join(ceph_use) }}]"
   user.present:
     - system: True
     - home: /var/lib/ceph
