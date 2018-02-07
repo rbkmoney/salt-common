@@ -4,6 +4,7 @@ ceph:
   pkg.installed:
     - pkgs:
       - sys-cluster/ceph: "{{ ceph_version }}[{{ ','.join(ceph_use) }}]"
+      - dev-libs/boost: ">=1.65.0[python,context]"
   user.present:
     - system: True
     - home: /var/lib/ceph
