@@ -1,7 +1,8 @@
+{% set ceph_version = salt['pillar.get']('ceph:version', '~=12.2.2') %}
 ceph:
   pkg.installed:
     - pkgs:
-      - sys-cluster/ceph: "[-nss,cryptopp,radosgw,tcmalloc,xfs]"
+      - sys-cluster/ceph: "{{ ceph_version }}[-nss,cryptopp,radosgw,tcmalloc,xfs]"
   user.present:
     - system: True
     - home: /var/lib/ceph
