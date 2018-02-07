@@ -79,11 +79,13 @@ ms bind ipv6 = true
 {% set ceph_mon = ceph_conf.get('mon', False) %}
 {% if ceph_mon %}
 [mon]
+{% if 'initial-members' in ceph_mon %}
 # The IDs of initial monitors in a cluster during startup.
-# mon initial members = a
-# The clock drift in seconds allowed between monitors.
+mon initial members = {{ ceph_mon['initial-members'] }}
+{% endif %}
 {% set ceph_mon_clock = ceph_mon.get('clock', False) %}
 {% if ceph_mon_clock %}
+# The clock drift in seconds allowed between monitors.
 mon clock drift allowed = {{ ceph_mon_clock.get('drift-allowed', '.050') }}
 # Exponential backoff for clock drift warnings
 mon clock drift warn backoff = {{ ceph_mon_clock.get('drift-warn-backoff', '5') }}
