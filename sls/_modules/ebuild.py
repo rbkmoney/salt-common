@@ -470,19 +470,22 @@ def _flags_changed(inst_flags, conf_flags):
 
 def process_target(param, version_num):
     installed = _cpv_to_version(_vartree().dep_bestmatch(param))
-    match = re.match('^(~|-|\*)?([<>]=?)?([^<>=]*)$', version_num)
-    if match:
-        keyword, prefix, verstr = match.groups()
-        # If no prefix characters were supplied and verstr contains a version, use '='
-        if len(verstr) > 0 and verstr[0] != ':' and verstr[0] != '[':
-            prefix = prefix or '='
-            target = '{0}{1}-{2}'.format(prefix, param, verstr)
-        else:
-            target = '{0}{1}'.format(param, verstr)
+    if version_num is None:
+        keyword, prefix = None, None
     else:
-        raise AttributeError(
-            'Unable to parse version {0} of {1}'.\
-            format(repr(version_num, param)))
+        match = re.match('^(~|-|\*)?([<>]=?)?([^<>=]*)$', version_num)
+        if match:
+            keyword, prefix, verstr = match.groups()
+            # If no prefix characters were supplied and verstr contains a version, use '='
+            if len(verstr) > 0 and verstr[0] != ':' and verstr[0] != '[':
+                prefix = prefix or '='
+                target = '{0}{1}-{2}'.format(prefix, param, verstr)
+            else:
+                target = '{0}{1}'.format(param, verstr)
+        else:
+            raise AttributeError(
+                'Unable to parse version {0} of {1}'.\
+                format(repr(version_num, param)))
 
     changes = {}
         
@@ -686,12 +689,9 @@ def install(name=None,
     else:
         targets = list()
         for param, version_num in six.iteritems(pkg_params):
-            if version_num is None:
-                targets.append(param)
-            else:
-                target, flag_changes = process_target(param, version_num)
-                changes.update(flag_changes)
-                targets.append(target)
+            target, flag_changes = process_target(param, version_num)
+            changes.update(flag_changes)
+            targets.append(target)
 
     cmd = []
     cmd.extend(['emerge', '--ask', 'n', '--quiet'])
