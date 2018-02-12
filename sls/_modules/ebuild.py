@@ -472,6 +472,7 @@ def process_target(param, version_num):
     installed = _cpv_to_version(_vartree().dep_bestmatch(param))
     if version_num is None:
         keyword, prefix = None, None
+        target = param
     else:
         match = re.match('^(~|-|\*)?([<>]=?)?([^<>=]*)$', version_num)
         if match:
