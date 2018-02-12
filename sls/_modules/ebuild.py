@@ -470,11 +470,9 @@ def _flags_changed(inst_flags, conf_flags):
 
 def process_target(param, version_num):
     installed = _cpv_to_version(_vartree().dep_bestmatch(param))
-    match = re.match('^(~|-|\*)?([<>])?(=)?([^<>=]*)$', version_num)
+    match = re.match('^(~|-|\*)?([<>]=?)?([^<>=]*)$', version_num)
     if match:
-        keyword, gt_lt, eq, verstr = match.groups()
-        prefix = gt_lt or ''
-        prefix += eq or ''
+        keyword, prefix, verstr = match.groups()
         # If no prefix characters were supplied and verstr contains a version, use '='
         if len(verstr) > 0 and verstr[0] != ':' and verstr[0] != '[':
             prefix = prefix or '='
@@ -482,7 +480,9 @@ def process_target(param, version_num):
         else:
             target = '{0}{1}'.format(param, verstr)
     else:
-        target = '{0}'.format(param)
+        raise AttributeError(
+            'Unable to parse version {0} of {1}'.\
+            format(repr(version_num, param)))
 
     changes = {}
         
@@ -686,11 +686,6 @@ def install(name=None,
     else:
         targets = list()
         for param, version_num in six.iteritems(pkg_params):
-            original_param = param
-            param = _p_to_cp(param)
-            if param is None:
-                raise AttributeError('Matching c/p form not found for atom {0}'.format(atom))
-
             if version_num is None:
                 targets.append(param)
             else:
