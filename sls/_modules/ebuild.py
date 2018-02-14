@@ -474,7 +474,7 @@ def process_target(param, version_num):
         keyword, prefix = None, None
         target = param
     else:
-        match = re.match('^(~|-|\*)?([<>]=?)?([^<>=]*)$', version_num)
+        match = re.match('^(~|-|\*)?([<>]?=?)?([^<>=]*)$', version_num)
         if match:
             keyword, prefix, verstr = match.groups()
             # If no prefix characters were supplied and verstr contains a version, use '='
