@@ -1,0 +1,18 @@
+#!/sbin/openrc-run
+
+depend() {
+    use network
+}
+PIDFILE="/var/nagios/graphios.pid"
+start() {
+    ebegin "Starting graphios"
+    start-stop-daemon --start --background --make-pidfile \
+        --user nagios --pidfile "${PIDFILE}" --exec /usr/local/lib/graphios/graphios.py
+    eend $? "Failed"
+}
+
+stop() {
+    ebegin "Stoping graphios"
+    start-stop-daemon --stop --pidfile "${PIDFILE}" --name /usr/local/lib/graphios/graphios.py
+    eend $? "Failed"
+}

@@ -84,6 +84,24 @@ include:
     - user: nagios
     - group: nagios
 
+/var/nagios/spool/:
+  file.directory:
+    - create: True
+    - user: nagios
+    - group: nagios
+    - mode: 750
+    - require:
+      - user: nagios
+
+/var/nagios/spool/graphios/:
+  file.directory:
+    - create: True
+    - user: nagios
+    - group: nagios
+    - mode: 750
+    - require:
+      - file: /var/nagios/spool/
+
 nagios:
   service.running:
     - enable: True
@@ -92,6 +110,8 @@ nagios:
       - user: nagios
       - file: /etc/nagios/
       - file: /etc/nagios/nagios.cfg
+      - file: /var/nagios/spool/
+      - file: /var/nagios/spool/graphios/
 
 nagios-reload:
   # This is for watch_in reloads
