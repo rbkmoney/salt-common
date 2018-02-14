@@ -13,7 +13,7 @@ replacement_character = _
 spool_directory = /var/nagios/spool/graphios
 
 # graphios log info
-log_file = /var/log/graphios.log
+log_file = /var/nagios/graphios.log
 
 # max log size in megabytes (it will rotate the files)
 log_max_size = 100
