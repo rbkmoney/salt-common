@@ -486,7 +486,7 @@ def process_target(param, version_num):
         else:
             raise AttributeError(
                 'Unable to parse version {0} of {1}'.\
-                format(repr(version_num, param)))
+                format(repr(version_num), param))
 
     changes = {}
         
