@@ -10,7 +10,7 @@ include:
 
 /usr/local/lib/graphios/graphios.py:
   file.managed:
-    - salt: salt://nagios/files/graphios.py
+    - source: salt://nagios/files/graphios.py
     - user: root
     - group: root
     - mode: 755
@@ -18,8 +18,8 @@ include:
       - file: /usr/local/lib/graphios/
 
 /usr/local/lib/graphios/graphios_backends.py:
-  file.directory:
-    - salt: salt://nagios/files/graphios_backends.py
+  file.managed:
+    - source: salt://nagios/files/graphios_backends.py
     - user: root
     - group: root
     - mode: 644
@@ -35,7 +35,7 @@ include:
 
 /etc/graphios/graphios.cfg:
   file.managed:
-    - salt: salt://nagios/files/graphios.cfg.tpl
+    - source: salt://nagios/files/graphios.cfg.tpl
     - template: jinja
     - user: root
     - group: nagios
@@ -46,7 +46,7 @@ include:
 
 /etc/init.d/graphios:
   file.managed:
-    - salt: salt://nagios/files/graphios.initd
+    - source: salt://nagios/files/graphios.initd
     - user: root
     - group: root
     - mode: 755
