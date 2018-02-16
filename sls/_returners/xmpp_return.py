@@ -153,7 +153,6 @@ class SendMsgBot(_ClientXMPP):
 
         self.disconnect(wait=True)
 
-
 def _filter_return(data):
     if not isinstance(data, dict):
         return data
@@ -197,8 +196,8 @@ def returner(ret):
     if not data:
         return True
 
-    msg = []
-    msg.append('{0}: {1}'.format(ret['jid'], ret['id']))
+    msg = ['']
+    msg.append('job {0} on {1}'.format(ret['jid'], ret['id']))
     msg.append('{0}{1}'.format(ret['fun'], ret['fun_args']))
     msg.append(pprint.pformat(data))
 

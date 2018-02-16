@@ -18,7 +18,7 @@
 	     '|pacemaker|salt-master)',
  'critical-nodeps': '()',
  'always-reload-only': '(libvirtd|xendomains)',
- 'ignore': '(ntp-client)'
+ 'ignore': '(ntp-client)',
  'inittab-killall': '(/sbin/agetty)'
 }) %}
 # Here you can classify your services
