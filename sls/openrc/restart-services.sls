@@ -5,4 +5,4 @@ app-admin/restart-services:
   file.managed:
     - source: salt://openrc/files/restart-services.conf.tpl
     - require:
-      - pkg: restart-services
+      - pkg: app-admin/restart-services
