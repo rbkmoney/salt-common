@@ -1,7 +1,7 @@
 # Managed by Salt
 # restart-services configuration file
 #
-{% set conf = salt['pillar.get']('restart-services', {} %}
+{% set conf = salt['pillar.get']('restart-services', {} ) %}
 {% set defaults = {
  'always': '(acpid|apcupsd|atd|autofs|(bareos|bacula)-fd' +
  	   '|cronie|vixie-cron|dcron|incron|anacron|fcron|bcron' +
