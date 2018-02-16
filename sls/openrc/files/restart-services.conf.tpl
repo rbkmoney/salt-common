@@ -20,7 +20,7 @@
  'always-reload-only': '(libvirtd|xendomains)',
  'ignore': '(ntp-client)',
  'inittab-killall': '(/sbin/agetty)'
-}) %}
+} %}
 # Here you can classify your services
 # (use extended regex without '^' and '$')
 # Every option can also be an array of regular expressions
