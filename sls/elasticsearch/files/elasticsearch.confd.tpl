@@ -1,4 +1,19 @@
 # Managed by Salt
+# Elasticsearch home directory
+#ES_HOME=/usr/share/elasticsearch
+
+# Elasticsearch Java path
+#JAVA_HOME=
+
+# Elasticsearch configuration directory
+CONF_DIR=/etc/elasticsearch
+
+# Elasticsearch data directory
+DATA_DIR=/var/lib/elasticsearch
+
+# Elasticsearch logs directory
+LOG_DIR=/var/log/elasticsearch
+
 # Additional Java OPTS
 ES_JAVA_OPTS="{{ es_java_opts if es_java_opts is defined else '' }}"
 
@@ -24,3 +39,7 @@ MAX_LOCKED_MEMORY={{ l_memlock }}
 # When using Systemd, this setting is ignored and the 'vm.max_map_count'
 # property is set at boot time in /usr/lib/sysctl.d/elasticsearch.conf
 MAX_MAP_COUNT={{ max_map_count }}
+
+MAX_THREADS={{ max_threads }}
+
+rc_ulimit="-l $MAX_LOCKED_MEMORY -n $MAX_OPEN_FILES -u $MAX_THREADS"

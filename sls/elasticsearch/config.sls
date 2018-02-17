@@ -13,6 +13,7 @@ hosts = __salt__['pillar.get']('elastic:hosts', [])
 l_nofile = __salt__['pillar.get']('elastic:limits:nofile', 1048576)
 l_memlock = __salt__['pillar.get']('elastic:limits:memlock', 'unlimited')
 max_map_count = __salt__['pillar.get']('elastic:limits:max_map_count', 262144)
+max_thread = __salt__['pillar.get']('elastic:limits:max_threads', 4096)
 
 # defaults
 config = {
@@ -48,7 +49,7 @@ state('/etc/conf.d/elasticsearch').file.managed(
   mode=644, user='root', group='root',
   template='jinja', source="salt://elasticsearch/files/elasticsearch.confd.tpl",
   defaults={'es_java_opts': '', 'l_nofile': l_nofile, 'l_memlock': l_memlock,
-           'max_map_count': max_map_count, 'es_startup_sleep_time': 10})
+            'max_map_count': max_map_count, 'max_threads': max_threads, 'es_startup_sleep_time': 10})
 
 state('/etc/security/limits.d/elasticsearch.conf').file.managed(
   mode=644, user='root', group='root',
