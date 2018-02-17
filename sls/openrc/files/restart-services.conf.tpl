@@ -9,16 +9,17 @@
  	   '|named|unbound|nsd|ntpd|chronyd' +
  	   '|postfix|qmail|opendkim|pypolicyd-spf|nullmailer|opendnssec' +
  	   '|sshd|zabbix-agentd|collectd|nagios|monit|salt-(minion|syndic)|cf-.*)',
- 'always-nodeps': '(udev|ulogd|rpc.*|rsyslog|syslog-ng|metalog|lvmetad)',
+ 'always-nodeps': '(udev|ulogd|rpc.*|rsyslog|syslog-ng|metalog|lvmetad' +
+ 		  '|xencommons)',
  'critical': '((bareos|bacula)-(sd|dir)|.*ftpd|minidlna|git-daemon' +
  	     '|nginx|uwsgi|apache2|php-fpm|exim|dovecot|ejabberd|asterisk' +
-	     '|mysql|postgresql-.*|mongodb|riak|dnet_.*|ceph-.*' +
+	     '|mysql|postgresql-.*|mongodb|riak|dnet_.*|ceph-.*|radosgw.*' +
 	     '|elasticsearch|kibana|carbon-*|grafana|jenkins|consul|samba' +
 	     '|openvpn.*|racoon|bird|bird6|quagga|suricata.*' +
 	     '|pacemaker|salt-master)',
  'critical-nodeps': '()',
- 'always-reload-only': '(libvirtd|xendomains)',
- 'ignore': '(ntp-client)',
+ 'always-reload-only': '(libvirtd)',
+ 'ignore': '(ntp-client|xendomains|xenstored)',
  'inittab-killall': '(/sbin/agetty)'
 } %}
 # Here you can classify your services
