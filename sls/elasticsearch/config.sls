@@ -13,7 +13,7 @@ hosts = __salt__['pillar.get']('elastic:hosts', [])
 l_nofile = __salt__['pillar.get']('elastic:limits:nofile', 1048576)
 l_memlock = __salt__['pillar.get']('elastic:limits:memlock', 'unlimited')
 max_map_count = __salt__['pillar.get']('elastic:limits:max_map_count', 262144)
-max_thread = __salt__['pillar.get']('elastic:limits:max_threads', 4096)
+max_threads = __salt__['pillar.get']('elastic:limits:max_threads', 4096)
 
 # defaults
 config = {
