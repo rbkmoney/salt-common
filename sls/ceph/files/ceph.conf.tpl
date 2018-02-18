@@ -127,13 +127,13 @@ debug auth = {{ ceph_mon_debug.get('auth', 20) }}
 # The number of active recovery requests per OSD at one time.
 # More requests will accelerate recovery, but the requests
 # places an increased load on the cluster.
-osd recovery max active = {{ ceph_osd.get('recovery-max-active', 5) }}
+osd recovery max active = {{ ceph_osd.get('recovery-max-active', 1) }}
 
 # The maximum number of backfills allowed to or from a single OSD.
-osd max backfills = {{ ceph_osd.get('max-backfills', 10) }}
+osd max backfills = {{ ceph_osd.get('max-backfills', 1) }}
 
 # The maximum number of simultaneous scrub operations for a Ceph OSD Daemon.
-osd max scrubs = {{ ceph_osd.get('max-scrubs', 2) }}
+osd max scrubs = {{ ceph_osd.get('max-scrubs', 1) }}
 
 osd mkfs type = xfs
 osd mkfs options xfs = {{ ceph_osd.get('mkfs-options', '-f') }}
