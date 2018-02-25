@@ -17,7 +17,7 @@ max_map_count = limits.get('max_map_count', 262144)
 max_threads = limits.get('max_threads', 4096)
 
 jvm = __salt__['pillar.get']('elastic:jvm', {})
-jvm_heap_size = jvm.get('heap_size', '2g')
+jvm_heap_size = jvm.get('heap_size', '1g')
 jvm_stack_size = jvm.get('stack_size', '1m')
 jvm_extra_options = jvm.get('extra_options', {})
 
