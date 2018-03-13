@@ -3,5 +3,5 @@
 
 net-libs/libtirpc:
   pkg.installed:
-    - version: {{ libtirpc_version }}
+    - version: "{{ libtirpc_version }}"
     - use: {{ libtirpc_use }}

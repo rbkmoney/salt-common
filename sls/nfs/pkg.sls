@@ -8,7 +8,7 @@ include:
 
 net-fs/nfs-utils:
   pkg.installed:
-    - version: {{ utils_version }}
+    - version: "{{ utils_version }}"
     - use: {{ utils_use }}
     - require:
       - pkg: net-libs/libtirpc
