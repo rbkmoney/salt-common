@@ -6,6 +6,6 @@ include:
 net-nds/rpcbind:
   pkg.installed:
     - version: "{{ rpcbind_version }}"
-    - use: {{ rpcbind_use }}
+    - uses: {{ rpcbind_use }}
     - require:
       - pkg: net-libs/libtirpc

@@ -493,13 +493,13 @@ def process_target(param, version_num):
     if '[' in target:
         # Clean target from use flags, since some of them may not exist.
         # This will raise an AttributeError, or some weird stack trace if portage_config is not patched.
+        uses = portage.dep.dep_getusedeps(atom)
         pv_target = target[:target.rfind('[')]
-        use = target[target.rfind('['):]
         if installed:
             old = __salt__['portage_config.get_flags_from_package_conf']('use', pv_target)
         else:
             old = []
-        __salt__['portage_config.append_use_flags'](target)
+        __salt__['portage_config.append_use_flags'](pv_target, uses)
         new = __salt__['portage_config.get_flags_from_package_conf']('use', pv_target)
         if old != new:
             changes[pv_target] = {'old': {'use': old},

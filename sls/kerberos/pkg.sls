@@ -4,4 +4,4 @@
 app-crypt/mit-krb5:
   pkg.installed:
     - version: "{{ krb5_version }}"
-    - use: {{ krb5_use }}
+    - uses: {{ krb5_use }}
