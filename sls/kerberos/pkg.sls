@@ -3,5 +3,4 @@
 
 app-crypt/mit-krb5:
   pkg.installed:
-    - version: "{{ krb5_version }}"
-    - uses: {{ krb5_use }}
+    - version: "{{ krb5_version }}[{{ ','.join(krb5_use) }}]"

@@ -5,7 +5,6 @@ include:
 
 net-nds/rpcbind:
   pkg.installed:
-    - version: "{{ rpcbind_version }}"
-    - uses: {{ rpcbind_use }}
+    - version: "{{ rpcbind_version }}[{{ ','.join(rpcbind_use) }}]"
     - require:
       - pkg: net-libs/libtirpc
