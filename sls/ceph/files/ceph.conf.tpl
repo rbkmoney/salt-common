@@ -76,23 +76,22 @@ log file = /var/log/ceph/$cluster-$name.log
 log to syslog = {{ 'true' if ceph_conf.get('log-to-syslog', True) else 'false' }}
 ms bind ipv6 = true
 
-{% set ceph_mon = ceph_conf.get('mon', False) %}
-{% if ceph_mon %}
+{% set ceph_mon = ceph_conf.get('mon', {}) %}
+{% set ceph_mon_clock = ceph_mon.get('clock', {}) %}
+{% set ceph_mon_osd = ceph_mon.get('osd', {}) %}
+{% set ceph_mon_debug = ceph_mon.get('debug', False) %}
+
 [mon]
 {% if 'initial-members' in ceph_mon %}
 # The IDs of initial monitors in a cluster during startup.
 mon initial members = {{ ceph_mon['initial-members'] }}
 {% endif %}
-{% set ceph_mon_clock = ceph_mon.get('clock', False) %}
-{% if ceph_mon_clock %}
+
 # The clock drift in seconds allowed between monitors.
 mon clock drift allowed = {{ ceph_mon_clock.get('drift-allowed', '.050') }}
 # Exponential backoff for clock drift warnings
 mon clock drift warn backoff = {{ ceph_mon_clock.get('drift-warn-backoff', '5') }}
-{% endif %}
 
-{% set ceph_mon_osd = ceph_mon.get('osd', False) %}
-{% if ceph_mon_osd %}
 # The percentage of disk space used before an OSD is considered full/nearfull.
 mon osd full ratio = {{ ceph_mon_osd.get('full-ratio', '.95') }}
 mon osd nearfull ratio = {{ ceph_mon_osd.get('nearfull-ratio', '.90') }}
@@ -101,15 +100,14 @@ mon osd down out interval  = {{ ceph_mon_osd.get('down-out-interval', 300) }}
 # The grace period in seconds before declaring unresponsive Ceph OSD down
 mon osd report timeout = {{ ceph_mon_osd.get('report-timeout', 900) }}
 mon osd allow primary affinity = {{ 'true' if ceph_mon_osd.get('allow-primary-affinity', True) else 'false' }}
-{% endif %}
 
-{% set ceph_mon_debug = ceph_mon.get('debug', False) %}
+# TODO: Extra configuration options
+
 {% if ceph_mon_debug %}
 debug ms = {{ ceph_mon_debug.get('ms', 1) }}
 debug mon = {{ ceph_mon_debug.get('mon', 20) }}
 debug paxos = {{ ceph_mon_debug.get('paxos', 20) }}
 debug auth = {{ ceph_mon_debug.get('auth', 20) }}
-{% endif %}
 {% endif %}
 
 {% for id,data in ceph_conf['mon-table'].items() %}
@@ -121,8 +119,9 @@ debug auth = {{ ceph_mon_debug.get('auth', 20) }}
   {% endfor %}
 {% endfor %}
 
-{% set ceph_osd = ceph_conf.get('osd', False) %}
-{% if ceph_osd %}
+{% set ceph_osd = ceph_conf.get('osd', {}) %}
+{% set ceph_osd_filestore = ceph_osd.get('filestore', {}) %}
+{% set ceph_osd_debug = ceph_osd.get('debug', False) %}
 [osd]
 # The number of active recovery requests per OSD at one time.
 # More requests will accelerate recovery, but the requests
@@ -148,7 +147,6 @@ osd journal size = {{ ceph_osd.get('journal-size', 10240) }}
 # Enables direct i/o to the journal.
 journal dio = true
 
-{% set ceph_osd_debug = ceph_osd.get('debug', False) %}
 {% if ceph_osd_debug %}
 debug ms = {{ ceph_osd_debug.get('ms', 1) }}
 debug osd = {{ ceph_osd_debug.get('osd', 20) }}
@@ -156,8 +154,6 @@ debug filestor = {{ ceph_osd_debug.get('filestore', 20) }}
 debug journal = {{ ceph_osd_debug.get('journal', 20) }}
 {% endif %}
 
-{% set ceph_osd_filestore = ceph_osd.get('filestore', False) %}
-{% if ceph_osd_filestore %}
 # The maximum interval in seconds for synchronizing the filestore.
 filestore max sync interval = {{ ceph_osd_filestore.get('max-sync-interval', 5) }}
 
@@ -181,14 +177,13 @@ filestore split multiple = {{ ceph_osd_filestore.get('split-multiple', 4) }}
 
 # The number of filesystem operation threads that execute in parallel.
 filestore op threads = {{ ceph_osd_filestore.get('op-threads', 4) }}
-{% endif %}
+
 # The number of threads to service Ceph OSD Daemon Operations. Set to 0 to disable it.
 # Increasing the number may increase the request processing rate.
 osd op threads = {{ ceph_osd.get('op-threads', 4) }}
 
 # By default OSDs update their details (location, weight and root) on the CRUSH map during startup
 osd crush update on start = {{ 'true' if ceph_osd.get('crush-update-on-start', True) else 'false' }}
-{% endif %}
 
 {% for id,data in ceph_conf.get('osd-table', {}).items() %}
 [osd.{{ id }}]
@@ -197,12 +192,10 @@ osd crush update on start = {{ 'true' if ceph_osd.get('crush-update-on-start', T
   {% endfor %}
 {% endfor %}
 
-{% set ceph_client = ceph_conf.get('client', False) %}
-{% if ceph_client %}
+{% set ceph_client = ceph_conf.get('client', {}) %}
+{% set ceph_client_cache = ceph_client.get('cache', {}) %}
 [client]
 
-{% set ceph_client_cache = ceph_client.get('cache', False) %}
-{% if ceph_client_cache %}
 # Enable caching for RADOS Block Device (RBD).
 rbd cache = {{ 'true' if ceph_client.get('enabled', True) else 'false' }}
 {% if ceph_client.get('enabled', True) %}
@@ -221,8 +214,6 @@ rbd cache max dirty age = {{ ceph_client_cache.get('max-dirty-age', 1.0) }}
 # Start out in write-through mode, and switch to write-back after the
 # first flush request is received.
 rbd cache writethrough until flush = true
-{% endif %}
-{% endif %}
 {% endif %}
 
 {% for id,data in ceph_conf.get('client-table', {}).items() %}
