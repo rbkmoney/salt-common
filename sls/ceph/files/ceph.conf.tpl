@@ -141,11 +141,14 @@ osd mount options xfs  = {{ ceph_osd.get('mount-options', 'rw,noatime,logbsize=2
 # Check log files for corruption. Can be computationally expensive.
 osd check for log corruption = {{ 'true' if ceph_osd.get('check-for-log-corruption', False) else 'false' }}
 
+# By default OSDs update their details (location, weight and root) on the CRUSH map during startup
+osd crush update on start = {{ 'true' if ceph_osd.get('crush-update-on-start', True) else 'false' }}
+
 # The size of the journal in megabytes.
 osd journal size = {{ ceph_osd.get('journal-size', 10240) }}
 
 # Enables direct i/o to the journal.
-journal dio = true
+journal dio = {{ 'true' if ceph_osd.get('journal-dio', True) else 'false' }}
 
 {% if ceph_osd_debug %}
 debug ms = {{ ceph_osd_debug.get('ms', 1) }}
@@ -182,9 +185,6 @@ filestore op threads = {{ ceph_osd_filestore.get('op-threads', 4) }}
 # Increasing the number may increase the request processing rate.
 osd op threads = {{ ceph_osd.get('op-threads', 4) }}
 
-# By default OSDs update their details (location, weight and root) on the CRUSH map during startup
-osd crush update on start = {{ 'true' if ceph_osd.get('crush-update-on-start', True) else 'false' }}
-
 {% for id,data in ceph_conf.get('osd-table', {}).items() %}
 [osd.{{ id }}]
   {% for k,v in data.items() %}
@@ -197,8 +197,8 @@ osd crush update on start = {{ 'true' if ceph_osd.get('crush-update-on-start', T
 [client]
 
 # Enable caching for RADOS Block Device (RBD).
-rbd cache = {{ 'true' if ceph_client.get('enabled', True) else 'false' }}
-{% if ceph_client.get('enabled', True) %}
+rbd cache = {{ 'true' if ceph_client_cache.get('enabled', True) else 'false' }}
+{% if ceph_client_cache.get('enabled', True) %}
 # The RBD cache size in bytes.
 rbd cache size = {{ ceph_client_cache.get('size', 33554432) }}
 
