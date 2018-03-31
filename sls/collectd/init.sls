@@ -8,16 +8,20 @@ include:
 {% set configured_plugins = salt['pillar.get']('collectd:configured-plugins', '') %}
 
 {% if machine_type == 'raspberry pi' %}
-{% set makeconf_collectd_plugins = '''aggregation apcups contextswitch cpu cpufreq csv curl curl_json curl_xml dbi df disk entropy ethstat exec filecount fscache interface iptables load logfile memcached memory nfs netlink network nginx processes python snmp syslog statsd table tail tcpconns unixsock uptime users vmem''' %}
+{% set makeconf_collectd_plugins = '''aggregation apcups contextswitch cpu cpufreq csv curl curl_json curl_xml dbi df disk entropy ethstat exec filecount fscache interface iptables load logfile memcached memory nfs netlink network nginx processes python syslog statsd table tail tcpconns unixsock uptime users vmem''' %}
 {% else %}
-{% set makeconf_collectd_plugins = 'aggregation apcups bind cgroups chrony conntrack contextswitch cpu cpufreq cpusleep csv curl curl_json curl_xml dbi df disk entropy ethstat exec filecount fscache interface iptables ipmi ipvs irq load logfile md memcached memory nfs netlink network nginx numa hddtemp processes python sensors snmp swap syslog statsd table tail tcpconns target_notification thermal treshold unixsock uptime users uuid vmem write_graphite write_riemann' +
+{% set makeconf_collectd_plugins = 'aggregation apcups cgroups chrony contextswitch cpu cpufreq cpusleep csv curl curl_json curl_xml dbi df disk entropy ethstat exec filecount fscache interface iptables ipvs irq load logfile md memcached memory nfs netlink network nginx numa hugepages processes python sensors swap syslog log_logstash statsd table tail tcpconns target_notification thermal treshold unixsock uptime users uuid vmem write_graphite write_riemann write_prometheus' +
 (' lvm' if 'lvm' in collectd else '') +
 (' ceph' if 'ceph' in collectd else '') +
 (' mysql' if 'mysql' in collectd else '') +
-(' smart' if 'smart' in collectd else '') +
+(' smart' if 'smart' in configured_plugins else '') +
+(' hddtemp' if 'hddtemp' in configured_plugins else '') +
 (' xencpu' if 'xencpu' in configured_plugins else '') +
 (' notify_email' if 'notify_email' in configured_plugins else '') +
-(' notify_nagios' if 'notify_nagios' in configured_plugins else '')
+(' notify_nagios' if 'notify_nagios' in configured_plugins else '') +
+(' snmp' if 'snmp' in configured_plugins else '') +
+(' ipmi' if 'ipmi' in configured_plugins else '') +
+(' openvpn' if 'openvpn' in configured_plugins else '')
 %}
 {% endif %}
 

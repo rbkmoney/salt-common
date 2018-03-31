@@ -75,12 +75,7 @@ LoadPlugin aggregation
 {% if 'apcups' in configured_plugins %}
 LoadPlugin apcups
 {% endif %}
-##LoadPlugin apple_sensors
 ##LoadPlugin aquaero
-##LoadPlugin ascent
-##LoadPlugin battery
-# LoadPlugin bind
-#LoadPlugin conntrack
 {% if p_ceph %}
 LoadPlugin ceph
 {% endif %}
@@ -926,49 +921,6 @@ LoadPlugin xencpu
 #    Driver "cem-dt-885x"
 #    Conn "/dev/ttyUSB1"
 #  </Device>
-#</Plugin>
-{% endif %}
-{% if False %}
-#<Plugin snmp>
-#   <Data "powerplus_voltge_input">
-#       Type "voltage"
-#       Table false
-#       Instance "input_line1"
-#       Values "SNMPv2-SMI::enterprises.6050.5.4.1.1.2.1"
-#   </Data>
-#   <Data "hr_users">
-#       Type "users"
-#       Table false
-#       Instance ""
-#       Values "HOST-RESOURCES-MIB::hrSystemNumUsers.0"
-#   </Data>
-#   <Data "std_traffic">
-#       Type "if_octets"
-#       Table true
-#       Instance "IF-MIB::ifDescr"
-#       Values "IF-MIB::ifInOctets" "IF-MIB::ifOutOctets"
-#   </Data>
-#
-#   <Host "some.switch.mydomain.org">
-#       Address "192.168.0.2"
-#       Version 1
-#       Community "community_string"
-#       Collect "std_traffic"
-#       Interval 120
-#   </Host>
-#   <Host "some.server.mydomain.org">
-#       Address "192.168.0.42"
-#       Version 2
-#       Community "another_string"
-#       Collect "std_traffic" "hr_users"
-#   </Host>
-#   <Host "some.ups.mydomain.org">
-#       Address "192.168.0.3"
-#       Version 1
-#       Community "more_communities"
-#       Collect "powerplus_voltge_input"
-#       Interval 300
-#   </Host>
 #</Plugin>
 {% endif %}
 
