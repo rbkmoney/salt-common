@@ -66,9 +66,6 @@ cephx require signatures = {{ 'true' if ceph_cephx.get('require-signatures', Fal
 cephx cluster require signatures = {{ 'true' if ceph_cephx.get('cluster-require-signatures', True) else 'false' }}
 cephx service require signatures = {{ 'true' if ceph_cephx.get('service-require-signatures', False) else 'false' }}
 
-# The path to the keyring file.
-keyring = /etc/ceph/$cluster.keyring
-
 # The location of the logging file for your cluster.
 log file = /var/log/ceph/$cluster-$name.log
 
