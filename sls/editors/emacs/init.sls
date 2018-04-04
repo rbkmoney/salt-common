@@ -1,0 +1,3 @@
+include:
+  - .pkg
+  - .yaml-mode
