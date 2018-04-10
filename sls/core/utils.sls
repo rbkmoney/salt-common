@@ -1,4 +1,3 @@
-# -*- mode: yaml -*-
 utils-purged:
   pkg.purged:
     - pkgs:
@@ -34,8 +33,6 @@ utils-latest:
       - net-analyzer/tcpdump
       - net-analyzer/traceroute
       - net-analyzer/iftop
-      - net-dns/bind-tools
-      - net-dns/ldns-utils
       - net-ftp/ftp
       - net-misc/curl
       - net-misc/iputils
@@ -59,7 +56,6 @@ utils-latest:
       - sys-apps/sed
       - sys-apps/util-linux: "[tty-helpers,fdformat]"
       - sys-apps/which
-      - sys-devel/binutils
       - sys-process/atop: "~>=2.2"
       - sys-process/iotop
       - sys-process/lsof
