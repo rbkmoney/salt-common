@@ -56,7 +56,6 @@ utils-latest:
       - sys-apps/less
       - sys-apps/man-pages
       - sys-apps/net-tools
-      - sys-apps/paxctl
       - sys-apps/sed
       - sys-apps/util-linux: "[tty-helpers,fdformat]"
       - sys-apps/which
