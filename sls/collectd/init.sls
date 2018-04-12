@@ -44,11 +44,11 @@ collectd:
       - file: /etc/collectd/conf.d/
   pkg.latest:
     - pkgs:
-      - app-admin/collectd: '~[udev,xfs]'
+      - app-metrics/collectd: '~[udev,xfs]'
     - watch:
       - augeas: manage-collectd-plugins
   portage_config.flags:
-    - name: app-admin/collectd
+    - name: app-metrics/collectd
     - accept_keywords:
       - ~*
 
