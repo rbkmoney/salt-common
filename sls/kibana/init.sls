@@ -1,4 +1,4 @@
-{% set elastic_version = salt['pillar.get']('elastic:version', '~>=5.1') %}
+{% set kibana_version = salt['pillar.get']('kibana:version', '~>=6.1') %}
 include:
   - kibana.config
 
@@ -9,7 +9,7 @@ kibana:
       - ~*
   pkg.installed:
     - pkgs:
-      - www-apps/kibana-bin: "{{ elastic_version }}"
+      - www-apps/kibana-bin: "{{ kibana_version }}"
     - require:
       - portage_config: kibana
   service.running:
