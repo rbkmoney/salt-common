@@ -27,6 +27,7 @@ for branch in branches:
                         for repo_name in extra_repos.keys()]))
   content['pillar_roots'][env_name] = (
     [path.join(d_salt, main_reponame, branch, 'pillar'),
+     path.join(d_salt, 'private', 'pillar'),
      path.join(d_salt, common_reponame, 'pillar')] +
     filter(path.isdir, [path.join(d_salt, repo_name, extra_repos[repo_name].get('branch', branch), 'pillar')
                         for repo_name in extra_repos.keys()]))
