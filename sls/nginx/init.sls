@@ -48,7 +48,7 @@ nginx:
       - pkg: nginx
       - pkg: openssl
       - file: /etc/nginx/nginx.conf
-  pkg.latest:
+  pkg.installed:
     - name: www-servers/nginx
     - watch:
       - portage_config: nginx
