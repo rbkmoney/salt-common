@@ -1,4 +1,3 @@
-# -*- mode: yaml -*-
 /etc/conf.d/hostname:
   file.managed:
     - user: root
@@ -9,8 +8,7 @@
         # Set to the hostname of this machine
         hostname="{{ grains['fqdn'] }}"
 
-hostname-restart:
-  cmd.wait:
-    - name: 'service hostname restart'
+hostname:
+  service.running:
     - watch:
       - file: /etc/conf.d/hostname
