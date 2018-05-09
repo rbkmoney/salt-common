@@ -819,6 +819,7 @@ def _verify_install(desired, new_pkgs, ignore_epoch=False):
             cver = new_pkgs.get(pkgname)
 
         if not cver:
+            log.warning('Desired package {0} is not installed'.format(pkgname))
             failed.append(pkgname)
             continue
         elif pkgver == 'latest':
@@ -835,6 +836,8 @@ def _verify_install(desired, new_pkgs, ignore_epoch=False):
                                   ignore_epoch=ignore_epoch):
             ok.append(pkgname)
         else:
+            log.warning('Package {0}-{1} does not fullfill {1}{2}'.\
+                        format(pkgname, cver, oper, verstr))
             failed.append(pkgname)
     return ok, failed
 
