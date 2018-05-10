@@ -34,7 +34,7 @@ utils-latest:
       - net-analyzer/traceroute
       - net-analyzer/iftop
       - net-ftp/ftp
-      - net-misc/curl
+      - net-misc/curl: "[ssl,adns]"
       - net-misc/iputils
       - net-misc/rsync
       - net-misc/netkit-telnetd
