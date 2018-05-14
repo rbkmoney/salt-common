@@ -185,16 +185,18 @@ welcome_email_on_sign_up = false
 
 #################################### Logging ##########################
 [log]
+{% set log = conf.get('log', {}) %}
 # Either "console", "file", "syslog". Default is console and  file
 # Use space to separate multiple modes, e.g. "console file"
-;mode = console file
+mode = {{ log.get('mode', 'file') }}
 
 # Either "debug", "info", "warn", "error", "critical", default is "info"
-;level = info
+level = {{ log.get('level', 'info') }}
 
+{% if 'filters' in log %}
 # optional settings to set different levels for specific loggers. Ex filters = sqlstore:debug
-;filters =
-
+filters = {{ log['filters'] }}
+{% endif %}
 
 # For "console" mode only
 [log.console]
