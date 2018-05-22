@@ -389,6 +389,7 @@ LoadPlugin xencpu
 #	MountPoint "/home"
   	# FSType "cgroup_root"
   Device "cgroup_root"
+  Device "shm"
   Device "devtmpfs"
   Device "rootfs"
   Device "/^docker-.+/"
