@@ -384,14 +384,13 @@ LoadPlugin xencpu
 </Plugin>
 {% endif %}
 <Plugin df>
-#	Device "/dev/hda1"
-#	Device "192.168.0.2:/mnt/nfs"
-#	MountPoint "/home"
-  	# FSType "cgroup_root"
+  # MountPoint "/home"
+  # FSType "cgroup_root"
+  Device "root"
+  Device "rootfs"
   Device "cgroup_root"
   Device "shm"
   Device "devtmpfs"
-  Device "rootfs"
   Device "/^docker-.+/"
   Device "/^mapper_docker-.+/"
   IgnoreSelected true
@@ -453,7 +452,8 @@ LoadPlugin xencpu
 {% endif %}
 
 <Plugin interface>
-  Interface "/^veth.+/"
+  Interface "/^veth-.+/"
+  Interface "/^br-.+/"
   IgnoreSelected true
 </Plugin>
 
