@@ -384,10 +384,11 @@ LoadPlugin xencpu
 </Plugin>
 {% endif %}
 <Plugin df>
-  # MountPoint "/home"
+  MountPoint "/dev"
+  MountPoint "/dev/shm"
   # FSType "cgroup_root"
   Device "root"
-  Device "rootfs"
+  Device "overlay"
   Device "cgroup_root"
   Device "shm"
   Device "devtmpfs"
