@@ -1,4 +1,3 @@
-# -*- mode: yaml -*-
 include:
   - gentoo.portage
   - vcs.git

@@ -1,4 +1,3 @@
-# -*- mode: yaml -*-
 /etc/modules.d/:
   file.directory:
     - create: true

@@ -1,4 +1,3 @@
-# -*- mode: yaml -*-
 {% set arch_conf = salt['pillar.get']('arch_conf', False) %}
 eselect-profile:
   eselect.set:

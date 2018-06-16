@@ -1,4 +1,3 @@
-# -*- mode: yaml -*-
 
 git:
   pkg.latest:

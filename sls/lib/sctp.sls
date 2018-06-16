@@ -1,4 +1,3 @@
-# -*- mode: yaml -*-
 
 lksctp-tools:
   pkg.latest:
