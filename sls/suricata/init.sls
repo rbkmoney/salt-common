@@ -1,12 +1,13 @@
-#!pydsl
+#!pyobjects
+# -*- mode: python -*-
 import yaml
 
-suricata = __salt__['pillar.get']('suricata', {})
+suricata = pillar('suricata', {})
 instances = suricata.get('instances', {})
 
 include('suricata.pkg')
 
-confd_suricata = state('/etc/conf.d/suricata').file
+suricata_confd='/etc/conf.d/suricata'
 confd_contents="""# Managed by Salt
 # Config file for /etc/init.d/suricata
 """
@@ -16,20 +17,19 @@ for name,data in instances.items():
     if 'SURICATA_' + key in data:
       confd_contents += '_'.join(('SURICATA', key, name)) + '="' + data['SURICATA_' + key] + '"\n'
 
-confd_suricata.managed(mode=644, user='root', group='root', contents=confd_contents)
+File.managed(suricata_confd, mode=644, user='root', group='root', contents=confd_contents)
 
 for name,data in instances.items():
-  suricata_yaml = state('/etc/suricata/suricata-' + name + '.yaml').file
-  initd_symlink = state('/etc/init.d/suricata.' + name).file
-  
-  suricata_yaml.managed(
-    mode=644, user='root', group='root',
-    contents='%YAML 1.1\n---\n' + yaml.dump(data['conf'] if 'conf' in data
-                                            else suricata['conf']))
+  suricata_service = 'suricata.' + name
+  suricata_yaml = '/etc/suricata/'+ suricata_service +'.yaml'
+  initd_symlink = '/etc/init.d/' + suricata_service
+  Service.running(suricata_service, enable=True,
+                  watch=(File(suricata_confd), Pkg('net-analyzer/suricata')))
 
-  initd_symlink.symlink(target='/etc/init.d/suricata')
-
-  state('suricata.' + name).\
-    service.running(enable=True).\
-    watch(confd_suricata, suricata_yaml, initd_symlink,
-          pkg='net-analyzer/suricata')
+  with Service(suricata_service, 'watch_in'):
+    File.symlink(initd_symlink, target='/etc/init.d/suricata')
+    File.managed(
+      suricata_yaml, mode=644, user='root', group='root',
+      check_cmd='suricata -T -c'
+      contents='%YAML 1.1\n---\n' + yaml.dump(
+        data['conf'] if 'conf' in data else suricata['conf']))

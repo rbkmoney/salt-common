@@ -7,13 +7,11 @@ include:
 # dev-libs/libyaml
 # dev-libs/jansson
 # net-libs/libnetfilter_queue
+
 net-analyzer/suricata:
-  portage_config.flags:
-    - accept_keywords:
-      - ~*
   pkg.latest:
     - pkgs:
-      - net-analyzer/suricata: '[af-packet,nfqueue,control-socket,logrotate]'
+      - net-analyzer/suricata: '~[af-packet,nfqueue,control-socket,logrotate,-rules]'
     - require:
       - pkg: logrotate
       - pkg: net-libs/libhtp
