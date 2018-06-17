@@ -21,7 +21,7 @@ File.managed(suricata_confd, mode=644, user='root', group='root', contents=confd
 
 for name,data in instances.items():
   suricata_service = 'suricata.' + name
-  suricata_yaml = '/etc/suricata/'+ suricata_service +'.yaml'
+  suricata_yaml = '/etc/suricata/'+ suricata_service.replace('.', '-') +'.yaml'
   initd_symlink = '/etc/init.d/' + suricata_service
   Service.running(suricata_service, enable=True,
                   watch=(File(suricata_confd), Pkg('net-analyzer/suricata')))
