@@ -30,6 +30,6 @@ for name,data in instances.items():
     File.symlink(initd_symlink, target='/etc/init.d/suricata')
     File.managed(
       suricata_yaml, mode=644, user='root', group='root',
-      check_cmd='suricata --init-errors-fatal -v  -T -c',
+      check_cmd='suricata --init-errors-fatal -v -T -c',
       contents='%YAML 1.1\n---\n' + yaml.dump(
         data['conf'] if 'conf' in data else suricata['conf']))
