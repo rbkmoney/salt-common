@@ -1,5 +1,3 @@
-# -*- mode: yaml -*-
-
 ldns:
   pkg.latest:
     - pkgs:

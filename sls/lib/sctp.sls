@@ -1,4 +1,3 @@
-
 lksctp-tools:
   pkg.latest:
     - pkgs:

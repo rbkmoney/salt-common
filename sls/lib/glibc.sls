@@ -1,4 +1,3 @@
-# -*- mode: yaml -*-
 glibc:
   pkg.latest:
     - name: sys-libs/glibc
