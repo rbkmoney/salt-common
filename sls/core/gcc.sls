@@ -1,5 +1,5 @@
 {% set arch_conf = salt['pillar.get']('arch_conf', False) %}
-{% set gcc_version = salt['pillar.get']('gcc:version', '6.4.0-r1') %}
+{% set gcc_version = salt['pillar.get']('gcc:version', '7.3.0-r3') %}
 {% set gcc_profile = arch_conf['CHOST'] + '-' + gcc_version.split('-')[0] %}
 gcc:
   pkg.installed:

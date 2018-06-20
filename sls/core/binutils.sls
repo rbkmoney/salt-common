@@ -1,12 +1,12 @@
 {% set arch_conf = salt['pillar.get']('arch_conf', False) %}
-{% set binutils_version = salt['pillar.get']('binutils:version', '2.29.1-r1') %}
+{% set binutils_version = salt['pillar.get']('binutils:version', '2.30-r2') %}
 {% set binutils_target = arch_conf['CHOST'] + '-' + binutils_version.split('-')[0] %}
 
 sys-devel/binutils:
   pkg.installed:
    - pkgs:
       - sys-devel/binutils: "{{ binutils_version }}[cxx,multitarget]"
-      - sys-devel/binutils-config: ">=5-r3"
+      - sys-devel/binutils-config: ">=5-r4"
 
 eselect-binutils:
   eselect.set:
