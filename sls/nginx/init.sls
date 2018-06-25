@@ -90,6 +90,7 @@ nginx-reload:
         ssl_ecdh_curve: prime256v1
         ssl_session_cache: 'shared:SSL:20m'
         ssl_session_timeout: 120m
+    - check_cmd: nginx -t -c
     - mode: 755
     - user: root
     - group: root
