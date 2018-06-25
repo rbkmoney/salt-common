@@ -58,15 +58,6 @@ include:
     - require:
       - file: /root/.ssh/nagios-objects-access
 
-/var/nagios/home/.ssh/:
-  file.directory:
-    - create: True
-    - user: nagios
-    - group: nagios
-    - mode: 750
-    - require:
-      - user: nagios
-
 /var/nagios/home/.ssh/config:
   file.managed:
     - source: salt://nagios/files/ssh-config
