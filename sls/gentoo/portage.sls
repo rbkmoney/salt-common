@@ -4,7 +4,7 @@ include:
 sys-apps/portage:
   pkg.latest:
     - pkgs:
-      - sys-apps/portage: "[xattr,git]"
+      - sys-apps/portage: "[xattr,-rsync-verify]"
     - watch:
       - portage_config: sys-apps/portage
   portage_config.flags:
@@ -20,14 +20,6 @@ app-portage-purged:
     - mode: 755
     - user: root
     - group: root
-
-# emerge-preserved-rebuild:
-#   cmd.run:
-#     - name: '/usr/bin/emerge --quiet @preserved-rebuild'
-
-# glsa-check-fix:
-#   cmd.run:
-#     - name: '/usr/bin/glsa-check --fix affected'
 
 /etc/portage/profile/:
   file.directory:
