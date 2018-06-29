@@ -9,6 +9,9 @@ sys-apps/portage:
       - portage_config: sys-apps/portage
   portage_config.flags:
     - accept_keywords: []
+    - use:
+      - xattr
+      - -rsync-verify
 
 app-portage-purged:
   pkg.purged:
