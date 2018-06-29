@@ -16,6 +16,7 @@ salt-deps:
       - dev-python/pyzmq: ">=14.4"
       - dev-python/pyopenssl: ">=0.15.1"
       - dev-python/psutil: ">=5.2.2"
+    - reload_modules: true
 
 app-admin/salt:
   pkg.installed:
@@ -23,6 +24,7 @@ app-admin/salt:
     - version: "2017.7.5"
     - watch:
       - portage_config: app-admin/salt
+    - reload_modules: true
     - require:
       - pkg: cython
       - pkg: python2

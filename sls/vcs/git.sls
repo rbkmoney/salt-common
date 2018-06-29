@@ -7,3 +7,4 @@ dev-vcs/git:
     - version: "[{{ ','.join(git_use) }}]"
     - require:
       - portage_config: dev-vcs/git
+    - reload_modules: true
