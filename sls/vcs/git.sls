@@ -6,4 +6,4 @@ dev-vcs/git:
     - refresh: false
     - version: "[{{ ','.join(git_use) }}]"
     - require:
-      - portage_config: git
+      - portage_config: dev-vcs/git
