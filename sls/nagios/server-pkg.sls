@@ -4,6 +4,6 @@ include:
 nagios_pkg:
   pkg.installed:
     - pkgs:
-        - net-analyzer/nagios-core: "~>=4.2.2[web,perl]"
+        - net-analyzer/nagios-core: ">=4.3.4[web,perl]"
     - require:
       - pkg: media-libs/gd
