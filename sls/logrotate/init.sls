@@ -1,7 +1,5 @@
-logrotate:
-  pkg.latest:
-    - pkgs:
-      - app-admin/logrotate
+import:
+  - .pkg
 
 /etc/cron.daily/logrotate:
   file.managed:
@@ -25,3 +23,9 @@ logrotate:
     - user: root
     - group: root
 
+{% for config_protect_file in salt['file.find']('/etc/logrotate.d/', name='.__cfg*', maxdepth=1) %}
+{{ config_protect_file }}:
+  file.absent:
+    - require:
+      - file: /etc/logrotate.d/
+{% endfor %}
