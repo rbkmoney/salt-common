@@ -1,4 +1,3 @@
-# -*- mode: yaml -*-
 cronie:
   pkg.latest:
     - name: sys-process/cronie
