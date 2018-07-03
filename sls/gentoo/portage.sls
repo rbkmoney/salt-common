@@ -12,6 +12,7 @@ sys-apps/portage:
     - use:
       - xattr
       - -rsync-verify
+    - reload_modules: true
 
 app-portage-purged:
   pkg.purged:
