@@ -1,4 +1,4 @@
-import:
+include:
   - .pkg
 
 /etc/cron.daily/logrotate:
