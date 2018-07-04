@@ -23,7 +23,7 @@ include:
     - user: root
     - group: root
 
-{% for config_protect_file in salt['file.find']('/etc/logrotate.d/', name='.__cfg*', maxdepth=1) %}
+{% for config_protect_file in salt['file.find']('/etc/logrotate.d/', name='._cfg*', maxdepth=1) %}
 {{ config_protect_file }}:
   file.absent:
     - require:
