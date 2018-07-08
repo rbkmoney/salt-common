@@ -1,7 +1,6 @@
-# -*- mode: yaml -*-
 include:
   - ssl.openssl
-  - salt
+  - salt.pkg
 
 salt-minion:
   service.running:

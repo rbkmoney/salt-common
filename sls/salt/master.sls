@@ -1,6 +1,6 @@
 include:
   - ssl.openssl
-  - salt
+  - salt.pkg
   - salt.repos
 
 salt-master:
