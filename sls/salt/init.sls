@@ -1,6 +1,7 @@
-# -*- mode: yaml -*-
 include:
   - python.python2
+
+{% set saltversion = '2017.7.7' %}
 
 # TODO: move cython to another state
 cython:
@@ -21,7 +22,7 @@ salt-deps:
 app-admin/salt:
   pkg.installed:
     - refresh: False
-    - version: "2017.7.7"
+    - version: "{{ saltversion }}"
     - watch:
       - portage_config: app-admin/salt
     - reload_modules: true
@@ -30,7 +31,7 @@ app-admin/salt:
       - pkg: python2
       - pkg: salt-deps
   portage_config.flags:
-    - name: '=app-admin/salt-2017.7.7'
+    - name: '=app-admin/salt-{{ saltversion }}'
     - accept_keywords:
       - ~*
     - use:
