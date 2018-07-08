@@ -21,7 +21,7 @@ salt-deps:
 app-admin/salt:
   pkg.installed:
     - refresh: False
-    - version: "2017.7.5"
+    - version: "2017.7.7"
     - watch:
       - portage_config: app-admin/salt
     - reload_modules: true
@@ -30,7 +30,7 @@ app-admin/salt:
       - pkg: python2
       - pkg: salt-deps
   portage_config.flags:
-    - name: '=app-admin/salt-2017.7.5'
+    - name: '=app-admin/salt-2017.7.7'
     - accept_keywords:
       - ~*
     - use:
