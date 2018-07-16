@@ -11,7 +11,6 @@ salt-master:
       - pkg: python2
       - pkg: cython
       - pkg: app-admin/salt
-      - pkg: salt-deps
       - file: /etc/salt/master
       - file: /etc/salt/master.d/roots.conf
 

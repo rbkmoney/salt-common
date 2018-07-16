@@ -11,5 +11,4 @@ salt-syndic:
       - pkg: cython
       - pkg: python2
       - pkg: app-admin/salt
-      - pkg: salt-deps
       - file: /etc/salt/master

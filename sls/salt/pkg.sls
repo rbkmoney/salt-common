@@ -9,10 +9,11 @@ cython:
     - refresh: False
     - name: dev-python/cython
 
-salt-deps:
+app-admin/salt:
   pkg.installed:
     - refresh: False
     - pkgs:
+      - app-admin/salt: "{{ saltversion }}"
       - net-libs/zeromq: ">=4.1.4"
       - dev-python/pyzmq: ">=14.4"
       - dev-python/pyopenssl: ">=0.15.1"
@@ -21,19 +22,12 @@ salt-deps:
       - dev-python/pycryptodome: "~>=3.4.7"
       - dev-python/dnspython: ">=1.16.0_pre20170831-r1"
       - dev-python/sleekxmpp: "~>=1.3.1"
-    - reload_modules: true
-
-app-admin/salt:
-  pkg.installed:
-    - refresh: False
-    - version: "{{ saltversion }}"
     - watch:
       - portage_config: app-admin/salt
     - reload_modules: true
     - require:
       - pkg: cython
       - pkg: python2
-      - pkg: salt-deps
   portage_config.flags:
     - name: '=app-admin/salt-{{ saltversion }}'
     - accept_keywords:
