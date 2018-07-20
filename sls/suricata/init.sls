@@ -33,3 +33,8 @@ for name,data in instances.items():
       check_cmd='suricata --init-errors-fatal -v -T -c',
       contents='%YAML 1.1\n---\n' + yaml.dump(
         data['conf'] if 'conf' in data else suricata['conf']))
+
+File.managed(
+  '/etc/logrotate.d/suricata', source='salt://suricata/files/suricata.logrotate',
+  template='jinja', defaults={'instances': instances.keys()},
+  mode=644, user='root', group='root')

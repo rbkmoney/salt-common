@@ -1,0 +1,11 @@
+/var/log/suricata/*.log /var/log/suricata/*.json {
+        rotate 3
+        missingok
+        create
+        sharedscripts
+        postrotate
+	        {% for name in instances %}
+                /etc/init.d/suricata.{{ name }} relog
+		{% endfor %}
+        endscript
+}
