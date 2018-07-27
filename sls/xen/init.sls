@@ -6,6 +6,7 @@
 {% set xen_version = salt['pillar.get']('xen:version', '~=4.9.1-r1') %}
 {% set xen_tools_version = salt['pillar.get']('xen:tools_version', '~=4.9.1-r1') %}
 {% set xen_version_short = xen_version.rsplit('-', 1)[0].lstrip('-~*<>=') %}
+{% set kernels_remote_uri = salt['pillar.get']('xen:kernels:remote', False) -%}
 
 include:
   - gentoo.portage
@@ -118,7 +119,46 @@ unmask-hvm:
     - source: salt://xen/scripts/block-rbd
     - mode: 755
     - user: root
-    - group: root    
+    - group: root
+
+/var/xen/:
+  file.directory:
+    - create: True
+    - mode: 755
+    - user: root
+    - group: root
+
+/var/xen/kernels/:
+  file.directory:
+    - create: True
+    - mode: 755
+    - user: root
+    - group: root
+    - require:
+      - file: /var/xen/
+
+{% if kernels_remote and kernels_remote['type'] == 'git' %}
+/root/.ssh/xen-kernels-access:
+  file.managed:
+    - source: salt://ssl/openssh-privkey.tpl
+    - template: jinja
+    - context:
+        privkey_key: xen-kernels-access
+    - mode: 600
+    - user: root
+
+fetch-kernels:
+  git.latest:
+    - name: /var/xen/kernels/
+    - target: {{ kernels_remote['uri'] }}
+    - rev: master
+    - force_clone: True
+    - force_checkout: True
+    - identity: /root/.ssh/xen-kernels-access
+    - require:
+      - file: /var/xen/kernels/
+      - file: /root/.ssh/xen-kernels-access
+{% endif %}
 
 xencommons:
   service.running:
