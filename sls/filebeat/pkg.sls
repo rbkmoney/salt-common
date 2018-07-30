@@ -1,7 +1,11 @@
+{% set filebeat_version = salt['pillar.get']('filebeat:version', '~>=6.3') %}
+include:
+  - go
+
 filebeat_pkg:
   pkg.installed:
     - pkgs:
-      - app-admin/filebeat: "~>=6.1.1"
+      - app-admin/filebeat: "{{ filebeat_version }}"
 
 'paxctl-ng-filebeat':
   cmd.run:
