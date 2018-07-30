@@ -6,7 +6,7 @@
 {% set xen_version = salt['pillar.get']('xen:version', '~=4.9.1-r1') %}
 {% set xen_tools_version = salt['pillar.get']('xen:tools_version', '~=4.9.1-r1') %}
 {% set xen_version_short = xen_version.rsplit('-', 1)[0].lstrip('-~*<>=') %}
-{% set kernels_remote_uri = salt['pillar.get']('xen:kernels:remote', False) -%}
+{% set kernels_remote = salt['pillar.get']('xen:kernels:remote', False) -%}
 
 include:
   - gentoo.portage
