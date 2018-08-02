@@ -149,8 +149,8 @@ unmask-hvm:
 
 fetch-kernels:
   git.latest:
-    - name: /var/xen/kernels/
-    - target: {{ kernels_remote['uri'] }}
+    - name: {{ kernels_remote['uri'] }}
+    - target: /var/xen/kernels/
     - rev: master
     - force_clone: True
     - force_checkout: True
