@@ -13,6 +13,7 @@ gentoo:
     - name: '{{ sync_uri }}'
     - target: '/usr/portage'
     - rev: master
+    - depth: 1
     - force_clone: True
     - force_checkout: True
   {% endif %}
