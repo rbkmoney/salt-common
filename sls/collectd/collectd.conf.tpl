@@ -80,6 +80,7 @@ LoadPlugin apcups
 LoadPlugin ceph
 {% endif %}
 LoadPlugin contextswitch
+LoadPlugin conntrack
 LoadPlugin cpu
 {% if not virtual_machine and machine_type not in ('raspberrypi') %}
 LoadPlugin cpufreq

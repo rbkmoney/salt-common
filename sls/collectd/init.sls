@@ -8,9 +8,9 @@ include:
 {% set configured_plugins = salt['pillar.get']('collectd:configured-plugins', '') %}
 
 {% if machine_type == 'raspberry pi' %}
-{% set makeconf_collectd_plugins = '''aggregation apcups contextswitch cpu cpufreq csv curl curl_json curl_xml dbi df disk entropy ethstat exec filecount fscache interface iptables load logfile memcached memory nfs netlink network nginx processes python syslog statsd table tail tcpconns unixsock uptime users vmem''' %}
+{% set makeconf_collectd_plugins = '''aggregation apcups contextswitch conntrack cpu cpufreq csv curl curl_json curl_xml dbi df disk entropy ethstat exec filecount fscache interface iptables load logfile memcached memory nfs netlink network nginx processes python syslog statsd table tail tcpconns unixsock uptime users vmem''' %}
 {% else %}
-{% set makeconf_collectd_plugins = 'aggregation apcups cgroups chrony contextswitch cpu cpufreq cpusleep csv curl curl_json curl_xml dbi df disk entropy ethstat exec filecount fscache interface iptables ipvs irq load logfile md memcached memory nfs netlink network nginx numa hugepages processes python sensors swap syslog log_logstash statsd table tail tcpconns target_notification thermal treshold unixsock uptime users uuid vmem write_graphite write_riemann write_prometheus' +
+{% set makeconf_collectd_plugins = 'aggregation apcups cgroups chrony contextswitch conntrack cpu cpufreq cpusleep csv curl curl_json curl_xml dbi df disk entropy ethstat exec filecount fscache interface iptables ipvs irq load logfile md memcached memory nfs netlink network nginx numa hugepages processes python sensors swap syslog log_logstash statsd table tail tcpconns target_notification thermal treshold unixsock uptime users uuid vmem write_graphite write_riemann write_prometheus' +
 (' lvm' if 'lvm' in collectd else '') +
 (' ceph' if 'ceph' in collectd else '') +
 (' mysql' if 'mysql' in collectd else '') +
