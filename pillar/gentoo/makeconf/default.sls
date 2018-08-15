@@ -17,4 +17,4 @@ make_conf:
   other:
     USE_SALT: "smp multitarget lzma logrotate sctp xattr -gnutls -tcpd"
     PYTHON_TARGETS: "python2_7 python3_6"
-    PYTHON_SINGLE_TARGET: "python2_7 python3_6"
+    PYTHON_SINGLE_TARGET: "python3_6"
