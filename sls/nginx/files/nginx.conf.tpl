@@ -1,3 +1,4 @@
+# -*- mode: nginx -*-
 user nginx nginx;
 worker_processes {{ worker_processes }};
 worker_rlimit_nofile {{ worker_rlimit_nofile }};
@@ -29,10 +30,15 @@ http {
     large_client_header_buffers 4 2k;
     request_pool_size 4k;
 
+    # TODO: parametrize with pillar data
     gzip on;
+    gzip_vary on;
+    gzip_proxied any;
+    gzip_http_version 1.1;
+    gzip_types text/plain text/css application/json application/x-javascript text/xml application/xml application/xml+rss text/javascript;
     gzip_min_length 1100;
-    gzip_buffers 4 8k;
-    gzip_types text/plain;
+    gzip_comp_level 6;
+    gzip_buffers 16 8k;
 
     output_buffers 1 32k;
     postpone_output 1460;
