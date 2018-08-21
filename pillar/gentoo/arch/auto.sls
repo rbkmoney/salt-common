@@ -13,7 +13,7 @@ arch_conf:
   mirror_arch: 'amd64/corei7-avx'
 {% elif 'sse4_2' in cpu_flags %}
   mirror_arch: 'amd64/corei7'
-{% else in cpu_flags %}
+{% else %}
   mirror_arch: 'amd64/core2'
 {% endif %}
 {% elif cpuarch == 'i686' %}
