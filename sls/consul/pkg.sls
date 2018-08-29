@@ -8,13 +8,12 @@ include:
 
 app-admin/consul:
   pkg.installed:
-    - app-admin/consul:
-      - version: "{{ consul_version }}"
-      {% if consul_packaged %}
-      - binhost: force
-      {% endif %}
-      - require:
-        - portage_config: app-admin/consul
+    - version: "{{ consul_version }}"
+    {% if consul_packaged %}
+    - binhost: force
+    {% endif %}
+    - require:
+      - portage_config: app-admin/consul
   portage_config.flags:
     - accept_keywords:
       - "~*"
