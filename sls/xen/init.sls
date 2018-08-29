@@ -1,10 +1,10 @@
 # This definitely should be set
 {% set efi = salt['grains.get']('efi', False) %}
-# This should be set when we can not install xen from here;
-# For example: machine is PXE booted, and you need to modify file on tftp server;
+# This should be set when we shall not install xen from here;
+# For example when the xen binary is fetched from a tftp server.
 {% set xen_provided = salt['grains.get']('xen_provided', False) %}
-{% set xen_version = salt['pillar.get']('xen:version', '~=4.9.1-r1') %}
-{% set xen_tools_version = salt['pillar.get']('xen:tools_version', '~=4.9.1-r1') %}
+{% set xen_version = salt['pillar.get']('xen:version', '~=4.9.2') %}
+{% set xen_tools_version = salt['pillar.get']('xen:tools_version', '~=4.9.2-r1') %}
 {% set xen_version_short = xen_version.rsplit('-', 1)[0].lstrip('-~*<>=') %}
 {% set kernels_remote = salt['pillar.get']('xen:kernels:remote', False) -%}
 
@@ -20,7 +20,7 @@ include:
     - group: root
     - mode: 644
     - contents: |
-        INSTALL_MASK='/boot/xen.gz /boot/xen-4.gz /boot/xen-4.6.gz /boot/xen-4.7.gz /boot/xen-4.8.gz'
+        INSTALL_MASK='/boot/xen.gz /boot/xen-4.gz /boot/xen-{{ xen_version_short }}.gz'
     - require:
       - file: /etc/portage/env/
 
