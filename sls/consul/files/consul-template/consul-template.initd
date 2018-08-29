@@ -1,0 +1,30 @@
+#!/sbin/openrc-run
+# -*- mode: shell-script -*-
+
+description="consul-template agent"
+group="${group:-${SVCNAME}}"
+pidfile="${pidfile:-"/run/${SVCNAME}/${SVCNAME}.pid"}"
+user="${user:-${SVCNAME}}"
+
+command="/usr/bin/${SVCNAME}"
+command_args="-config=/etc/consul-template.d ${command_args}"
+command_background="true"
+start_stop_daemon_args="--user ${user} --group ${group} \
+        --stdout /var/log/${SVCNAME}/${SVCNAME}.log \
+        --stderr /var/log/${SVCNAME}/${SVCNAME}.log"
+
+depend() {
+        need net
+        after net
+}
+
+start_pre() {
+        checkpath -d -m 0755 -o "${user}":"${group}" "${pidfile%/*}"
+}
+
+stop() {
+        # SIGINT is required for graceful shutdown of consul-template
+        ebegin "Stopping ${SVCNAME}"
+        start-stop-daemon --stop --signal SIGINT --pidfile "${pidfile}"
+        eend $?
+}
