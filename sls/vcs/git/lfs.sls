@@ -6,6 +6,8 @@ dev-vcs/git-lfs:
   portage_config.flags:
     - accept_keywords:
       - ~*
+    - use:
+      - "-docs"
   pkg.latest:
     - require:
       - pkg: dev-lang/go
