@@ -1,5 +1,8 @@
-# -*- mode: yaml -*-
-{% for username, data in salt['pillar.get']('users:present', {}).items() %}
+{% set users_present = salt['pillar.get']('users:present', {})%}
+{% set users_present_list = users_present.keys() %}
+{% set users_absent = salt['pillar.get']('users:absent', [])%}
+
+{% for username, data in users_present.items() %}
 {% set homedir = data.get('home', '/home/' + username) %}
 {{ username }}_user:
   user.present:
@@ -30,7 +33,7 @@
 
 {{ homedir }}/.ssh/authorized_keys:
   file.managed:
-    - source: salt://users/authorized_keys.tpl
+    - source: salt://users/files/authorized_keys.tpl
     - template: jinja
     - context:
         user: {{ username }}
@@ -40,10 +43,13 @@
       - file: {{ homedir }}/.ssh
 {% endif %}
 {% endfor %}
-{% for user in salt['pillar.get']('users:absent', []) %}
+
+{% for user in users_absent %}
+{% if user not in users_present_list %}
 {{ user }}:
   user.absent:
     - purge: True
+{% endif %}
 {% endfor %}
 
 {% for groupname, data in salt['pillar.get']('groups:present', {}).items() %}
