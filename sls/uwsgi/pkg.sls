@@ -1,4 +1,3 @@
-# -*- mode: yaml -*-
 include:
   - augeas
   - gentoo.makeconf

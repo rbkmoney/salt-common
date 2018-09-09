@@ -1,9 +1,9 @@
 include:
   - gentoo.makeconf
 
-python2:
+python35:
   pkg.latest:
-    - name: dev-lang/python:2.7
-    - slot: '2.7'
+    - name: dev-lang/python:3.5
+    - slot: '3.5'
     - watch:
       - augeas: manage-make-conf

@@ -1,9 +1,9 @@
 include:
   - gentoo.makeconf
 
-python2:
+python36:
   pkg.latest:
-    - name: dev-lang/python:2.7
-    - slot: '2.7'
+    - name: dev-lang/python:3.6
+    - slot: '3.6'
     - watch:
       - augeas: manage-make-conf

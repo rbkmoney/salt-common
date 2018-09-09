@@ -19,13 +19,5 @@ pkg_python-config:
       - portage_config: app-eselect/eselect-python
       - portage_config: dev-lang/python-exec
 
-eselect-python3:
-  eselect.set:
-    - name: python
-    - action_parameter: '--python3'
-    - target: 'python3.5'
-    - require:
-      - pkg: pkg_python-config
-
 app-admin/python-updater:
   pkg.purged
