@@ -1,11 +1,12 @@
 # This definitely should be set
+{% set xen_version = salt['pillar.get']('xen:version', '~=4.9.2') %}
+{% set xen_tools_version = salt['pillar.get']('xen:tools_version', '~=4.9.2-r1') %}
+{% set xen_version_short = xen_version.rsplit('-', 1)[0].lstrip('-~*<>=') %}
 {% set efi = salt['grains.get']('efi', False) %}
 # This should be set when we shall not install xen from here;
 # For example when the xen binary is fetched from a tftp server.
 {% set xen_provided = salt['grains.get']('xen_provided', False) %}
-{% set xen_version = salt['pillar.get']('xen:version', '~=4.9.2') %}
-{% set xen_tools_version = salt['pillar.get']('xen:tools_version', '~=4.9.2-r1') %}
-{% set xen_version_short = xen_version.rsplit('-', 1)[0].lstrip('-~*<>=') %}
+{% set xen_packaged = salt['pillar.get']('xen:packaged', False) %}
 {% set kernels_remote = salt['pillar.get']('xen:kernels:remote', False) -%}
 
 include:
@@ -39,6 +40,9 @@ xen:
       {% endif %}
       - app-emulation/xen-tools: "{{ xen_tools_version }}[api,hvm,screen,system-qemu,-qemu,system-seabios]"
       - dev-libs/libnl
+    {% if xen_packaged %}
+    - binhost: force
+    {% endif %}
     - require:
       - pkg: qemu
       - portage_config: xen

@@ -1,7 +1,12 @@
 {% set ceph_version = salt['pillar.get']('ceph:version', '~=12.2.5') %}
 {% set ceph_use = salt['pillar.get']('ceph:use', ('radosgw', 'tcmalloc', 'xfs')) %}
+{% set ceph_packaged = salt['pillar.get']('ceph:packaged', False) %}
+
 ceph:
   pkg.installed:
+    {% if ceph_packaged %}
+    - binhost: force
+    {% endif %}
     - pkgs:
       - sys-cluster/ceph: "{{ ceph_version }}[{{ ','.join(ceph_use) }}]"
       - dev-libs/boost: ">=1.65.0[python,context]"
