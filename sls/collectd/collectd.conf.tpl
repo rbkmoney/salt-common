@@ -166,7 +166,6 @@ LoadPlugin nginx
 {% endif %}
 ##LoadPlugin pinba
 # LoadPlugin ping
-##LoadPlugin postgresql
 ##LoadPlugin powerdns
 LoadPlugin processes
 ##LoadPlugin protocols
@@ -746,78 +745,6 @@ LoadPlugin xencpu
 #		Foo "Bar"
 #		Qux "Baz"
 #	</Plugin>
-#</Plugin>
-
-#<Plugin pinba>
-#	Address "::0"
-#	Port "30002"
-#	<View "name">
-#		Host "host name"
-#		Server "server name"
-#		Script "script name"
-#	</View>
-#</Plugin>
-
-#<Plugin ping>
-#	Host "host.foo.bar"
-#	Interval 1.0
-#	Timeout 0.9
-#	TTL 255
-#	SourceAddress "1.2.3.4"
-#	Device "eth0"
-#	MaxMissed -1
-#</Plugin>
-
-#<Plugin postgresql>
-#	<Query magic>
-#		Statement "SELECT magic FROM wizard WHERE host = $1;"
-#		Param hostname
-#		<Result>
-#			Type gauge
-#			InstancePrefix "magic"
-#			ValuesFrom magic
-#		</Result>
-#	</Query>
-#	<Query rt36_tickets>
-#		Statement "SELECT COUNT(type) AS count, type \
-#		                  FROM (SELECT CASE \
-#		                               WHEN resolved = 'epoch' THEN 'open' \
-#		                               ELSE 'resolved' END AS type \
-#		                               FROM tickets) type \
-#		                  GROUP BY type;"
-#		<Result>
-#			Type counter
-#			InstancePrefix "rt36_tickets"
-#			InstancesFrom "type"
-#			ValuesFrom "count"
-#		</Result>
-#	</Query>
-#	<Writer sqlstore>
-#		# See contrib/postgresql/collectd_insert.sql for details
-#		Statement "SELECT collectd_insert($1, $2, $3, $4, $5, $6, $7, $8, $9);"
-#		StoreRates true
-#	</Writer>
-#	<Database foo>
-#		Host "hostname"
-#		Port "5432"
-#		User "username"
-#		Password "secret"
-#		SSLMode "prefer"
-#		KRBSrvName "kerberos_service_name"
-#		Query magic
-#	</Database>
-#	<Database bar>
-#		Interval 60
-#		Service "service_name"
-#		Query backend # predefined
-#		Query rt36_tickets
-#	</Database>
-#	<Database qux>
-#		Service "collectd_store"
-#		Writer sqlstore
-#		# see collectd.conf(5) for details
-#		CommitInterval 30
-#	</Database>
 #</Plugin>
 
 #<Plugin powerdns>
