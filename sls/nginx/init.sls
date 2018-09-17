@@ -1,4 +1,3 @@
-# -*- mode: yaml -*-
 include:
   - ssl.openssl
   - augeas.lenses
