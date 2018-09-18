@@ -3,6 +3,15 @@ include:
   - elasticsearch.pkg
   - elasticsearch.config
 
+/etc/elasticsearch/elasticsearch.keystore:
+  file.managed:
+    - replace: False
+    - mode: 660
+    - user: elasticsearch
+    - group: elasticsearch
+    - require:
+      - pkg: elasticsearch_pkg
+
 elasticsearch:
   service.running:
     - enable: True
