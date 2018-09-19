@@ -13,5 +13,5 @@ set-gcc-profile:
     - name: gcc-config -f {{ gcc_profile }}
     - onlyif: "test \"$(gcc-config -c)\" != {{ gcc_profile }}"
     - watch:
-      - pkg: gcc
+      - pkg: sys-devel/gcc
       - pkg: sys-devel/gcc-config
