@@ -5,8 +5,8 @@ include:
 'emerge -q --prune sys-devel/gcc':
   cmd.run:
     - onchanges:
-      - pkg: gcc
-      - cmd: gcc-profile
+      - pkg: sys-devel/gcc
+      - cmd: set-gcc-profile
 
 'emerge -q --prune sys-devel/binutils sys-libs/binutils-libs':
   cmd.run:
