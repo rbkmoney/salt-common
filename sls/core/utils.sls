@@ -65,7 +65,6 @@ utils-latest:
       - app-misc/screen
       - app-shells/zsh
       - app-doc/zsh-lovers
-      - app-shells/gentoo-zsh-completions
       - app-admin/killproc
       - sys-devel/bc
       {% if not salt['grains.get']('diskless', False) %}
