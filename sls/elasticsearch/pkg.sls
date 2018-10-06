@@ -2,7 +2,6 @@
 include:
   - java.icedtea3
 
-elasticsearch_pkg:
+app-misc/elasticsearch:
   pkg.installed:
-    - pkgs:
-      - app-misc/elasticsearch: '{{ elastic_version }}'
+    - version: '{{ elastic_version }}'

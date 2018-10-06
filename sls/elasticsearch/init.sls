@@ -3,6 +3,14 @@ include:
   - elasticsearch.pkg
   - elasticsearch.config
 
+create-elasticsearch-keystore:
+  cmd.run:
+    - name: ${ES_HOME}/bin/elasticsearch-keystore
+    - creates: /etc/elasticsearch/elasticsearch.keystore
+    - require:
+      - pkg: app-misc/elasticsearch
+      - file: /etc/elasticsearch/
+
 /etc/elasticsearch/elasticsearch.keystore:
   file.managed:
     - replace: False
@@ -10,7 +18,7 @@ include:
     - user: elasticsearch
     - group: elasticsearch
     - require:
-      - pkg: elasticsearch_pkg
+      - cmd: create-elasticsearch-keystore
 
 elasticsearch:
   service.running:
@@ -22,3 +30,5 @@ elasticsearch:
       - file: /etc/elasticsearch/jvm.options
       - file: /etc/security/limits.d/elasticsearch.conf
       - file: /etc/conf.d/elasticsearch
+      - cmd: create-elasticsearch-keystore
+      - file: /etc/elasticsearch/elasticsearch.keystore
