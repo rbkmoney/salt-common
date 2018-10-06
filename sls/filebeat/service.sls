@@ -1,9 +1,8 @@
-/etc/filebeat/conf.d:
+/etc/filebeat/conf.d/:
   file.directory:
-    - user:  root
+    - user: root
     - group: root
-    - mode:  755
-    - makedirs: True
+    - mode: 755
 
 filebeat:
   service.running:
