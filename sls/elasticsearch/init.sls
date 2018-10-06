@@ -25,7 +25,7 @@ elasticsearch:
     - enable: True
     - watch:
       - pkg: icedtea3
-      - pkg: elasticsearch_pkg
+      - pkg: app-misc/elasticsearch
       - file: /etc/elasticsearch/elasticsearch.yml
       - file: /etc/elasticsearch/jvm.options
       - file: /etc/security/limits.d/elasticsearch.conf
