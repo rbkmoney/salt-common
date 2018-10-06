@@ -7,7 +7,7 @@ extend:
   filebeat:
     service.running:
       - watch:
-        - pkg: filebeat_pkg
+        - pkg: app-admin/filebeat
         - file: /etc/filebeat/filebeat.yml
         - file: /etc/filebeat/conf.d/
         - file: /etc/filebeat/filebeat.template.json

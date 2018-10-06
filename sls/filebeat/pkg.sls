@@ -1,18 +1,23 @@
 {% set filebeat_version = salt['pillar.get']('filebeat:version', '~>=6.3') %}
+{% set filebeat_packaged = salt['pillar.get']('filebeat:packaged', False) %}
+{% if not filebeat_packaged %}
 include:
   - go
+{% endif %}
 
-filebeat_pkg:
+app-admin/filebeat:
   pkg.installed:
-    - pkgs:
-      - app-admin/filebeat: "{{ filebeat_version }}"
+    - version: "{{ filebeat_version }}"
+    {% if filebeat_packaged %}
+    - binhost: force
+    {% endif %}
 
 'paxctl-ng-filebeat':
   cmd.run:
     - name: 'setfattr -n user.pax.flags -v "em" /usr/bin/filebeat'
     - unless: 'test $(getfattr -n user.pax.flags /usr/bin/filebeat --only-values) == "em"'
     - watch:
-      - pkg: filebeat_pkg
+      - pkg: app-admin/filebeat
 
 /var/lib/filebeat/module/:
   file.recurse:
