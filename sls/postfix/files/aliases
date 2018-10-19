@@ -1,0 +1,25 @@
+# Managed by Salt
+{% set default_mailto = salt['pillar.get']('contacts:default:email') %}
+noc: root
+webmaster: root
+bin: root
+news: usenet
+www: webmaster
+named: root
+uucp: root
+mail: root
+daemon: root
+operator: root
+postfix: root
+ftp: root
+postmaster: root
+nobody: root
+abuse: postmaster
+hostmaster: root
+usenet: root
+adm: root
+lp: root
+security: root
+exim: root
+MAILER-DAEMON: {{ default_mailto }}
+root: {{ default_mailto }}

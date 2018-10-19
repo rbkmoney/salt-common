@@ -1,0 +1,3 @@
+/^Received:/ IGNORE
+/^X-Originating-IP:/ IGNORE
+/^Received-SPF:/ IGNORE
