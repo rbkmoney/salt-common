@@ -3,14 +3,14 @@ include:
 
 /etc/cron.daily/logrotate:
   file.managed:
-    - source: salt://logrotate/logrotate.cron.daily
+    - source: salt://logrotate/files/logrotate.cron.daily
     - mode: 755
     - user: root
     - group: root
 
 /etc/logrotate.conf:
   file.managed:
-    - source: salt://logrotate/logrotate.conf
+    - source: salt://logrotate/files/logrotate.conf.tpl
     - template: jinja
     - mode: 644
     - user: root
