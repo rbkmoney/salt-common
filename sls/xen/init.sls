@@ -11,7 +11,6 @@
 
 include:
   - gentoo.portage
-  - qemu
   - xen.bridgeconfig
   - xen.domainconfig
 
@@ -39,6 +38,7 @@ xen:
       - app-emulation/xen: "{{ xen_version }}[{{ 'efi' if efi else '-efi' }}]"
       {% endif %}
       - app-emulation/xen-tools: "{{ xen_tools_version }}[api,hvm,screen,system-qemu,-qemu,system-seabios]"
+      - app-emulation/qemu: "[numa,nfs,xen,xfs,rbd]"
       - dev-libs/libnl
     {% if xen_packaged %}
     - binhost: force
