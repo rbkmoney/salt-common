@@ -44,7 +44,6 @@ xen:
     - binhost: force
     {% endif %}
     - require:
-      - pkg: qemu
       - portage_config: xen
       - file: unmask-hvm
       {% if xen_provided %}
