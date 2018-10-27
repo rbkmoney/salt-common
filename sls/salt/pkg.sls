@@ -1,7 +1,7 @@
 include:
   - python.python2
 
-{% set saltversion = '2017.7.7' %}
+{% set saltversion = '<2018.0.0' %}
 
 # TODO: move cython to another state
 cython:
@@ -29,7 +29,6 @@ app-admin/salt:
       - pkg: cython
       - pkg: python2
   portage_config.flags:
-    - name: '=app-admin/salt-{{ saltversion }}'
     - accept_keywords:
       - ~*
     - use:
