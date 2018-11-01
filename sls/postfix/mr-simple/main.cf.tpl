@@ -265,9 +265,13 @@ smtpd_sender_restrictions=
 
 smtpd_recipient_restrictions=
  reject_non_fqdn_recipient,
+ reject_unknown_recipient_domain,
+ reject_unverified_recipient,
  permit_mynetworks,
  reject_unauth_destination,
  check_policy_service unix:private/policyd-spf
+
+# unverified_recipient_reject_reason = Address lookup failed
 
 policyd-spf_time_limit = 3600
 
