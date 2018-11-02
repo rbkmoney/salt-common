@@ -1,5 +1,6 @@
 {% set postfix_version = salt['pillar.get']('postfix:version', '>=3.3.1-r1') %}
-{% set postfix_use = salt['pillar.get']('postfix:use', ('hardened', 'berkdb', '-dovecot-sasl', '-memcached', '-mysql') %}
+{% set postfix_use = salt['pillar.get']('postfix:use',
+['hardened', 'berkdb', '-dovecot-sasl', '-memcached', '-mysql']) %}
 #['berkdb', 'dovecot-sasl', 'hardened', 'memcached', 'mysql', 'pam', 'ssl']
 {% set postfix_packaged = salt['pillar.get']('postfix:packaged', False) %}
 
