@@ -1,5 +1,6 @@
-{% set mydomain = salt['pillar.get']('postfix:nullmailer:mydomain') %}
-{% set relayhost = salt['pillar.get']('postfix:nullmailer:relayhost') %}
+{% set conf = salt['pillar.get']('postfix:nullmailer', {}) %}
+{% set mydomain = conf['mydomain'] %}
+{% set relayhost = conf['relayhost'] %}
 queue_directory = /var/spool/postfix
 command_directory = /usr/sbin
 daemon_directory = /usr/libexec/postfix
