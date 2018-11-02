@@ -5,6 +5,7 @@ include:
 /etc/mail/aliases:
   file.managed:
     - source: salt://postfix/files/aliases
+    - template: jinja
     - mode: 644
     - user: root
     - group: root
