@@ -1,4 +1,10 @@
 include:
-  - lib.timezone-data
-  - lib.glibc
+  - .timezone-data
+  - .glibc
+  - .glib
+  - .ldns
+  - .sctp
+  - .libevent
+  - ssl.openssl
+  - pam
 
