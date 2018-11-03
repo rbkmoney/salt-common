@@ -4,5 +4,7 @@ dev-libs/libsodium:
   pkg.latest:
     {% if libs_packaged %}
     - binhost: force
+    {% else %}
+    - binhost: try
     {% endif %}
 

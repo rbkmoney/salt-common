@@ -3,4 +3,6 @@ sys-libs/cracklib:
   pkg.latest:
     {% if libs_packaged %}
     - binhost: force
+    {% else %}
+    - binhost: try
     {% endif %}

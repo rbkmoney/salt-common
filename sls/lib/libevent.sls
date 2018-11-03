@@ -4,4 +4,6 @@ dev-libs/libevent:
   pkg.latest:
     {% if libs_packaged %}
     - binhost: force
+    {% else %}
+    - binhost: try
     {% endif %}
