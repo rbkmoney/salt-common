@@ -9,7 +9,7 @@ unbound:
     - watch:
       - pkg: net-dns/unbound
       - pkg: net-dns/dnssec-root
-      - pkg: glibc
+      - pkg: sys-libs/glibc
       - pkg: openssl
       - pkg: ldns
       - pkg: dev-libs/libevent
