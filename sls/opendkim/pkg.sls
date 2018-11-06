@@ -1,5 +1,8 @@
-pkg_opendkim:
+include:
+  - unbound.pkg
+
+mail-filter/opendkim:
   pkg.latest:
-    - pkgs:
-        - mail-filter/opendkim: '[berkdb,ssl,unbound]'
-        - net-dns/unbound
+    - version: '[berkdb,ssl,unbound]'
+    - require:
+      - pkg: net-dns/unbound

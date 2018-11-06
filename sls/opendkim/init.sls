@@ -7,6 +7,9 @@ opendkim:
   service.running:
     - enable: True
     - watch:
+      - pkg: mail-filter/opendkim
+      - pkg: net-dns/unbound
+      - pkg: openssl
       - file: /etc/opendkim/opendkim.conf
       - file: /etc/opendkim/signing-table
       - file: /etc/opendkim/key-table
