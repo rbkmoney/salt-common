@@ -1,7 +1,9 @@
 include:
   - postfix.common
+  - postfix.collectd
   - pypolicyd-spf
   - opendkim
+  - syslog
 
 extend:
   postfix:
