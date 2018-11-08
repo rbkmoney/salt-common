@@ -11,13 +11,14 @@ BaseDir     "/var/lib/collectd"
 PIDFile     "/run/collectd/collectd.pid"
 TypesDB     "/etc/collectd/types.db"
 # PluginDir   "/usr/lib64/collectd"
+Include "/etc/collectd/conf.d/*.conf"
 
 #----------------------------------------------------------------------------#
 # When enabled, plugins are loaded automatically with the default options    #
 # when an appropriate <Plugin ...> block is encountered.                     #
 # Disabled by default.                                                       #
 #----------------------------------------------------------------------------#
-AutoLoadPlugin {{ 'true' if 'include' in configured_plugins else 'false' }}
+AutoLoadPlugin {{ 'true' if collectd_conf.get('AutoLoadPlugin', False) else 'false' }}
 
 #----------------------------------------------------------------------------#
 # Interval at which to query values. This may be overwritten on a per-plugin #
@@ -26,7 +27,7 @@ AutoLoadPlugin {{ 'true' if 'include' in configured_plugins else 'false' }}
 #       Interval 60                                                          #
 #   </LoadPlugin>                                                            #
 #----------------------------------------------------------------------------#
-Interval 10
+Interval {{ collectd_conf.get('Interval', 10) }}
 
 Timeout {{ collectd_conf.get('Timeout', 2) }}
 ReadThreads {{ collectd_conf.get('ReadThreads', 5) }}
@@ -45,37 +46,23 @@ WriteThreads {{ collectd_conf.get('WriteThreads', 5) }}
 ##############################################################################
 
 LoadPlugin syslog
-##LoadPlugin logfile
 
 <Plugin syslog>
   LogLevel info
 </Plugin>
 
-#<Plugin logfile>
-#	LogLevel info
-#	File STDOUT
-#	Timestamp true
-#	PrintSeverity false
-#</Plugin>
-
 ##############################################################################
 # LoadPlugin section                                                         #
 #----------------------------------------------------------------------------#
-# Lines beginning with a single `#' belong to plugins which have been built  #
-# but are disabled by default.                                               #
-#                                                                            #
-# Lines begnning with `##' belong to plugins which have not been built due   #
-# to missing dependencies or because they have been deactivated explicitly.  #
-##############################################################################
 {% if p_aggregation %}
 LoadPlugin aggregation
 {% endif %}
-##LoadPlugin amqp
-##LoadPlugin apache
+#LoadPlugin amqp
+#LoadPlugin apache
 {% if 'apcups' in configured_plugins %}
 LoadPlugin apcups
 {% endif %}
-##LoadPlugin aquaero
+#LoadPlugin aquaero
 {% if p_ceph %}
 LoadPlugin ceph
 {% endif %}
@@ -88,10 +75,10 @@ LoadPlugin irq
 LoadPlugin numa
 LoadPlugin sensors
 {% endif %}
-##LoadPlugin csv
-##LoadPlugin curl
-##LoadPlugin curl_json
-##LoadPlugin curl_xml
+#LoadPlugin csv
+#LoadPlugin curl
+#LoadPlugin curl_json
+#LoadPlugin curl_xml
 {% if "dbi" in configured_plugins %}
 LoadPlugin dbi
 {% endif %}
@@ -100,8 +87,8 @@ LoadPlugin disk
 LoadPlugin entropy
 LoadPlugin ethstat
 LoadPlugin exec
-##LoadPlugin filecount
-##LoadPlugin fscache
+#LoadPlugin filecount
+#LoadPlugin fscache
 #LoadPlugin gmond
 {% if "hddtemp" in configured_plugins %}
 LoadPlugin hddtemp
@@ -114,17 +101,17 @@ LoadPlugin iptables
 LoadPlugin ipmi
 {% endif %}
 {% if False %}
-##LoadPlugin ipvs
+#LoadPlugin ipvs
 {% endif %}
 {% if False %}
-##LoadPlugin java
-##LoadPlugin libvirt
+#LoadPlugin java
+#LoadPlugin libvirt
 {% endif %}
 LoadPlugin load
-##LoadPlugin lpar
-##LoadPlugin lvm
-##LoadPlugin madwifi
-##LoadPlugin mbmon
+#LoadPlugin lpar
+#LoadPlugin lvm
+#LoadPlugin madwifi
+#LoadPlugin mbmon
 {% if "mdraid" in configured_plugins %}
 LoadPlugin md
 {% endif %}
@@ -135,13 +122,13 @@ LoadPlugin memcachec
 LoadPlugin memcached
 {% endif %}
 LoadPlugin memory
-##LoadPlugin modbus
-##LoadPlugin multimeter
+#LoadPlugin modbus
+#LoadPlugin multimeter
 {% if p_mysql %}
 LoadPlugin mysql
 {% endif %}
-##LoadPlugin netapp
-##LoadPlugin netlink
+#LoadPlugin netapp
+#LoadPlugin netlink
 {% if p_network -%}
 LoadPlugin network
 {% endif %}
@@ -154,65 +141,64 @@ LoadPlugin nginx
 #LoadPlugin notify_desktop
 #LoadPlugin notify_email
 # LoadPlugin ntpd
-##LoadPlugin nut
-##LoadPlugin olsrd
-##LoadPlugin onewire
-##LoadPlugin openvpn
-##LoadPlugin oracle
+#LoadPlugin nut
+#LoadPlugin olsrd
+#LoadPlugin onewire
+#LoadPlugin openvpn
+#LoadPlugin oracle
 {% if "perl" in configured_plugins %}
 <LoadPlugin perl>
   Globals true
 </LoadPlugin>
 {% endif %}
-##LoadPlugin pinba
+#LoadPlugin pinba
 # LoadPlugin ping
-##LoadPlugin powerdns
+#LoadPlugin powerdns
 LoadPlugin processes
-##LoadPlugin protocols
+#LoadPlugin protocols
 {% if "python" in configured_plugins %}
 <LoadPlugin python>
   Globals true
 </LoadPlugin>
 {% endif %}
-##LoadPlugin redis
-##LoadPlugin routeros
+#LoadPlugin redis
+#LoadPlugin routeros
 #LoadPlugin rrdcached
 #LoadPlugin rrdtool
-##LoadPlugin serial
-##LoadPlugin sigrok
+#LoadPlugin serial
+#LoadPlugin sigrok
 {% if "snmp" in configured_plugins %}
 LoadPlugin snmp
 {% endif %}
 LoadPlugin statsd
-##LoadPlugin swap
-##LoadPlugin table
+#LoadPlugin swap
+#LoadPlugin table
 LoadPlugin tail
 #LoadPlugin tail_csv
-##LoadPlugin tape
+#LoadPlugin tape
 #LoadPlugin tcpconns
-##LoadPlugin teamspeak2
-##LoadPlugin ted
+#LoadPlugin teamspeak2
+#LoadPlugin ted
 #LoadPlugin thermal
-##LoadPlugin tokyotyrant
+#LoadPlugin tokyotyrant
 LoadPlugin unixsock
 LoadPlugin uptime
 LoadPlugin users
-##LoadPlugin uuid
-##LoadPlugin varnish
-##LoadPlugin mic
+#LoadPlugin uuid
+#LoadPlugin varnish
+#LoadPlugin mic
 LoadPlugin vmem
-##LoadPlugin vserver
-##LoadPlugin wireless
+#LoadPlugin vserver
+#LoadPlugin wireless
 {% if p_write_graphite %}
 LoadPlugin write_graphite
 {% endif %}
-##LoadPlugin write_http
-##LoadPlugin write_mongodb
-##LoadPlugin write_redis
+#LoadPlugin write_http
+#LoadPlugin write_mongodb
+#LoadPlugin write_redis
 {% if p_write_riemann %}
 LoadPlugin write_riemann
 {% endif %}
-##LoadPlugin zfs_arc
 {% if "xencpu" in configured_plugins %}
 LoadPlugin xencpu
 {% endif %}
@@ -888,175 +874,6 @@ LoadPlugin xencpu
 #		</Result>
 #	</Table>
 #</Plugin>
-{% endif %}
-<Plugin "tail">
-{% if "postfix" in configured_plugins %}
-<File "/var/log/mail.log">
-  Instance "postfix"
-   # number of connections
-   # (incoming)
-   <Match>
-     Regex "\\<postfix\\/smtpd\\[[0-9]+\\]: connect from\\>"
-     DSType "DeriveInc"
-     Type "mail_counter"
-     Instance "connection-in-open"
-   </Match>
-   <Match>
-     Regex "\\<postfix\\/smtpd\\[[0-9]+\\]: disconnect from\\>"
-     DSType "DeriveInc"
-     Type "mail_counter"
-     Instance "connection-in-close"
-   </Match>
-   <Match>
-     Regex "\\<postfix\\/smtpd\\[[0-9]+\\]: lost connection after .* from\\>"
-     DSType "DeriveInc"
-     Type "mail_counter"
-     Instance "connection-in-lost"
-   </Match>
-   <Match>
-     Regex "\\<postfix\\/smtpd\\[[0-9]+\\]: timeout after .* from\\>"
-     DSType "DeriveInc"
-     Type "mail_counter"
-     Instance "connection-in-timeout"
-   </Match>
-   <Match>
-     Regex "\\<postfix\\/smtpd\\[[0-9]+\\]: setting up TLS connection from\\>"
-     DSType "DeriveInc"
-     Type "mail_counter"
-     Instance "connection-in-TLS-setup"
-   </Match>
-   <Match>
-     Regex "\\<postfix\\/smtpd\\[[0-9]+\\]: [A-Za-z]+ TLS connection established from\\>"
-     DSType "DeriveInc"
-     Type "mail_counter"
-     Instance "connection-in-TLS-established"
-   </Match>
-   # (outgoing)
-   <Match>
-     Regex "\\<postfix\\/smtp\\[[0-9]+\\]: setting up TLS connection to\\>"
-     DSType "DeriveInc"
-     Type "mail_counter"
-     Instance "connection-out-TLS-setup"
-   </Match>
-   <Match>
-     Regex "\\<postfix\\/smtp\\[[0-9]+\\]: [A-Za-z]+ TLS connection established to\\>"
-     DSType "DeriveInc"
-     Type "mail_counter"
-     Instance "connection-out-TLS-established"
-   </Match>
-
-  # rejects for incoming E-mails
-  <Match>
-    Regex "\\<554 5\\.7\\.1\\>"
-    DSType "DeriveInc"
-    Type "mail_counter"
-    Instance "rejected"
-  </Match>
-  <Match>
-    Regex "\\<450 4\\.7\\.1\\>.*Helo command rejected: Host not found\\>"
-    DSType "DeriveInc"
-    Type "mail_counter"
-    Instance "rejected-host_not_found"
-  </Match>
-  <Match>
-    Regex "\\<450 4\\.7\\.1\\>.*Client host rejected: No DNS entries for your MTA, HELO and Domain\\>"
-    DSType "DeriveInc"
-    Type "mail_counter"
-    Instance "rejected-no_dns_entry"
-  </Match>
-   <Match>
-     Regex "\\<450 4\\.7\\.1\\>.*Client host rejected: Mail appeared to be SPAM or forged\\>"
-     DSType "DeriveInc"
-     Type "mail_counter"
-     Instance "rejected-spam_or_forged"
-   </Match>
-
-  # status codes
-  <Match>
-    Regex "status=deferred"
-    DSType "DeriveInc"
-    Type "mail_counter"
-    Instance "status-deferred"
-  </Match>
-  <Match>
-    Regex "status=forwarded"
-    DSType "DeriveInc"
-    Type "mail_counter"
-    Instance "status-forwarded"
-  </Match>
-  <Match>
-    Regex "status=reject"
-    DSType "DeriveInc"
-    Type "mail_counter"
-    Instance "status-reject"
-  </Match>
-  <Match>
-    Regex "status=sent"
-    DSType "DeriveInc"
-    Type "mail_counter"
-    Instance "status-sent"
-  </Match>
-  <Match>
-    Regex "status=bounced"
-    DSType "DeriveInc"
-    Type "mail_counter"
-    Instance "status-bounced"
-  </Match>
-  <Match>
-    Regex "status=SOFTBOUNCE"
-    DSType "DeriveInc"
-    Type "mail_counter"
-    Instance "status-softbounce"
-  </Match>
-
-  # message size
-  <Match>
-    Regex "size=([0-9]*)"
-    DSType "DeriveAdd"
-    Type "ipt_bytes"
-    Instance "size"
-  </Match>
-
-  # delays (see [1] for details)
-  # total time spent in the Postfix queue
-  <Match>
-    Regex "delay=([\.0-9]*)"
-    DSType "GaugeAverage"
-    Type "gauge"
-    Instance "delay"
-  </Match>
-  # time spent before the queue manager, including message transmission
-  <Match>
-    Regex "delays=([\.0-9]*)/[\.0-9]*/[\.0-9]*/[\.0-9]*"
-    DSType "GaugeAverage"
-    Type "gauge"
-    Instance "delay-before_queue_mgr"
-  </Match>
-  # time spent in the queue manager
-  <Match>
-    Regex "delays=[\.0-9]*/([\.0-9]*)/[\.0-9]*/[\.0-9]*"
-    DSType "GaugeAverage"
-    Type "gauge"
-    Instance "delay-in_queue_mgr"
-  </Match>
-  # connection setup time including DNS, HELO and TLS
-  <Match>
-    Regex "delays=[\.0-9]*/[\.0-9]*/([\.0-9]*)/[\.0-9]*"
-    DSType "GaugeAverage"
-    Type "gauge"
-    Instance "delay-setup_time"
-  </Match>
-  # message transmission time
-  <Match>
-    Regex "delays=[\.0-9]*/[\.0-9]*/[\.0-9]*/([\.0-9]*)"
-    DSType "GaugeAverage"
-    Type "gauge"
-    Instance "delay-trans_time"
-  </Match>
-</File>
-{% endif %}
-</Plugin>
-{% if False %}
 #<Plugin "tail_csv">
 #   <Metric "dropped">
 #       Type "percent"
@@ -1319,10 +1136,4 @@ LoadPlugin xencpu
 #    </Type>
 #  </Host>
 #</Plugin>
-{% endif %}
-
-{% if 'include' in configured_plugins %}
-<Include "/etc/collectd/conf.d">
-  Filter "*.conf"
-</Include>
 {% endif %}
