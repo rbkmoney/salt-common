@@ -891,56 +891,56 @@ LoadPlugin xencpu
 {% endif %}
 <Plugin "tail">
 {% if "postfix" in configured_plugins %}
- <File "/var/log/mail.log">
+<File "/var/log/mail.log">
   Instance "postfix"
    # number of connections
    # (incoming)
    <Match>
      Regex "\\<postfix\\/smtpd\\[[0-9]+\\]: connect from\\>"
-     DSType "CounterInc"
+     DSType "DeriveInc"
      Type "mail_counter"
      Instance "connection-in-open"
    </Match>
    <Match>
      Regex "\\<postfix\\/smtpd\\[[0-9]+\\]: disconnect from\\>"
-     DSType "CounterInc"
+     DSType "DeriveInc"
      Type "mail_counter"
      Instance "connection-in-close"
    </Match>
    <Match>
      Regex "\\<postfix\\/smtpd\\[[0-9]+\\]: lost connection after .* from\\>"
-     DSType "CounterInc"
+     DSType "DeriveInc"
      Type "mail_counter"
      Instance "connection-in-lost"
    </Match>
    <Match>
      Regex "\\<postfix\\/smtpd\\[[0-9]+\\]: timeout after .* from\\>"
-     DSType "CounterInc"
+     DSType "DeriveInc"
      Type "mail_counter"
      Instance "connection-in-timeout"
    </Match>
    <Match>
      Regex "\\<postfix\\/smtpd\\[[0-9]+\\]: setting up TLS connection from\\>"
-     DSType "CounterInc"
+     DSType "DeriveInc"
      Type "mail_counter"
      Instance "connection-in-TLS-setup"
    </Match>
    <Match>
      Regex "\\<postfix\\/smtpd\\[[0-9]+\\]: [A-Za-z]+ TLS connection established from\\>"
-     DSType "CounterInc"
+     DSType "DeriveInc"
      Type "mail_counter"
      Instance "connection-in-TLS-established"
    </Match>
    # (outgoing)
    <Match>
      Regex "\\<postfix\\/smtp\\[[0-9]+\\]: setting up TLS connection to\\>"
-     DSType "CounterInc"
+     DSType "DeriveInc"
      Type "mail_counter"
      Instance "connection-out-TLS-setup"
    </Match>
    <Match>
      Regex "\\<postfix\\/smtp\\[[0-9]+\\]: [A-Za-z]+ TLS connection established to\\>"
-     DSType "CounterInc"
+     DSType "DeriveInc"
      Type "mail_counter"
      Instance "connection-out-TLS-established"
    </Match>
@@ -948,25 +948,25 @@ LoadPlugin xencpu
   # rejects for incoming E-mails
   <Match>
     Regex "\\<554 5\\.7\\.1\\>"
-    DSType "CounterInc"
+    DSType "DeriveInc"
     Type "mail_counter"
     Instance "rejected"
   </Match>
   <Match>
     Regex "\\<450 4\\.7\\.1\\>.*Helo command rejected: Host not found\\>"
-    DSType "CounterInc"
+    DSType "DeriveInc"
     Type "mail_counter"
     Instance "rejected-host_not_found"
   </Match>
   <Match>
     Regex "\\<450 4\\.7\\.1\\>.*Client host rejected: No DNS entries for your MTA, HELO and Domain\\>"
-    DSType "CounterInc"
+    DSType "DeriveInc"
     Type "mail_counter"
     Instance "rejected-no_dns_entry"
   </Match>
    <Match>
      Regex "\\<450 4\\.7\\.1\\>.*Client host rejected: Mail appeared to be SPAM or forged\\>"
-     DSType "CounterInc"
+     DSType "DeriveInc"
      Type "mail_counter"
      Instance "rejected-spam_or_forged"
    </Match>
@@ -974,37 +974,37 @@ LoadPlugin xencpu
   # status codes
   <Match>
     Regex "status=deferred"
-    DSType "CounterInc"
+    DSType "DeriveInc"
     Type "mail_counter"
     Instance "status-deferred"
   </Match>
   <Match>
     Regex "status=forwarded"
-    DSType "CounterInc"
+    DSType "DeriveInc"
     Type "mail_counter"
     Instance "status-forwarded"
   </Match>
   <Match>
     Regex "status=reject"
-    DSType "CounterInc"
+    DSType "DeriveInc"
     Type "mail_counter"
     Instance "status-reject"
   </Match>
   <Match>
     Regex "status=sent"
-    DSType "CounterInc"
+    DSType "DeriveInc"
     Type "mail_counter"
     Instance "status-sent"
   </Match>
   <Match>
     Regex "status=bounced"
-    DSType "CounterInc"
+    DSType "DeriveInc"
     Type "mail_counter"
     Instance "status-bounced"
   </Match>
   <Match>
     Regex "status=SOFTBOUNCE"
-    DSType "CounterInc"
+    DSType "DeriveInc"
     Type "mail_counter"
     Instance "status-softbounce"
   </Match>
@@ -1012,12 +1012,12 @@ LoadPlugin xencpu
   # message size
   <Match>
     Regex "size=([0-9]*)"
-    DSType "CounterAdd"
+    DSType "DeriveAdd"
     Type "ipt_bytes"
     Instance "size"
   </Match>
 
-  # delays
+  # delays (see [1] for details)
   # total time spent in the Postfix queue
   <Match>
     Regex "delay=([\.0-9]*)"
@@ -1054,41 +1054,6 @@ LoadPlugin xencpu
     Instance "delay-trans_time"
   </Match>
 </File>
-{% endif %}
-{% if "nginx" in configured_plugins %}
-<File "/var/log/nginx/access_log">
-  Instance "nginx"
-  <Match>
-    Regex " \\[5..\\] "
-    DSType "DeriveInc"
-    Type "derive"
-    Instance "5xx"
-  </Match>
-  <Match>
-    Regex " \\[4..\\] "
-    DSType "DeriveInc"
-    Type "derive"
-    Instance "4xx"
-  </Match>
-  <Match>
-    Regex " \\[3..\\] "
-    DSType "DeriveInc"
-    Type "derive"
-    Instance "3xx"
-  </Match>
-  <Match>
-    Regex "\\[2..\\]"
-    DSType "DeriveInc"
-    Type "derive"
-    Instance "2xx"
-  </Match>
-  <Match>
-    Regex " \\[1..\\] "
-    DSType "DeriveInc"
-    Type "derive"
-    Instance "1xx"
-  </Match>
- </File>
 {% endif %}
 </Plugin>
 {% if False %}
