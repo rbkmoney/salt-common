@@ -10,6 +10,11 @@ vm.zone_reclaim_mode:
     - config: '/etc/sysctl.d/vm.conf'
     - value: {{ vm.get('zone_reclaim_mode', 0) }}
 
+vm.vfs_cache_pressure:
+  sysctl.present:
+    - config: '/etc/sysctl.d/vm.conf'
+    - value: {{ vm.get('vfs_cache_pressure', 100) }}
+
 vm.dirty_bytes:
   sysctl.present:
     - config: '/etc/sysctl.d/vm.conf'
@@ -23,5 +28,5 @@ vm.dirty_background_bytes:
 vm.min_free_kbytes:
   sysctl.present:
     - config: '/etc/sysctl.d/vm.conf'
-    - value: {{ vm.get('min_free_kbytes', 262144) }}
+    - value: {{ vm.get('min_free_kbytes', 131072) }}
 
