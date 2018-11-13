@@ -190,9 +190,9 @@ bluestore cache size hdd = {{ ceph_osd_bluestore.get('cache-size-hdd', 107374182
 # The default amount of memory BlueStore will use for its cache when backed by an SSD.
 bluestore cache size ssd = {{ ceph_osd_bluestore.get('cache-size-ssd', 1073741824) }}
 # The ratio of cache devoted to metadata.
-bluestore cache meta ratio = {{ ceph_osd_bluestore.get('cache-meta-ratio', 0.01) }}
+bluestore cache meta ratio = {{ ceph_osd_bluestore.get('cache-meta-ratio', 0.1) }}
 # The ratio of cache devoted to key/value data (rocksdb).
-bluestore cache kv ratio = {{ ceph_osd_bluestore.get('cache-kv-ratio', 0.99) }}
+bluestore cache kv ratio = {{ ceph_osd_bluestore.get('cache-kv-ratio', 0.5) }}
 # The maximum amount of cache devoted to key/value data (rocksdb).
 bluestore cache kv max = {{ ceph_osd_bluestore.get('cache-kv-max', 536870912) }}
 
