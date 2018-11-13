@@ -118,6 +118,7 @@ debug auth = {{ ceph_mon_debug.get('auth', 20) }}
 
 {% set ceph_osd = ceph_conf.get('osd', {}) %}
 {% set ceph_osd_filestore = ceph_osd.get('filestore', {}) %}
+{% set ceph_osd_bluestore = ceph_osd.get('bluestore', {}) %}
 {% set ceph_osd_debug = ceph_osd.get('debug', False) %}
 [osd]
 # The number of active recovery requests per OSD at one time.
@@ -154,6 +155,11 @@ debug filestor = {{ ceph_osd_debug.get('filestore', 20) }}
 debug journal = {{ ceph_osd_debug.get('journal', 20) }}
 {% endif %}
 
+# The number of threads to service Ceph OSD Daemon Operations. Set to 0 to disable it.
+# Increasing the number may increase the request processing rate.
+osd op threads = {{ ceph_osd.get('op-threads', 4) }}
+
+## Filestore
 # The maximum interval in seconds for synchronizing the filestore.
 filestore max sync interval = {{ ceph_osd_filestore.get('max-sync-interval', 5) }}
 
@@ -178,9 +184,17 @@ filestore split multiple = {{ ceph_osd_filestore.get('split-multiple', 4) }}
 # The number of filesystem operation threads that execute in parallel.
 filestore op threads = {{ ceph_osd_filestore.get('op-threads', 4) }}
 
-# The number of threads to service Ceph OSD Daemon Operations. Set to 0 to disable it.
-# Increasing the number may increase the request processing rate.
-osd op threads = {{ ceph_osd.get('op-threads', 4) }}
+## Bluestore
+# The default amount of memory BlueStore will use for its cache when backed by an HDD.
+bluestore cache size hdd = {{ ceph_osd_bluestore.get('cache-size-hdd', 1073741824) }}
+# The default amount of memory BlueStore will use for its cache when backed by an SSD.
+bluestore cache size ssd = {{ ceph_osd_bluestore.get('cache-size-ssd', 1073741824) }}
+# The ratio of cache devoted to metadata.
+bluestore cache meta ratio = {{ ceph_osd_bluestore.get('cache-meta-ratio', 0.01) }}
+# The ratio of cache devoted to key/value data (rocksdb).
+bluestore cache kv ratio = {{ ceph_osd_bluestore.get('cache-kv-ratio', 0.99) }}
+# The maximum amount of cache devoted to key/value data (rocksdb).
+bluestore cache kv max = {{ ceph_osd_bluestore.get('cache-kv-max', 536870912) }}
 
 {% for id,data in ceph_conf.get('osd-table', {}).items() %}
 [osd.{{ id }}]
