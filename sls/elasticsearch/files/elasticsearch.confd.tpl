@@ -9,7 +9,13 @@
 CONF_DIR=/etc/elasticsearch
 
 # Elasticsearch data directory
-DATA_DIR=/var/lib/elasticsearch
+{% set data_path = '/var/lib/elasticsearch' %}
+{% set data_count = salt['pillar.get']('elastic:data-dir-count', False) %}
+{% if data_dir_count %}
+DATA_DIR="{{ ','.join([data_path + '/data' + str(i) for i in range(0, data_count)]) }}"
+{% else %}
+DATA_DIR="{{ data_path }}"
+{% endif %}
 
 # Elasticsearch logs directory
 LOG_DIR=/var/log/elasticsearch
