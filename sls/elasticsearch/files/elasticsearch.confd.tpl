@@ -6,19 +6,13 @@
 #JAVA_HOME=
 
 # Elasticsearch configuration directory
-CONF_DIR=/etc/elasticsearch
+CONF_DIR="{{ conf_dir }}"
 
 # Elasticsearch data directory
-{% set data_path = '/var/lib/elasticsearch' %}
-{% set data_count = salt['pillar.get']('elastic:data-dir-count', False) %}
-{% if data_dir_count %}
-DATA_DIR="{{ ','.join([data_path + '/data' + str(i) for i in range(0, data_count)]) }}"
-{% else %}
-DATA_DIR="{{ data_path }}"
-{% endif %}
+DATA_DIR="{{ data_dir }}"
 
 # Elasticsearch logs directory
-LOG_DIR=/var/log/elasticsearch
+LOG_DIR="{{ log_dir }}"
 
 # Additional Java OPTS
 ES_JAVA_OPTS="{{ es_java_opts if es_java_opts is defined else '' }}"
