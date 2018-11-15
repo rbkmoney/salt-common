@@ -4,12 +4,20 @@ from salt.utils import dictupdate
 import yaml
 
 conf_path = '/etc/elasticsearch/'
-data_path = '/var/lib/elasticsearch/'
 log_path = '/var/log/elasticsearch/'
+data_path = '/var/lib/elasticsearch/'
 
 File.directory(
-  conf_path,
-  create=True, mode=755, user='root', group='root')
+  conf_path, create=True,
+  mode=755, user='root', group='root')
+
+File.directory(
+  log_path, create=True,
+  mode=755, user='elasticsearch', group='elasticsearch')
+
+File.directory(
+  data_path, create=True,
+  mode=755, user='elasticsearch', group='elasticsearch')
 
 fqdn = grains('fqdn')
 fqdn_ipv6 = grains('fqdn_ipv6')
@@ -17,7 +25,13 @@ hosts = pillar('elastic:hosts', [])
 
 data_count = pillar('elastic:data-dir-count', False)
 if data_count:
-  data_dir = ','.join([data_path + 'data' + str(i) for i in range(0, data_count)])
+  _dirs = [data_path + 'data' + str(i) for i in range(0, data_count)]
+  data_dir = ','.join(_dirs)
+  for d in _dirs:
+    File.directory(
+      d, create=True,
+      mode=755, user='elasticsearch', group='elasticsearch',
+      require=[File(data_path)])
 else:
   data_dir = data_path
 

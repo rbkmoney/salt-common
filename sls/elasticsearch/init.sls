@@ -5,7 +5,7 @@ include:
 
 create-elasticsearch-keystore:
   cmd.run:
-    - name: ${ES_HOME}/bin/elasticsearch-keystore
+    - name: /usr/share/elasticsearch/bin/elasticsearch-keystore
     - creates: /etc/elasticsearch/elasticsearch.keystore
     - require:
       - pkg: app-misc/elasticsearch
