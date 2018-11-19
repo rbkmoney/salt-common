@@ -1,8 +1,8 @@
 include:
   - ruby
-  - ruby.ruby22
+  - ruby.ruby23
 
-eselect-ruby22:
+eselect-ruby23:
   eselect.set:
     - name: ruby
-    - target: 'ruby22'
+    - target: 'ruby23'
