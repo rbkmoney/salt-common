@@ -17,7 +17,7 @@
   
 /etc/conf.d/modules:
   file.managed:
-    - source: salt://gentoo/modules.confd
+    - source: salt://openrc/files/modules.confd
     - user: root
     - group: root
     - mode: 755

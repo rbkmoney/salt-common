@@ -1,8 +1,7 @@
 include:
   - gentoo.portage
+  - gentoo.eix
   - gentoo.repos.gentoo
-  - gentoo.repos.baka-bakka
   - gentoo.profile
-  - gentoo.modules
   - gentoo.makeconf
 
