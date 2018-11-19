@@ -7,3 +7,5 @@ app-portage/eix:
     - mode: 755
     - user: portage
     - group: portage
+    - require_in:
+      - pkg: app-portage/eix
