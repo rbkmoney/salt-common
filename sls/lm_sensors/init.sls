@@ -1,9 +1,7 @@
-# -*- mode: yaml -*-
-
 lm_sensors:
   pkg.installed:
     - pkgs:
-      - sys-apps/lm_sensors: '[sensord]'
+      - sys-apps/lm_sensors: '[-sensord]'
   service.running:
     - enable: True
     - watch:
