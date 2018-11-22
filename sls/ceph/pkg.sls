@@ -1,6 +1,6 @@
 {% set ceph_version = salt['pillar.get']('ceph:version', '=12.2.8-r1') %}
 {% set ceph_use = salt['pillar.get']('ceph:use', ('radosgw', 'tcmalloc', 'xfs')) %}
-{% set ceph_packaged = salt['pillar.get']('ceph:packaged', False) %}
+{% set ceph_packaged = salt['pillar.get']('ceph:packaged', True) %}
 
 ceph:
   pkg.installed:
