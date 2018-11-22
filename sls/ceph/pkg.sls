@@ -34,7 +34,8 @@ ceph:
     - require:
       - user: ceph
 
-/var/lib/ceph/mon/:
+{% for daemon in ('mon', 'mgr', 'osd', 'mds') %}
+/var/lib/ceph/{{ daemon }}/:
   file.directory:
     - create: True
     - mode: 755
@@ -42,24 +43,7 @@ ceph:
     - group: ceph
     - require:
       - file: /var/lib/ceph/
-
-/var/lib/ceph/osd/:
-  file.directory:
-    - create: True
-    - mode: 755
-    - user: ceph
-    - group: ceph
-    - require:
-      - file: /var/lib/ceph/
-
-/var/lib/ceph/mds/:
-  file.directory:
-    - create: True
-    - mode: 755
-    - user: ceph
-    - group: ceph
-    - require:
-      - file: /var/lib/ceph/
+{% endfor %}
 
 /var/log/ceph/:
   file.directory:

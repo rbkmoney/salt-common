@@ -7,17 +7,6 @@ include:
 {% set enable_ceph_mgr = salt['pillar.get']('ceph:mgr:enable', False) %}
 {% set host_osd_map = salt['pillar.get']('ceph:osd:map', {}) %}
 
-{% for daemon in ('mon', 'mgr', 'osd', 'mds') %}
-/var/lib/ceph/{{ daemon }}/:
-  file.directory:
-    - create: True
-    - mode: 755
-    - user: ceph
-    - group: ceph
-    - require:
-      - pkg: ceph
-{% endfor %}
-
 {% if enable_ceph_mon %}
 /var/lib/ceph/mon/ceph-{{ host }}/:
   file.directory:
