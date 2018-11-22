@@ -98,7 +98,7 @@ ceph-mgr.{{ host }}:
     - user: ceph
     - group: ceph
     - require:
-      - file: /var/lib/ceph/osd/ceph-{{ host }}/
+      - file: /var/lib/ceph/osd/ceph-{{ osd_id }}/
 
 /var/lib/ceph/osd/ceph-{{ osd_id }}/whoami:
   file.exists
