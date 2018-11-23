@@ -1,6 +1,6 @@
 # This definitely should be set
-{% set xen_version = salt['pillar.get']('xen:version', '~=4.10.1-r2') %}
-{% set xen_tools_version = salt['pillar.get']('xen:tools_version', '~=4.10.1-r1') %}
+{% set xen_version = salt['pillar.get']('xen:version', '~=4.10.2-r2') %}
+{% set xen_tools_version = salt['pillar.get']('xen:tools_version', '~=4.10.2-r1') %}
 {% set xen_version_short = xen_version.rsplit('-', 1)[0].lstrip('-~*<>=') %}
 {% set efi = salt['grains.get']('efi', False) %}
 # This should be set when we shall not install xen from here;
