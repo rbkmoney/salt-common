@@ -439,8 +439,8 @@ LoadPlugin xencpu
 {% endif %}
 
 <Plugin interface>
-  Interface "/^veth-.+/"
-  Interface "/^br-.+/"
+  Interface "/^veth.+/"
+  Interface "/^br.+/"
   IgnoreSelected true
 </Plugin>
 
