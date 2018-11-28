@@ -439,6 +439,7 @@ LoadPlugin xencpu
 {% endif %}
 
 <Plugin interface>
+  Interface "/^vif.+/"
   Interface "/^veth.+/"
   Interface "/^br.+/"
   IgnoreSelected true
@@ -843,11 +844,11 @@ LoadPlugin xencpu
 <Plugin statsd>
   Host "::"
   Port "8125"
-  DeleteCounters false
-  DeleteTimers   false
-  DeleteGauges   false
-  DeleteSets     false
-  TimerPercentile 90.0
+  DeleteCounters true
+  DeleteTimers   true
+  DeleteGauges   true
+  DeleteSets     true
+  TimerPercentile 95.0
 </Plugin>
 
 {% if False %}
