@@ -1,7 +1,8 @@
+{% set salt_version = salt['pillar.get']('salt:version', '<2018.0.0') %}
+{% set salt_use = salt['pillar.get']('salt:use',
+('openssl', 'portage', 'gnupg', 'mako', '-mysql', '-raet')) %}
 include:
   - python.python2
-
-{% set saltversion = '<2018.0.0' %}
 
 # TODO: move cython to another state
 cython:
@@ -13,7 +14,7 @@ app-admin/salt:
   pkg.installed:
     - refresh: False
     - pkgs:
-      - app-admin/salt: "{{ saltversion }}"
+      - app-admin/salt: "{{ salt_version }}[{{ ','.join(salt_use) }}]"
       - net-libs/zeromq: ">=4.1.4"
       - dev-python/pyzmq: ">=14.4"
       - dev-python/pyopenssl: ">=0.15.1"
@@ -31,13 +32,6 @@ app-admin/salt:
   portage_config.flags:
     - accept_keywords:
       - ~*
-    - use:
-      - openssl
-      - portage
-      - gnupg
-      - mako
-      - -mysql
-      - "-raet"
 
 /etc/logrotate.d/salt:
   file.managed:
