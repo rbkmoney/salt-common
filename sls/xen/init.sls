@@ -59,13 +59,8 @@ xen-provided:
 {% if efi %}
 xen.efi:
   file.copy:
-    - name: /boot/efi/gentoo/xen.efi
-    - source: /boot/efi/gentoo/xen-{{ xen_version_short }}.efi
-{% else %}
-xen.gz:
-  file.copy:
-    - name: /boot/xen.gz
-    - source: /boot/xen-{{ xen_version_short }}.gz
+    - name: /boot/efi/boot/bootx64.efi
+    - source: /usr/lib64/efi/xen-{{ xen_version_short }}.efi
 {% endif %}
 {% endif %}
 
