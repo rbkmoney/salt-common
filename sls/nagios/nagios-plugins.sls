@@ -17,7 +17,7 @@ monitoring-plugins:
       - portage_config: monitoring-plugins
       - pkg: nagios-plugins
   portage_config.flags:
-    {% set extra_use = salt['pillar.get']('monitoring-plugins:extra_use') %}
+    {% set extra_use = salt['pillar.get']('monitoring-plugins:extra_use', []) %}
     - use:
       - ssh
       - ssl
