@@ -19,7 +19,9 @@ user={{ salt['pillar.get']('consul:user', 'consul') }}
 start_pre() {
     if [ "$RC_CMD" != restart ]; then
 	for dir in services checks; do
-	    test -d "${data_dir}/${dir}" && rm -rf "${data_dir}/${dir}"
+	    if [ -d "${data_dir}/${dir}" ]; then
+		rm -rf "${data_dir}/${dir}"
+	    fi
 	done
     fi
 }
