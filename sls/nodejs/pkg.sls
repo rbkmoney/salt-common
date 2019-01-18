@@ -3,5 +3,5 @@ include:
 
 net-libs/nodejs:
   pkg.installed:
-    - version: ">=8.11.1[npm]"
+    - version: ">=8.12.0[npm]"
 
