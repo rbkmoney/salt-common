@@ -1,5 +1,5 @@
 {% set filebeat_version = salt['pillar.get']('filebeat:version', '~>=6.3') %}
-{% set filebeat_packaged = salt['pillar.get']('filebeat:packaged', False) %}
+{% set filebeat_packaged = salt['pillar.get']('filebeat:packaged', True) %}
 {% if not filebeat_packaged %}
 include:
   - go
