@@ -15,3 +15,13 @@ extend:
     service.running:
       - require:
         - pkg: www-servers/nginx
+
+
+/etc/logrotate.d/nginx:
+  file.managed:
+    - source: salt://nginx/files/nginx.logrotate
+    - mode: 644
+    - user: root
+    - group: root
+    - require:
+      - file: /etc/logrotate.d/
