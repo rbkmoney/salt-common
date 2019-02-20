@@ -20,3 +20,10 @@ COLLECTD_PIDFILE='/run/collectd/collectd.pid'
 # require it, as e.g. ping or iptables plugins)
 #
 COLLECTD_USER='root'
+
+start_pre() {
+    if [ "${RC_CMD}" != "restart" ]; then
+        configtest || return 1
+    fi
+    checkpath --directory $(dirname "${COLLECTD_PIDFILE}") -o "${COLLECTD_USER}" -m 0755
+}
