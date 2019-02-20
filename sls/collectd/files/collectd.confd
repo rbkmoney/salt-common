@@ -13,17 +13,10 @@ COLLECTD_CONFIGFILE='/etc/collectd/collectd.conf'
 
 # File used to store the PID file. Usually you won't need to touch it.
 #
-COLLECTD_PIDFILE='/run/collectd/collectd.pid'
+COLLECTD_PIDFILE='/run/collectd.pid'
 
 # User to run collectd as (default is collectd, change to root or give
 # collectd user appropriate privileges if you use one of the plugins that 
 # require it, as e.g. ping or iptables plugins)
 #
 COLLECTD_USER='root'
-
-start_pre() {
-    if [ "${RC_CMD}" != "restart" ]; then
-        configtest || return 1
-    fi
-    checkpath --directory $(dirname "${COLLECTD_PIDFILE}") -o "${COLLECTD_USER}" -m 0755
-}

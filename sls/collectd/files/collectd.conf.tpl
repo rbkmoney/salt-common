@@ -927,7 +927,7 @@ LoadPlugin xencpu
 {% endif %}
 
 <Plugin unixsock>
-	SocketFile "/run/collectd/collectd.sock"
+	SocketFile "/run/collectd-unixsock"
 	SocketGroup "nagios"
 	SocketPerms "0660"
 #	DeleteSocket false
