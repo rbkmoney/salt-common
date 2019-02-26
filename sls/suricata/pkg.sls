@@ -9,9 +9,10 @@ include:
 # net-libs/libnetfilter_queue
 
 net-analyzer/suricata:
-  pkg.latest:
-    - pkgs:
-      - net-analyzer/suricata: '~[af-packet,nfqueue,control-socket,logrotate,-rules]'
+  pkg.installed:
+    - version: '~>=4.0.4[af-packet,nfqueue,control-socket,logrotate,-rules]'
     - require:
       - pkg: logrotate
       - pkg: net-libs/libhtp
+  portage_config.flags:
+    - accept_keywords: ["~*"]
