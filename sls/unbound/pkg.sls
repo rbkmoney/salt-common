@@ -7,4 +7,4 @@ include:
 
 net-dns/unbound:
   pkg.installed:
-    - version: "~>=1.6.8-r2[dnscrypt,ecdsa]"
+    - version: "~>=1.9.0[dnscrypt,ecdsa]"
