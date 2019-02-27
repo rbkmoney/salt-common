@@ -3,6 +3,8 @@ include:
 
 dev-python/carbon:
   pkg.installed:
-    - version: ">=1.1.3-r1"
+    - pkgs:
+        dev-python/carbon: "~>=1.1.5"
+        dev-python/whisper: "~>=1.1.5"
     - require:
       - augeas: manage-make-conf
