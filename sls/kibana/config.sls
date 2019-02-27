@@ -24,7 +24,6 @@ config = {
   'kibana': {
     'index': ".kibana",
   },
-  'pid': { 'file': '/run/kibana.pid' },
   'logging': {
     'dest': '/var/log/kibana/kibana.log',
   },
