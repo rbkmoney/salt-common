@@ -1,27 +1,26 @@
-{% set kibana_version = salt['pillar.get']('kibana:version', '~>=6.1') %}
+{% set kibana_version = salt['pillar.get']('kibana:version', '~>=6.3') %}
 include:
   - nodejs
   - kibana.config
 
 /etc/init.d/kibana:
   file.managed:
-    - source: salt://kibana/kibana.initd
+    - source: salt://kibana/files/kibana.initd
     - mode: 755
 
-kibana:
-  portage_config.flags:
-    - name: www-apps/kibana-bin
-    - accept_keywords:
-      - ~*
+www-apps/kibana-bin:
   pkg.installed:
-    - pkgs:
-      - www-apps/kibana-bin: "{{ kibana_version }}"
+    - version: "{{ kibana_version }}"
     - require:
-      - portage_config: kibana
+      - portage_config: www-apps/kibana-bin
+  portage_config.flags:
+    - accept_keywords: ["~*"]
+
+kibana:
   service.running:
     - enable: True
     - watch:
-      - pkg: kibana
+      - pkg: www-apps/kibana-bin
       - pkg: net-libs/nodejs
       - file: /etc/kibana/kibana.yml
       - file: /etc/init.d/kibana
