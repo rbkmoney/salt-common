@@ -7,7 +7,7 @@ include:
 
 net-analyzer/graphite-web:
   pkg.installed:
-    - version: '~>=1.1.3-r1[carbon,memcached,mysql]'
+    - version: '~>=1.1.5[carbon,memcached,mysql]'
     - require:
       - pkg: dev-python/django-tagging
 
