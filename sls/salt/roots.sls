@@ -8,7 +8,7 @@ d_salt = '/var/salt'
 main_reponame = __salt__['pillar.get']('salt:repos:main:name', 'local')
 common_reponame = __salt__['pillar.get']('salt:repos:common:name', 'common')
 extra_repos = __salt__['pillar.get']('salt:repos:extra', {})
-branches = filter(lambda x: x not in (main_reponame, '.git'),
+branches = filter(lambda x: x not in (main_reponame, '.git', '_mirror'),
                   map(path.basename,
                       filter(path.isdir, glob(path.join(d_salt, main_reponame, '*')))))
 
