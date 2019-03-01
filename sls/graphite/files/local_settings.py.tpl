@@ -19,10 +19,13 @@ CONTENT_DIR = '/usr/share/graphite-web/webapp/content'
 ## Data directories
 # NOTE: If any directory is unreadable in DATA_DIRS it will break metric browsing
 WHISPER_DIR = '/var/lib/carbon/whisper'
+CERES_DIR = '/var/lib/carbon/ceres'
 RRD_DIR = '/var/lib/carbon/rrd'
-DATA_DIRS = [WHISPER_DIR, RRD_DIR] # Default: set from the above variables
+DATA_DIRS = [WHISPER_DIR, CERES_DIR, RRD_DIR] # Default: set from the above variables
 LOG_DIR = '/var/log/graphite-web/'
 INDEX_FILE = '/var/lib/carbon/index'  # Search index file
+FETCH_TIMEOUT = {{ conf.get('fetch-timeout', 30) }}
+FIND_TIMEOUT = {{ conf.get('find-timeout', 30) }}
 
 #####################################
 # General Configuration #
@@ -93,7 +96,6 @@ DEBUG = {{'True' if conf.get('debug', False) else 'False'}}
 # DO NOT FORGET TO RUN 'manage.py syncdb' AFTER SETTING UP A NEW DATABASE
 #
 # The following built-in database engines are available:
-#  django.db.backends.postgresql          # Removed in Django 1.4
 #  django.db.backends.postgresql_psycopg2
 #  django.db.backends.mysql
 #  django.db.backends.sqlite3
