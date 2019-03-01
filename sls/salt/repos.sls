@@ -48,7 +48,7 @@ include:
 # Delete directories of deleted main branches, since we're looking at all main remote branches
 {% for reponame in sync_reponames %}
 {% for dir in salt['file.find']('/var/salt/' + reponame, type='d', maxdepth=1)
-   if dir.split('/')[-1] != reponame and dir.split('/')[-1] not in sync_branches %}
+   if (dir.split('/')[-1] not in [reponame, "_mirror"] + sync_branches) %}
 {{ dir }}:
   file.absent:
     - require_in:
@@ -81,15 +81,12 @@ include:
 {% endif %}
 
 {% if remote_uri %}
-{% for branch in remote_branches if branch in sync_branches or branch == fixed_branch %}
-{% set i = salt['file.mkdir']('/'.join(('/var/salt', reponame, branch, 'sls')), mode=750) %}
-{% set i = salt['file.mkdir']('/'.join(('/var/salt', reponame, branch, 'pillar')), mode=750) %}
-salt-repo-{{ reponame }}-{{ branch }}:
+salt-repo-{{ reponame }}-_mirror:
   git.latest:
     - name: {{ remote_uri }}
-    - target: /var/salt/{{ reponame }}/{{ branch }}
-    - rev: {{ branch }}
-    - branch: {{ branch }}
+    - target: /var/salt/{{ reponame }}/_mirror
+    - bare: True
+    - mirror: True
     - user: root
     - force_checkout: True
     - force_clone: True
@@ -99,6 +96,26 @@ salt-repo-{{ reponame }}-{{ branch }}:
     - require:
       - file: /var/salt/ssh/salt
       - file: /var/salt/{{ reponame }}
+    - require_in:
+      - file: /etc/salt/master.d/roots.conf
+
+{% for branch in remote_branches if branch in sync_branches or branch == fixed_branch %}
+# Those directories are required for correct roots.conf generation on the first run
+{% set i = salt['file.mkdir']('/'.join(('/var/salt', reponame, branch, 'sls')), mode=750) %}
+{% set i = salt['file.mkdir']('/'.join(('/var/salt', reponame, branch, 'pillar')), mode=750) %}
+salt-repo-{{ reponame }}-{{ branch }}:
+  git.latest:
+    - name: /var/salt/{{ reponame }}/_mirror
+    - target: /var/salt/{{ reponame }}/{{ branch }}
+    - rev: {{ branch }}
+    - branch: {{ branch }}
+    - user: root
+    - force_checkout: True
+    - force_clone: True
+    - force_fetch: True
+    - force_reset: True
+    - require:
+      - git: salt-repo-{{ reponame }}-_mirror
     - require_in:
       - file: /etc/salt/master.d/roots.conf
 {% endfor %}
