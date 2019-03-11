@@ -35,6 +35,8 @@ www-servers/nginx:
       - http-cache
       - ipv6
       - pcre
+      - pcre-jit
+      - luajit
       - "-libatomic"
       - ssl
       - threads
