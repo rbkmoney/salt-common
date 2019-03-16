@@ -145,19 +145,15 @@ osd crush update on start = {{ 'true' if ceph_osd.get('crush-update-on-start', T
 # The size of the journal in megabytes.
 osd journal size = {{ ceph_osd.get('journal-size', 10240) }}
 
-# Enables direct i/o to the journal.
-journal dio = {{ 'true' if ceph_osd.get('journal-dio', True) else 'false' }}
-
-{% if ceph_osd_debug %}
-debug ms = {{ ceph_osd_debug.get('ms', 1) }}
-debug osd = {{ ceph_osd_debug.get('osd', 20) }}
-debug filestor = {{ ceph_osd_debug.get('filestore', 20) }}
-debug journal = {{ ceph_osd_debug.get('journal', 20) }}
-{% endif %}
-
 # The number of threads to service Ceph OSD Daemon Operations. Set to 0 to disable it.
 # Increasing the number may increase the request processing rate.
 osd op threads = {{ ceph_osd.get('op-threads', 4) }}
+
+# An operation becomes complaint worthy after the specified number of seconds have elapsed
+osd op complaint time = {{ ceph_osd.get('op-complaint-time', 30) }}
+
+# Enables direct i/o to the journal.
+journal dio = {{ 'true' if ceph_osd.get('journal-dio', True) else 'false' }}
 
 ## Filestore
 # The maximum interval in seconds for synchronizing the filestore.
@@ -185,6 +181,27 @@ filestore split multiple = {{ ceph_osd_filestore.get('split-multiple', 4) }}
 filestore op threads = {{ ceph_osd_filestore.get('op-threads', 4) }}
 
 ## Bluestore
+{% set bs_cache_autotune = ceph_osd_bluestore.get('cache-autotune', True) %}
+bluestore cache autotune = {{ 'true' if bs_cache_autotune else 'false' }}
+
+# Autotune
+# The chunk size in bytes to allocate to caches when cache autotune is enabled.
+bluestore cache autotune chunk size = {{ ceph_osd_bluestore.get('cache-autotune-chunk-size', 33554432) }}
+# The number of seconds to wait between rebalances when cache autotune is enabled.
+bluestore cache autotune interval = {{ ceph_osd_bluestore.get('cache-autotune-interval', 5) }}
+# Try to keep this many bytes mapped in memory.
+# Note: This may not exactly match the RSS memory usage of the process.
+osd memory target = {{ ceph_osd.get('memory-target', 1073741824) }}
+# Minimum amount of memory in bytes the OSD will need.
+osd memory base = {{ ceph_osd.get('memory-base', 805306368) }}
+# Estimate the percent of memory fragmentation.
+osd memory expected fragmentation = {{ ceph_osd.get('memory-expected-fragmentation', 0.15) }}
+# Set the minimum amount of memory used for caches.
+osd memory cache min = {{ ceph_osd.get('memory-cache-min', 134217728) }}
+# wait this many seconds between resizing caches.
+osd memory cache resize interval = {{ ceph_osd.get('memory-cache-resize-interval', 1) }}
+
+# Manual cache sizes
 # The default amount of memory BlueStore will use for its cache when backed by an HDD.
 bluestore cache size hdd = {{ ceph_osd_bluestore.get('cache-size-hdd', 1073741824) }}
 # The default amount of memory BlueStore will use for its cache when backed by an SSD.
