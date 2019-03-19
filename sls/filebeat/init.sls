@@ -1,7 +1,7 @@
 include:
-  - filebeat.pkg
-  - filebeat.conf
-  - filebeat.service
+  - .pkg
+  - .conf
+  - .service
 
 extend:
   filebeat:

@@ -9,7 +9,7 @@ include:
 dev-db/clickhouse:
   portage_config.flags:
     - accept_keywords: ["~*"]
-  package.installed:
+  pkg.installed:
     - version: "{{ clickhouse_version }}[{{ ','.join(clickhouse_use) }}]"
     {% if clickhouse_packaged %}
     - binhost: force

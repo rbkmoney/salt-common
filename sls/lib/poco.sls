@@ -7,7 +7,7 @@ include:
 dev-libs/poco:
   portage_config.flags:
     - accept_keywords: ['~*']
-  package.latest:
+  pkg.latest:
     - version: "{{ poco_version }}[{{ ','.join(poco_use) }}]"
     {% if poco_packaged %}
     - binhost: force
