@@ -1,11 +1,13 @@
-{% set collectd_conf = salt['pillar.get']('collectd:conf', {}) %}
-{% set configured_plugins = salt['pillar.get']('collectd:configured-plugins', '') %}
-{% set p_aggregation = salt['pillar.get']('collectd:aggregation', False) -%}
-{% set p_ceph = salt['pillar.get']('collectd:ceph', False) -%}
-{% set p_network = salt['pillar.get']('collectd:network', False) -%}
-{% set p_mysql = salt['pillar.get']('collectd:mysql', False) -%}
-{% set p_write_graphite = salt['pillar.get']('collectd:write_graphite', False) -%}
-{% set p_write_riemann = salt['pillar.get']('collectd:write_riemann', False) -%}
+{% set collectd = salt.pillar.get('collectd', {}) %}
+{% set collectd_conf = collectd.get('conf', {}) %}
+{% set extra_plugins = collectd.get('extra-plugins', []) %}
+{% set extra_plugin_config = collectd.get('extra-plugin-config', []) %}
+{% set p_network = collectd.get('network', False) %}
+{% set p_aggregation = collectd.get('aggregation', False) %}
+{% set p_write_graphite = collectd.get('write_graphite', False) %}
+{% set p_write_riemann = collectd.get('write_riemann', False) %}
+{% set p_ceph = collectd.get('ceph', False) %}
+{% set p_mysql = collectd.get('mysql', False) %}
 FQDNLookup {{ collectd_conf.get('FQDNLookup', 'true') }}
 BaseDir     "/var/lib/collectd"
 PIDFile     "/run/collectd/collectd.pid"
@@ -59,7 +61,7 @@ LoadPlugin aggregation
 {% endif %}
 #LoadPlugin amqp
 #LoadPlugin apache
-{% if 'apcups' in configured_plugins %}
+{% if 'apcups' in extra_plugin_config %}
 LoadPlugin apcups
 {% endif %}
 #LoadPlugin aquaero
@@ -79,9 +81,6 @@ LoadPlugin sensors
 #LoadPlugin curl
 #LoadPlugin curl_json
 #LoadPlugin curl_xml
-{% if "dbi" in configured_plugins %}
-LoadPlugin dbi
-{% endif %}
 LoadPlugin df
 LoadPlugin disk
 LoadPlugin entropy
@@ -90,14 +89,14 @@ LoadPlugin exec
 #LoadPlugin filecount
 #LoadPlugin fscache
 #LoadPlugin gmond
-{% if "hddtemp" in configured_plugins %}
+{% if "hddtemp" in extra_plugin_config %}
 LoadPlugin hddtemp
 {% endif %}
 LoadPlugin interface
-{% if "iptables" in configured_plugins %}
+{% if "iptables" in extra_plugin_config %}
 LoadPlugin iptables
 {% endif %}
-{% if "ipmi" in configured_plugins %}
+{% if "ipmi" in extra_plugin_config %}
 LoadPlugin ipmi
 {% endif %}
 {% if False %}
@@ -112,13 +111,10 @@ LoadPlugin load
 #LoadPlugin lvm
 #LoadPlugin madwifi
 #LoadPlugin mbmon
-{% if "mdraid" in configured_plugins %}
+{% if "md" in extra_plugin_config %}
 LoadPlugin md
 {% endif %}
-{% if "memcachec" in configured_plugins %}
-LoadPlugin memcachec
-{% endif %}
-{% if "memcached" in configured_plugins %}
+{% if "memcached" in extra_plugin_config %}
 LoadPlugin memcached
 {% endif %}
 LoadPlugin memory
@@ -135,18 +131,17 @@ LoadPlugin network
 {% if nfs_server %}
 LoadPlugin nfs
 {% endif %}
-{% if "nginx" in configured_plugins %}
+{% if "nginx" in extra_plugin_config %}
 LoadPlugin nginx
 {% endif %}
 #LoadPlugin notify_desktop
 #LoadPlugin notify_email
-# LoadPlugin ntpd
 #LoadPlugin nut
 #LoadPlugin olsrd
 #LoadPlugin onewire
 #LoadPlugin openvpn
 #LoadPlugin oracle
-{% if "perl" in configured_plugins %}
+{% if "perl" in extra_plugin_config %}
 <LoadPlugin perl>
   Globals true
 </LoadPlugin>
@@ -156,18 +151,13 @@ LoadPlugin nginx
 #LoadPlugin powerdns
 LoadPlugin processes
 #LoadPlugin protocols
-{% if "python" in configured_plugins %}
-<LoadPlugin python>
-  Globals true
-</LoadPlugin>
-{% endif %}
 #LoadPlugin redis
 #LoadPlugin routeros
 #LoadPlugin rrdcached
 #LoadPlugin rrdtool
 #LoadPlugin serial
 #LoadPlugin sigrok
-{% if "snmp" in configured_plugins %}
+{% if "snmp" in extra_plugin_config %}
 LoadPlugin snmp
 {% endif %}
 LoadPlugin statsd
@@ -176,10 +166,7 @@ LoadPlugin statsd
 LoadPlugin tail
 #LoadPlugin tail_csv
 #LoadPlugin tape
-#LoadPlugin tcpconns
-#LoadPlugin teamspeak2
 #LoadPlugin ted
-#LoadPlugin thermal
 #LoadPlugin tokyotyrant
 LoadPlugin unixsock
 LoadPlugin uptime
@@ -199,8 +186,11 @@ LoadPlugin write_graphite
 {% if p_write_riemann %}
 LoadPlugin write_riemann
 {% endif %}
-{% if "xencpu" in configured_plugins %}
+{% if "xencpu" in extra_plugin_config %}
 LoadPlugin xencpu
+{% endif %}
+{% if "zookeeper" in extra_plugin_config %}
+LoadPlugin zookeeper
 {% endif %}
 ##############################################################################
 # Plugin configuration                                                       #
@@ -253,7 +243,7 @@ LoadPlugin xencpu
 #  </Instance>
 #</Plugin>
 {% endif %}
-{% if 'apcups' in configured_plugins %}
+{% if 'apcups' in extra_plugin_config %}
 <Plugin apcups>
   Host "localhost"
   Port "3551"
@@ -431,7 +421,7 @@ LoadPlugin xencpu
 #  </Metric>
 #</Plugin>
 {% endif %}
-{% if "hddtemp" in configured_plugins %}
+{% if "hddtemp" in extra_plugin_config %}
 <Plugin hddtemp>
   Host "127.0.0.1"
   Port "7634"
@@ -445,7 +435,7 @@ LoadPlugin xencpu
   IgnoreSelected true
 </Plugin>
 
-{% if "ipmi" in configured_plugins %}
+{% if "ipmi" in extra_plugin_config %}
 <Plugin ipmi>
 #	Sensor "some_sensor"
 #	Sensor "another_one"
@@ -455,7 +445,7 @@ LoadPlugin xencpu
 	NotifySensorNotPresent false
 </Plugin>
 {% endif %}
-{% if "iptables" in configured_plugins %}
+{% if "iptables" in extra_plugin_config %}
 <Plugin iptables>
 	Chain filter check-flags
 </Plugin>
@@ -503,7 +493,7 @@ LoadPlugin xencpu
 #	Port "411"
 #</Plugin>
 {% endif %}
-{% if "mdraid" in configured_plugins %}
+{% if "md" in extra_plugin_config %}
 <Plugin md>
   Device "/dev/md0"
   IgnoreSelected true
@@ -512,24 +502,9 @@ LoadPlugin xencpu
 <Plugin memory>
   ValuesPercentage true
 </Plugin>
-{% if "memcachec" in configured_plugins %}
-<Plugin memcachec>
-	<Page "plugin_instance">
-		Server "localhost"
-		Key "page_key"
-		<Match>
-			Regex "(\\d+) bytes sent"
-			ExcludeRegex "<lines to be excluded>"
-			DSType CounterAdd
-			Type "ipt_octets"
-			Instance "type_instance"
-		</Match>
-	</Page>
-</Plugin>
-{% endif %}
-{% if "memcached" in configured_plugins %}
+{% if "memcached" in extra_plugin_config %}
 <Plugin memcached>
-	Host "127.0.0.1"
+	Host "::1"
 	Port "11211"
 </Plugin>
 {% endif %}
@@ -657,7 +632,7 @@ LoadPlugin xencpu
   # CacheFlush {{ p_network.get('cache-flush', 1800) }}
 </Plugin>
 {% endif -%}
-{% if "nginx" in configured_plugins %}
+{% if "nginx" in extra_plugin_config %}
 <Plugin nginx>
 	URL "http://localhost/nginx_status"
 #	User "status"
@@ -756,21 +731,6 @@ LoadPlugin xencpu
 #	Value "/^Tcp:/"
 #	IgnoreSelected false
 #</Plugin>
-
-# <Plugin python>
-# 	ModulePath "/usr/local/share/collectd"
-# 	LogTraces true
-# 	Interactive false
-# 	Import "cgminer-collectd"
-# 	<Module "cgminer-collectd">
-# 		addr "127.0.0.1" "4028"
-# 		Want "summary" "devs" "pools" "coin"
-# 		WantFromSummary "MHS av"
-# 		WantFromGPU "MHS av" "MHS 5s"
-# 		WantFromPool "Accepted" "Rejected" "Discarded" "Stale"
-# 		WantFromCoin "Network Difficulty"
-# 	</Module>
-# </Plugin>
 
 #<Plugin redis>
 #   <Node example>
@@ -900,16 +860,6 @@ LoadPlugin xencpu
 #       Collect "dropped" "mbps" "alerts" "kpps"
 #       TimeFrom 0
 #   </File>
-#</Plugin>
-#<Plugin tcpconns>
-#	ListeningPorts false
-#	LocalPort "25"
-#	RemotePort "25"
-#</Plugin>
-#<Plugin teamspeak2>
-#	Host "127.0.0.1"
-#	Port "51234"
-#	Server "8767"
 #</Plugin>
 #<Plugin ted>
 #	Device "/dev/ttyUSB0"
@@ -1058,6 +1008,12 @@ LoadPlugin xencpu
 </Plugin>
 {% endif %}
 {% if False %}
+{% if "zookeeper" in extra_plugin_config %}
+<Plugin "zookeeper">
+   Host "::1"
+   Port "2181"
+</Plugin>
+{% endif %}
 ##############################################################################
 # Filter configuration                                                       #
 #----------------------------------------------------------------------------#

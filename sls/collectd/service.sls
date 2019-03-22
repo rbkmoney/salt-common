@@ -1,4 +1,7 @@
-{% set p_network = salt['pillar.get']('collectd:network', False) -%}
+{% set collectd = salt.pillar.get('collectd', {}) -%}
+{% set p_network = collectd.get('network', False) -%}
+{% set extra_plugins = collectd.get('extra-plugins', []) %}
+{% set extra_plugin_config = collectd.get('extra-plugin-config', []) %}
 collectd:
   service.running:
     - enable: True
@@ -65,3 +68,15 @@ collectd:
     - mode: 755
     - user: root
     - group: collectd
+
+{% if extra_plugin_config.get('jmx', False) %}
+/etc/collectd/conf.d/10-jmx.conf:
+    - source: salt://collectd/files/conf.d/10-jmx.conf
+    - mode: 640
+    - user: root
+    - group: collectd
+    - require:
+      - file: /etc/collectd/conf.d/
+    - watch_in:
+      - service: collectd
+{% endif %}
