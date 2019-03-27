@@ -1,6 +1,6 @@
 {% set collectd = salt.pillar.get('collectd', {}) -%}
 {% set p_network = collectd.get('network', False) -%}
-{% set extra_plugins = collectd.get('extra-plugins', []) %}
+{% set extra_plugins = collectd.get('extra-plugins', {}) %}
 {% set extra_plugin_config = collectd.get('extra-plugin-config', []) %}
 collectd:
   service.running:
