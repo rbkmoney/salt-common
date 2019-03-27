@@ -128,23 +128,25 @@ disable_gravatar = true
 
 #################################### Users ####################################
 [users]
+{% set users = conf.get('users') %}
 # disable user signup / registration
-allow_sign_up = false
+allow_sign_up = {{ 'true' if users.get('allow-sign-up', False) else 'false' }}
 
 # Allow non admin users to create organizations
-allow_org_create = false
+allow_org_create = {{ 'true' if users.get('allow-org-create', False) else 'false' }}
 
 # Set to true to automatically assign new users to the default organization (id 1)
-;auto_assign_org = true
+auto_assign_org = {{ 'true' if users.get('auto-assign-org', True) else 'false' }}
+auto_assign_org_id = {{ users.get('auto-assign-org-id', 1) }}
 
 # Default role new users will be automatically assigned (if disabled above is set to true)
-;auto_assign_org_role = Viewer
+auto_assign_org_role = {{ users.get('auto-assign-org-role', 'Viewer') }}
 
 # Background text for the user field on the login page
-;login_hint = email or username
+login_hint = {{ users.get('login-hint', 'email or username') }}
 
 # Default UI theme ("dark" or "light")
-default_theme = dark
+default_theme = login_hint = {{ users.get('default-theme', 'dark') }}
 
 # External user management, these options affect the organization users view
 ;external_manage_link_url =
