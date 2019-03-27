@@ -128,7 +128,7 @@ disable_gravatar = true
 
 #################################### Users ####################################
 [users]
-{% set users = conf.get('users') %}
+{% set users = conf.get('users', {}) %}
 # disable user signup / registration
 allow_sign_up = {{ 'true' if users.get('allow-sign-up', False) else 'false' }}
 
