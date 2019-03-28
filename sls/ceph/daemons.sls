@@ -5,7 +5,7 @@ include:
 {% set host = grains['host'] %}
 {% set enable_ceph_mon = salt['pillar.get']('ceph:mon:enable', False) %}
 {% set enable_ceph_mgr = salt['pillar.get']('ceph:mgr:enable', False) %}
-{% set host_osd_map = salt['pillar.get']('ceph:osd:map', {}) %}
+{% set host_osd_list = salt['pillar.get']('ceph:osd:list', []) %}
 
 {% if enable_ceph_mon %}
 /var/lib/ceph/mon/ceph-{{ host }}/:
@@ -81,7 +81,7 @@ ceph-mgr.{{ host }}:
     - enable: False
 {% endif %}
 
-{% for osd_id,data in host_osd_map.items() %}
+{% for osd_id in host_osd_list %}
 /var/lib/ceph/osd/ceph-{{ osd_id }}/:
   file.directory:
     - mode: 755
