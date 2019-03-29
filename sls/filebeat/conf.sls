@@ -33,7 +33,7 @@ config = {
 }
 
 elastic_template = pillar('template', False)
-config['filebeat']['prospectors'] = pillar('filebeat:prospectors')
+config['filebeat']['inputs'] = pillar('filebeat:inputs')
 config['output'] = pillar('filebeat:output')
 dictupdate.update(config, pillar('filebeat:config', {}))
 
