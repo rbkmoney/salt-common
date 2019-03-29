@@ -71,21 +71,21 @@ unmask-hvm:
 
 /etc/xen/xl.conf:
   file.managed:
-    - source: salt://xen/xl.conf
+    - source: salt://xen/files/xl.conf
     - mode: 644
     - user: root
     - group: root
 
 /etc/init.d/xendomains:
   file.managed:
-    - source: salt://xen/xendomains.initd
+    - source: salt://xen/files/xendomains.initd
     - mode: 755
     - user: root
     - group: root
 
 /etc/conf.d/xendomains:
   file.managed:
-    - source: salt://xen/xendomains.confd.tpl
+    - source: salt://xen//files/xendomains.confd.tpl
     - template: jinja
     - mode: 644
     - user: root
