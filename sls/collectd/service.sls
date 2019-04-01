@@ -69,14 +69,17 @@ collectd:
     - user: root
     - group: collectd
 
-{% if extra_plugin_config.get('jmx', False) %}
 /etc/collectd/conf.d/10-jmx.conf:
+  {% if extra_plugin_config.get('jmx', False) %}
+  file.managed:
     - source: salt://collectd/files/conf.d/10-jmx.conf
     - mode: 640
     - user: root
     - group: collectd
+  {% else %}
+  file.absent:
+  {% endif %}
     - require:
       - file: /etc/collectd/conf.d/
     - watch_in:
       - service: collectd
-{% endif %}
