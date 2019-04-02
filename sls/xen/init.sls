@@ -57,9 +57,8 @@ xen-provided:
     - text: "app-emulation/xen-{{ xen_version }}"
 {% else %}
 {% if efi %}
-xen.efi:
+/boot/efi/xen.efi:
   file.copy:
-    - name: /boot/efi/boot/bootx64.efi
     - source: /usr/lib64/efi/xen-{{ xen_version_short }}.efi
 {% endif %}
 {% endif %}
