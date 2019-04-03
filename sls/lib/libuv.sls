@@ -2,7 +2,7 @@
 {% set libuv_version = salt['pillar.get']('libuv:version', '~>=1.25.0') %}
 
 dev-libs/libuv:
-  pkg.latest:
+  pkg.installed:
     - version: "{{ libuv_version }}"
     {% if libs_packaged %}
     - binhost: force

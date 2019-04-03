@@ -1,4 +1,4 @@
-{% set kibana_version = salt['pillar.get']('kibana:version', '~>=6.3') %}
+{% set kibana_version = salt.pillar.get('kibana:version', '~>=6.3') %}
 include:
   - nodejs
   - kibana.config

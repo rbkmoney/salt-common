@@ -1,4 +1,4 @@
-{% set nodejs_packaged = salt.pillar.get('nodejs:packaged', True) %}
+{% set nodejs_packaged = salt.pillar.get('nodejs:packaged', false) %}
 {% set nodejs_version = salt.pillar.get('nodejs:version', '~=8.15.1') %}
 {% set nodejs_use = salt.pillar.get('nodejs:use', ['npm']) %}
 include:
