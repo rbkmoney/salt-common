@@ -12,6 +12,7 @@ www-apps/kibana-bin:
   pkg.installed:
     - version: "{{ kibana_version }}"
     - require:
+      - pkg: net-libs/nodejs
       - portage_config: www-apps/kibana-bin
   portage_config.flags:
     - accept_keywords: ["~*"]
