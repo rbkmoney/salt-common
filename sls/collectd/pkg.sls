@@ -1,7 +1,7 @@
 include:
   - gentoo.makeconf
   - lib.glibc
-  - lib.openssl
+  - ssl.openssl
   - lib.libmicrohttpd
 
 {% set collectd = salt['pillar.get']('collectd', {}) -%}
