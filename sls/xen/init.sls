@@ -60,6 +60,7 @@ xen-provided:
 /boot/efi/xen.efi:
   file.copy:
     - source: /usr/lib64/efi/xen-{{ xen_version_short }}.efi
+    - mode: 755
 {% endif %}
 {% endif %}
 
