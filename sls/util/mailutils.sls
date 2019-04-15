@@ -1,6 +1,6 @@
 include:
   - lib.glibc
-  - ssl.openssl
+  - lib.gnutls
 
 net-mail/mailutils:
   pkg.latest:
