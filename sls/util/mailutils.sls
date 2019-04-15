@@ -5,5 +5,4 @@ include:
 net-mail/mailutils:
   pkg.latest:
     - require:
-      - pkg: sys-libs/glibc
-      - pkg: openssl
+      - pkg: net-libs/gnutls
