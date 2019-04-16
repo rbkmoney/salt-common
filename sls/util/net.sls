@@ -1,3 +1,7 @@
+include:
+  - lib.glibc
+  - lib.openssl
+
 util-net-purged:
   pkg.purged:
     - pkgs:
