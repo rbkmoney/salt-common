@@ -2,7 +2,7 @@ include:
   - gentoo.portage
   - vcs.git
 
-{% set sync_uri = 'git://git.bakka.su/gentoo-mirror' %}
+{% set sync_uri = salt.pillar.get('repos:gentoo:sync-uri', 'https://anongit.gentoo.org/git/repo/gentoo.git') %}
 
 gentoo:
   file.directory:
@@ -16,6 +16,7 @@ gentoo:
     - depth: 1
     - force_clone: True
     - force_checkout: True
+    - force_reset: True
   {% endif %}
 
 /etc/portage/repos.conf/gentoo.conf:
