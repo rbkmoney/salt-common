@@ -15,6 +15,7 @@ make_conf:
     - getbinpkg
     - -news
   other:
-    USE_SALT: "smp multitarget numa caps seccomp xattr sctp lzma logrotate sqlite -gnutls -tcpd"
+    USE_SALT: "argon2 caps cgroups cracklib ecdsa efi filecaps gnupg iproute2 leaps_timezone logrotate lz4 lzma lzo multitarget netlink nettle nfsv4 nfsv41 numa openssl pcre16 sctp seccomp smp sqlite threads udev xattr xfs -X -bindist -dbus -gnutls -tcpd"
+    CURL_SSL: "openssl"
     PYTHON_TARGETS: "python2_7 python3_6"
     PYTHON_SINGLE_TARGET: "python3_6"
