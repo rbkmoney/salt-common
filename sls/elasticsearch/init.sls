@@ -1,3 +1,4 @@
+{% set tls_enabled = salt.pillar.get('elastic:tls:enabled', False) %}
 include:
   - java.icedtea3
   - elasticsearch.pkg
@@ -32,3 +33,10 @@ elasticsearch:
       - file: /etc/conf.d/elasticsearch
       - cmd: create-elasticsearch-keystore
       - file: /etc/elasticsearch/elasticsearch.keystore
+      {% if tls_enabled %}
+      {% for proto in ('transport', 'http') %}
+      {% for pemtype in ('cert', 'key', 'ca') %}
+      - file: /etc/elasticsearch/{{ proto }}-{{ pemtype }}.pem
+      {% endfor %}
+      {% endfor %}
+      {% endif %}

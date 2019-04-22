@@ -46,6 +46,12 @@ jvm_heap_size = jvm.get('heap_size', '1g')
 jvm_stack_size = jvm.get('stack_size', '1m')
 jvm_extra_options = jvm.get('extra_options', {})
 
+tls = pillar('elastic:tls', {})
+tls_enabled = tls.get('enabled', False)
+if tls_enabled:
+  tls_transport = pillar('elastic:tls:transport')
+  tls_http = pillar('elastic:tls:http')
+
 # defaults
 config = {
   'node': {
@@ -66,6 +72,26 @@ config = {
 config['discovery']['zen']['ping']['unicast']['hosts'] = filter(
   lambda x: x != fqdn and x not in fqdn_ipv6,
   hosts)
+if tls_enabled:
+  config['opendistro_security'] = {
+    'ssl': {
+      'http': {
+        'enable_openssl_if_available': True,
+        'pemcert_filepath': 'http-cert.pem',
+        'pemkey_filepath': 'http-key.pem',
+        'pemtrustedcas_filepath': 'http-ca.pem',
+        'clientauth_mode': tls_http.get('clientauth_mode', 'OPTIONAL')
+      },
+      'transport': {
+        'enable_openssl_if_available': True,
+        'pemcert_filepath': 'transport-cert.pem',
+        'pemkey_filepath': 'transport-key.pem',
+        'pemtrustedcas_filepath': 'transport-ca.pem',
+        'enforce_hostname_verification': True
+      },
+    }
+  }
+
 dictupdate.update(config, pillar('elastic:config'))
 
 File.managed(
@@ -90,6 +116,14 @@ File.managed(
     'conf_dir': conf_path, 'log_dir': log_path, 'data_dir': data_dir,
     'es_java_opts': '', 'l_nofile': l_nofile, 'l_memlock': l_memlock,
     'max_map_count': max_map_count, 'max_threads': max_threads, 'es_startup_sleep_time': 10})
+
+if tls_enabled:
+  for proto in ('transport', 'http'):
+    for pemtype in ('cert', 'key', 'ca'):
+      File.managed(
+        conf_path + proto + '-' pemtype + '.pem',
+        mode=600, user='elasticsearch', group='elasticsearch',
+        contents=tls[proto][pemtype], require=[File(conf_path)])
 
 File.managed(
   '/etc/security/limits.d/elasticsearch.conf',
