@@ -48,9 +48,9 @@ jvm_extra_options = jvm.get('extra_options', {})
 
 tls = pillar('elastic:tls', {})
 tls_enabled = tls.get('enabled', False)
-if tls_enabled:
-  tls_transport = pillar('elastic:tls:transport')
-  tls_http = pillar('elastic:tls:http')
+if tls:
+  tls_transport = tls.get('transport', {})
+  tls_http = tls.get('http', {})
 
 # defaults
 config = {
@@ -121,9 +121,10 @@ if tls_enabled:
   for proto in ('transport', 'http'):
     for pemtype in ('cert', 'key', 'ca'):
       File.managed(
-        conf_path + proto + '-' pemtype + '.pem',
+        conf_path + proto + '-' + pemtype + '.pem',
         mode=600, user='elasticsearch', group='elasticsearch',
-        contents=tls[proto][pemtype], require=[File(conf_path)])
+        contents=tls[proto].get(pemtype, tls.get(pemtype, '')),
+        require=[File(conf_path)])
 
 File.managed(
   '/etc/security/limits.d/elasticsearch.conf',
