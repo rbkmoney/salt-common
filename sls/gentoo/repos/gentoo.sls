@@ -2,7 +2,7 @@ include:
   - gentoo.portage
   - vcs.git
 
-{% set sync_uri = salt.pillar.get('repos:gentoo:sync-uri', 'https://anongit.gentoo.org/git/repo/gentoo.git') %}
+{% set sync_uri = salt.pillar.get('repos:gentoo:sync-uri', 'https://anongit.gentoo.org/git/repo/sync/gentoo.git') %}
 
 gentoo:
   file.directory:
