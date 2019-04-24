@@ -72,10 +72,11 @@ config = {
 config['discovery']['zen']['ping']['unicast']['hosts'] = filter(
   lambda x: x != fqdn and x not in fqdn_ipv6,
   hosts)
-if tls_enabled:
+if tls:
   config['opendistro_security'] = {
     'ssl': {
       'http': {
+        'enabled': tls_http.get('enabled', tls_enabled),
         'enable_openssl_if_available': True,
         'pemcert_filepath': 'http-cert.pem',
         'pemkey_filepath': 'http-key.pem',
@@ -83,6 +84,7 @@ if tls_enabled:
         'clientauth_mode': tls_http.get('clientauth_mode', 'OPTIONAL')
       },
       'transport': {
+        'enabled': tls_transport.get('enabled', tls_enabled),
         'enable_openssl_if_available': True,
         'pemcert_filepath': 'transport-cert.pem',
         'pemkey_filepath': 'transport-key.pem',
@@ -117,7 +119,7 @@ File.managed(
     'es_java_opts': '', 'l_nofile': l_nofile, 'l_memlock': l_memlock,
     'max_map_count': max_map_count, 'max_threads': max_threads, 'es_startup_sleep_time': 10})
 
-if tls_enabled:
+if tls:
   for proto in ('transport', 'http'):
     for pemtype in ('cert', 'key', 'ca'):
       File.managed(
