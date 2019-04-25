@@ -1,6 +1,5 @@
-# -*- mode: yaml -*-
 include:
-  - ssl.openssl
+  - lib.openssl
 
 ca-certificates:
   pkg.latest:
@@ -44,5 +43,3 @@ ca-certificates-dirs:
       - file: /etc/ca-certificates.conf
       - file: ca-certificates-dirs
       - file: /usr/local/share/ca-certificates
-
-  
