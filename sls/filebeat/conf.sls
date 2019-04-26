@@ -57,7 +57,7 @@ else:
 
 for out in config['output'].keys():
   if out in tls:
-    out_enabled = out.get('enabled', True):
+    out_enabled = out.get('enabled', True)
     out_ssl = {}
     config['output'][out]['ssl'] = out_ssl
     out_ssl['enabled'] = out_enabled
