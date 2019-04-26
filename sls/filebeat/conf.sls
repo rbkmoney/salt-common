@@ -10,6 +10,8 @@ fqdn = grains('fqdn')
 fqdn_ipv6 = grains('fqdn_ipv6')
 conf_path = '/etc/filebeat/'
 
+tls = pillar('filebeat:tls', {})
+
 # defaults
 config = {
   'name': str(fqdn),
@@ -53,4 +55,19 @@ if elastic_template:
 else:
   File.absent(conf_path + 'filebeat.template.json')
 
-
+for out in config['output'].keys():
+  if out in tls:
+    out_enabled = out.get('enabled', True):
+    out_ssl = {}
+    config['output'][out]['ssl'] = out_ssl
+    out_ssl['enabled'] = out_enabled
+    for pemtype in ('cert', 'key', 'ca'):
+      contents = tls[out].get(pemtype, tls.get(pemtype, ''))
+      path = conf_path + out + '-' + pemtype + '.pem'
+      if contents:
+        if pemtype == 'ca': out_ssl['certificate_authorities'] = [path]
+        elif pemtype == 'cert': out_ssl['certificate'] = path
+        elif pemtype == 'key': out_ssl['key'] = path
+      File.managed(
+        path, mode=600, user='root', group='root',
+        contents=contents, require=[File(conf_path)])
