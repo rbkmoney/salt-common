@@ -1,7 +1,7 @@
 #!pydsl
 # -*- mode: python -*-
 include("augeas.lenses")
-mirror_host = __salt__['pillar.get']('gentoo_mirror_host', 'gentoo-mirror.bakka.su')
+mirror_host = __salt__['pillar.get']('gentoo:mirror-host', 'gentoo-mirror.bakka.su')
 make_conf = __salt__['pillar.get']('make_conf', False)
 arch_conf = __salt__['pillar.get']('arch_conf', False)
 
@@ -56,8 +56,9 @@ if arch_conf:
          'aes', 'popcnt', 'avx', 'avx2', 'fma', 'fma3', 'fma4', 'xop', '3dnow',
          '3dnowext', 'sse4a'))))
   if arch_conf.get('mirror_arch', False):
-      chap('PORTAGE_BINHOST',
-           'https://' + mirror_host + '/gentoo-packages/' + arch_conf['mirror_arch'] + '/packages')
+    binhost = arch_conf.get('binhost-host', mirror_host)
+    chap('PORTAGE_BINHOST',
+         'https://' + binhost + '/gentoo-packages/' + arch_conf['mirror_arch'] + '/packages')
 
 state('manage-make-conf').augeas.change(
   context='/files/etc/portage/make.conf',
