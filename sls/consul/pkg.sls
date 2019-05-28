@@ -1,4 +1,4 @@
-{% set consul_version = salt['pillar.get']('consul:version', '<1.5') %}
+{% set consul_version = salt['pillar.get']('consul:version', '<1.6') %}
 {% set consul_packaged = salt['pillar.get']('consul:packaged', True) %}
 {% if not consul_packaged %}
 include:
