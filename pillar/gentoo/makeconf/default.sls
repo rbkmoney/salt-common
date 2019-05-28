@@ -1,3 +1,6 @@
+portage:
+  sync_wait_one_day: True
+
 make_conf:
   features:
     - xattr
@@ -19,3 +22,4 @@ make_conf:
     CURL_SSL: "openssl"
     PYTHON_TARGETS: "python2_7 python3_6"
     PYTHON_SINGLE_TARGET: "python3_6"
+    ACCEPT_LICENSE: "*"
