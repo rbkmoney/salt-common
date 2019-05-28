@@ -1,3 +1,6 @@
+portage:
+  sync_wait_one_day: True
+
 make_conf:
   features:
     - xattr
