@@ -12,3 +12,8 @@ app-admin/consul:
     {% if consul_packaged %}
     - binhost: force
     {% endif %}
+    - require:
+      - portage_config: app-admin/consul
+  portage_config.flags:
+    - accept_keywords:
+      - "~*"

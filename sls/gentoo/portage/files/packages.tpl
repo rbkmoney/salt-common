@@ -1,4 +1,4 @@
-{% if packagefile == 'keywords' %}
+{% if packagefile == 'accept_keywords' %}
  {% for atom in packagespillar recursive %}
   {% if packagespillar[atom].kwrd is defined %}
 {% if packagespillar[atom].version is defined %}={% endif %}{{ atom }}{% if packagespillar[atom].version is defined %}-{{ packagespillar[atom].version }}{% endif %} {{ packagespillar[atom].kwrd }}

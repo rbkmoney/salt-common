@@ -1,4 +1,4 @@
-{% for packagefile in ['keywords','use'] %}
+{% for packagefile in ['accept_keywords','use'] %}
 /etc/portage/package.{{ packagefile }}/SALT:
   file.managed:
     - source: salt://{{ tpldir }}/files/packages.tpl
