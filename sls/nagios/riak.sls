@@ -1,6 +1,6 @@
 # -*- mode: yaml -*-
 include:
-  - gentoo.repos.baka-bakka
+  - gentoo.repos.rbkmoney
 
 riak_nagios_pkg:
   pkg.installed:

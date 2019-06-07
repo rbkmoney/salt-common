@@ -8,7 +8,7 @@ nagios-plugins:
 monitoring-plugins:
   pkg.installed:
     - pkgs:
-      - net-analyzer/monitoring-plugins: "~2.1.2::baka-bakka"
+      - net-analyzer/monitoring-plugins: "~2.1.2::{{ pillar.get('gentoo:portage:overlay', 'baka-bakka') }}"
       - net-analyzer/fping: "~"
       - dev-perl/Net-SNMP: "~"
       - dev-perl/Crypt-DES: "~"
