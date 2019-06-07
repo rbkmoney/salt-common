@@ -2,7 +2,6 @@ include:
   - augeas
   - gentoo.makeconf
   - python
-  - ssl.openssl
 
 # TODO: Custom uWSGI deps and use flags
 {% set uwsgi_plugins = '''cache carbon cheaper_busyness corerouter emperor_zeromq fastrouter http logfile logsocket mongodblog nagios ping rawrouter redislog router_basicauth router_cache router_expires router_hash router_http router_memcached router_metrics router_redirect router_rewrite router_static router_uwsgi rpc signal spooler sslrouter symcall syslog stats_pusher_statsd transformation_chunked transformation_gzip transformation_offload transformation_tofile ugreen xslt zergpool''' -%}

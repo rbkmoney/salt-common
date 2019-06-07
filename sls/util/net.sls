@@ -1,6 +1,5 @@
 include:
   - lib.glibc
-  - lib.openssl
 
 util-net-purged:
   pkg.purged:
@@ -14,7 +13,6 @@ util-net:
   pkg.latest:
     - require:
       - pkg: sys-libs/glibc
-      - pkg: openssl
       - pkg: util-net-purged
     - pkgs:
       - net-analyzer/mtr
@@ -28,7 +26,7 @@ util-net:
       - net-misc/rsync
       - net-misc/netkit-telnetd
       - net-misc/wget: "~"
-      - net-misc/whois 
+      - net-misc/whois
       - sys-apps/iproute2
       - sys-apps/net-tools
 

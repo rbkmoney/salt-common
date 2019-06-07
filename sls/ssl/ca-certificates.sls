@@ -1,11 +1,6 @@
-include:
-  - lib.openssl
-
 ca-certificates:
   pkg.latest:
     - name: app-misc/ca-certificates
-    - require:
-      - pkg: openssl
 
 /etc/ca-certificates.conf:
   file.managed:
@@ -35,7 +30,7 @@ ca-certificates-dirs:
     - file_mode: 644
     - user: root
     - group: root
-  
+
 /usr/sbin/update-ca-certificates:
   cmd.wait:
     - watch:

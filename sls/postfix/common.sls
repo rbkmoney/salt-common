@@ -1,5 +1,4 @@
 include:
-  - ssl.openssl
   - .pkg
 
 /etc/mail/aliases:
@@ -27,7 +26,6 @@ postfix:
   service.running:
     - enable: True
     - watch:
-      - pkg: openssl
       - pkg: mail-mta/postfix
 
 postfix-reload:
@@ -35,7 +33,6 @@ postfix-reload:
     - name: postfix
     - reload: True
     - require:
-      - pkg: openssl
       - pkg: mail-mta/postfix
     - watch:
       - cmd: newaliases-create

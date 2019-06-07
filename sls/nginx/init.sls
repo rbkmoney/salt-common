@@ -1,5 +1,4 @@
 include:
-  - ssl.openssl
   - augeas.lenses
   - logrotate
   - .pkg
@@ -10,7 +9,6 @@ extend:
     service.running:
       - watch:
         - pkg: www-servers/nginx
-        - pkg: openssl
   nginx-reload:
     service.running:
       - require:

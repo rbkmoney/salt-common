@@ -1,7 +1,6 @@
 include:
   - gentoo.makeconf
   - lib.glibc
-  - ssl.openssl
   - lib.libmicrohttpd
 
 {% set collectd = salt['pillar.get']('collectd', {}) -%}
@@ -27,7 +26,6 @@ app-metrics/collectd:
   pkg.installed:
     - require:
       - pkg: sys-libs/glibc
-      - pkg: openssl
       - pkg: net-libs/libmicrohttpd
     - version: "{{ collectd_version }}[{{ ','.join(collectd_use) }}]"
     {% if collectd_packaged %}

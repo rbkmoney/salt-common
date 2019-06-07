@@ -1,6 +1,5 @@
 include:
   - lib.glibc
-  - ssl.openssl
   - lib.ldns
   - lib.libevent
   - lib.libsodium

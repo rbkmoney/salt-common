@@ -1,5 +1,4 @@
 include:
-  - ssl.openssl
   - salt.pkg
   - salt.repos
 
@@ -7,7 +6,6 @@ salt-master:
   service.running:
     - enable: True
     - watch:
-      - pkg: openssl
       - pkg: python2
       - pkg: cython
       - pkg: app-admin/salt

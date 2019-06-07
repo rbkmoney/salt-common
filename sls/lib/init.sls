@@ -5,6 +5,5 @@ include:
   - .ldns
   - .sctp
   - .libevent
-  - ssl.openssl
   - pam
 

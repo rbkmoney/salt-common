@@ -1,6 +1,3 @@
-include:
-  - ssl.openssl
-
 erlang:
   pkg.installed:
     - pkgs:

@@ -1,7 +1,7 @@
 # -*- mode: yaml -*-
 {% from "php/map.jinja" import php_config with context %}
 {% set php_version = php_config['version'] %}
-  
+
 include:
   - php
 
@@ -27,7 +27,7 @@ include:
     - group: root
     - require:
       - file: /etc/php/fpm-php{{ php_version }}/fpm.d/
-    
+
 eselect-php-fpm:
   eselect.set:
     - name: php
@@ -38,7 +38,6 @@ php-fpm:
   service.running:
     - enable: True
     - watch:
-      - pkg: openssl
       - pkg: php
       - eselect: eselect-php-fpm
       - file: /etc/php/fpm-php{{ php_version }}/php-fpm.conf
