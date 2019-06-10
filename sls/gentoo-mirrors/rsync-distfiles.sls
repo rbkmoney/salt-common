@@ -1,4 +1,3 @@
-# -*- mode: yaml -*-
 include:
   - nginx
   - gentoo-mirrors.ssl-nginx

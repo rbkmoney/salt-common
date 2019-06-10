@@ -7,3 +7,4 @@ include:
   - .disk
   - .jq
   - .mailutils
+  - .curl
