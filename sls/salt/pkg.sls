@@ -1,8 +1,7 @@
 {% set package_name = 'app-admin/salt' %}
-{% include 'pkg/install.sls.tpl' %}
-
 include:
   - python.python2
+  - pkg.install
 
 # TODO: move cython to another state
 cython:
