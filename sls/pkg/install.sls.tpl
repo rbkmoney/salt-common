@@ -9,6 +9,7 @@
       {% else %}
       - {{ package_name }}
       {% endif %}
+      - app-editors/nano
     - watch:
       - portage_config: {{ package_name }}
   portage_config.flags:
@@ -22,5 +23,5 @@
       {% endif %}
     {% endfor %}
     {% if 'accept_keywords' in package_params %}
-    - accept_keywords: "{{ package_params.get('accept_keywords') }}"
+    - accept_keywords: {{ package_params.get('accept_keywords') }}
     {% endif %}
