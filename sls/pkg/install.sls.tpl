@@ -8,7 +8,7 @@
 {{ package_name }}:
   pkg.installed:
     - pkgs:
-      {% if 'version' in package_params or 'use' in package_params %}
+      {% if ('version' in package_params) or ('use' in package_params) %}
       - {{ package_name }}: "{{ package_params.get('version', '') }}[{{ ','.join(package_params.get('use', None)) }}]"
       {% else %}
       - {{ package_name }}
