@@ -1,5 +1,5 @@
 {% set package_name = 'app-admin/salt' %}
-{% include pkg/install.sls.tpl %}
+{% include 'pkg/install.sls.tpl' %}
 include:
   - python.python2
 
