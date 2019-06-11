@@ -1,9 +1,5 @@
- #!jinja|pyobjects
-# -*- mode: python -*-
-#from salt://pkg/common.sls import process_target
-
 {% set packages_pillar_root = "gentoo:portage:packages" %}
-{% set package_params = pillar.get(packages_pillar_root + ":" + package_name) %}
+{% set package_params = salt.pillar.get(packages_pillar_root + ":" + package_name) %}
 
 {{ package_name }}:
   pkg.installed:
