@@ -1,6 +1,6 @@
 {% import 'pkg/common_vars' as pkg %}
 {% set packages = salt.pillar.get(pillar.get("pkg_root", "gentoo:portage:packages")) %}
-{% set salt = salt.packages.get('app-admin/salt') %}
+{% set salt = packages.get('app-admin/salt') %}
 include:
   - python.python2
 
