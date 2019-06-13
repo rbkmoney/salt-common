@@ -1,5 +1,6 @@
 {% set package_name = 'app-admin/salt' %}
 {% include 'pkg/common_vars' %}
+{% set params = pillar.get('gentoo:portage:packages:app-admin/salt') %}
 include:
   - python.python2
 
@@ -13,7 +14,7 @@ cython:
   pkg.installed:
     - refresh: False
     - pkgs:
-      - app-admin/salt: "{{ version }}[{{ ','.join(use) }}]"
+      - app-admin/salt: "{{ get_flag(params, 'version') }}{{ get_flag(params, 'use') }}"
       - dev-python/dnspython: ">=1.16.0_pre20170831-r1"
       - dev-python/sleekxmpp: "~>=1.3.1"
     - watch:
@@ -22,7 +23,10 @@ cython:
     - require:
       - pkg: cython
       - pkg: python2
-  portage_config.flags: {{ pc }}
+  portage_config.flags:
+    - accept_keywords: {{ get_flag(params, 'accept_keywords') }}
+    - use: {{ get_flag(params, 'use') }}
+
 
 /etc/logrotate.d/salt:
   file.managed:
