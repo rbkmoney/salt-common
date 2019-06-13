@@ -1,0 +1,27 @@
+{# ### depends on package_name variable in context!!!###  #}
+{% set packages_pillar_root = salt.pillar.get("packages_pillar_root", gentoo:portage:packages") %}
+{% set packages = salt.pillar.get(packages_pillar_root) %}
+{% set package_params = packages.get(package_name) %}
+{# #}
+{% set use = package_params.get('use') %}
+{% if use %}
+  {% set use = use if use is iterable and use is not string else [use] %}
+{% else %}
+  {% set use = [] %}
+{% endif %}
+{# #}
+{% set mask = package_params.get('mask') %}
+{% if mask %}
+  {% set mask = mask if mask is iterable and mask is not string else [mask] %}
+{% else %}
+  {% set mask = [] %}
+{% endif %}
+{# #}
+{% set version = package_params.get('version') %}
+{% set accept_keywords = package_params.get('accept_keywords') %}
+{# ### pc stands for portage_config ### #}
+{% set pc = {'accept_keywords': accept_keywords, 
+             'version': version,
+             'use': use,
+             'mask': mask} 
+%}
