@@ -25,7 +25,7 @@ cython:
       - pkg: python2
   portage_config.flags:
     - accept_keywords: "{{ common.get_flag(params, 'accept_keywords') -}}"
-    - use: {{ common.get_flag(params, 'use') -}}
+    - use: {{ common.get_flag(params, 'use') }}
 
 
 /etc/logrotate.d/salt:
