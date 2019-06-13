@@ -1,6 +1,5 @@
-{% macro get_flag(p, flag) -%}
-  {{ p|pprint }}
-  {% set flag_val = p.get(flag) %}
+{% macro get_flag(params, flag) -%}
+  {% set flag_val = params.get(flag) %}
   {% if flag_val in ('use', 'mask') %}
     {% if flag_val %}
       {% set flag_val = flag_val if flag_val is iterable and flag_val is not string else [flag_val] %}
