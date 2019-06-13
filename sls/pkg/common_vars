@@ -1,17 +1,17 @@
 {%- macro get_flag(params, flag) -%}
-  {% set flag_val = params.get(flag) %}
-  {% if flag in ('use', 'mask') %}
-    {% if flag_val %}
-      {% set flag_val = flag_val if flag_val is iterable and flag_val is not string else [flag_val] %}
-    {% else %}
-      {% set flag_val = [] %}
-    {% endif %}
-  {% if (flag_val) and (flag_val|length > 0) %}
+  {%- set flag_val = params.get(flag) -%}
+  {%- if flag in ('use', 'mask') -%}
+    {%- if flag_val -%}
+      {%- set flag_val = flag_val if flag_val is iterable and flag_val is not string else [flag_val] -%}
+    {%- else -%}
+      {%- set flag_val = [] -%}
+    {%- endif -%}
+  {%- if (flag_val) and (flag_val|length > 0) -%}
 {{ flag_val }}
-  {% endif %}
-  {% else %}
-    {% if (flag_val) %}
+  {%- endif -%}
+  {%- else -%}
+    {%- if (flag_val) -%}
 {{ flag_val }}
-    {% endif %}  
-  {% endif %}
+    {%- endif -%}  
+  {%- endif -%}
 {%- endmacro -%}
