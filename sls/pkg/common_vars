@@ -1,4 +1,5 @@
 {% macro get_flag(p, flag) -%}
+  {% pprint(p, True) %}
   {% set flag_val = p.get(flag) %}
   {% if flag_val in ('use', 'mask') %}
     {% if flag_val %}
