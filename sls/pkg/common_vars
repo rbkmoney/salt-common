@@ -1,5 +1,5 @@
 {% macro get_flag(p, flag) -%}
-  {{ pprint(p, verbose=True) }}
+  {{ p|pprint }}
   {% set flag_val = p.get(flag) %}
   {% if flag_val in ('use', 'mask') %}
     {% if flag_val %}
