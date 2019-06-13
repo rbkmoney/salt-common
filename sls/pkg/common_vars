@@ -7,11 +7,11 @@
       {% set flag_val = [] %}
     {% endif %}
   {% if (flag_val) and (flag_val|length > 0) %}
-{{ "[" + ",".join(flag_val) + "]" }}
+"[{{ ",".join(flag_val) }}]"
   {% endif %}
   {% else %}
     {% if (flag_val) %}
-{{ flag_val }}
+"{{ flag_val }}"
     {% endif %}  
   {% endif %}
 {%- endmacro %}
