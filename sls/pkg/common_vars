@@ -1,5 +1,5 @@
 {# ### depends on package_name variable in context!!!###  #}
-{% set packages_pillar_root = salt.pillar.get("packages_pillar_root", gentoo:portage:packages") %}
+{% set packages_pillar_root = salt.pillar.get("packages_pillar_root", "gentoo:portage:packages") %}
 {% set packages = salt.pillar.get(packages_pillar_root) %}
 {% set package_params = packages.get(package_name) %}
 {# #}
