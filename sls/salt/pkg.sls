@@ -24,7 +24,7 @@ app-admin/salt:
       - pkg: cython
       - pkg: python2
   portage_config.flags:
-    - accept_keywords: "{{ pkg.getf(salt, 'accept_keywords') -}}"
+    - accept_keywords: {{ pkg.getf(salt, 'accept_keywords') -}}
     - use: {{ pkg.getf(salt, 'use') }}
 
 
