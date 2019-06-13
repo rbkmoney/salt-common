@@ -1,6 +1,5 @@
-{% set salt_version = salt['pillar.get']('salt:version', '<2018.0.0') %}
-{% set salt_use = salt['pillar.get']('salt:use',
-('openssl', 'portage', 'gnupg', 'mako', '-mysql', '-raet')) %}
+{% set package_name = 'app-admin/salt' %}
+{% include 'pkg/common_vars' %}
 include:
   - python.python2
 
@@ -10,22 +9,20 @@ cython:
     - refresh: False
     - name: dev-python/cython
 
-app-admin/salt:
+{{ package_name }}:
   pkg.installed:
     - refresh: False
     - pkgs:
-      - app-admin/salt: "{{ salt_version }}[{{ ','.join(salt_use) }}]"
+      - app-admin/salt: "{{ version }}[{{ ','.join(use) }}]"
       - dev-python/dnspython: ">=1.16.0_pre20170831-r1"
       - dev-python/sleekxmpp: "~>=1.3.1"
     - watch:
-      - portage_config: app-admin/salt
+      - portage_config: {{ package_name }}
     - reload_modules: true
     - require:
       - pkg: cython
       - pkg: python2
-  portage_config.flags:
-    - accept_keywords:
-      - ~*
+  portage_config.flags: {{ pc }}
 
 /etc/logrotate.d/salt:
   file.managed:
