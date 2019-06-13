@@ -1,5 +1,5 @@
 {# ### getf stands for "get flags" ### #}
-{%- macro getf(params, flag) -%}
+{%- macro getf(params, flag, join=False) -%}
   {%- set flag_val = params.get(flag) -%}
   {%- if flag in ('use', 'mask', 'accept_keywords') -%}
     {%- if flag_val -%}
@@ -8,7 +8,11 @@
       {%- set flag_val = [] -%}
     {%- endif -%}
   {%- if (flag_val) and (flag_val|length > 0) -%}
+    {%- if join -%}
+{{ "[" + ",".join(flag_val) + "]" }}
+    {%- else -%}
 {{ flag_val }}
+    {%- endif -%}
   {%- endif -%}
   {%- else -%}
     {%- if (flag_val) -%}
