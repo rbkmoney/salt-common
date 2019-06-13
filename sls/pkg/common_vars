@@ -1,6 +1,7 @@
-{%- macro get_flag(params, flag) -%}
+{# ### getf stands for "get flags" ### #}
+{%- macro getf(params, flag) -%}
   {%- set flag_val = params.get(flag) -%}
-  {%- if flag in ('use', 'mask') -%}
+  {%- if flag in ('use', 'mask', 'accept_keywords') -%}
     {%- if flag_val -%}
       {%- set flag_val = flag_val if flag_val is iterable and flag_val is not string else [flag_val] -%}
     {%- else -%}
