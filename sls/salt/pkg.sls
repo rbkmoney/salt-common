@@ -17,7 +17,7 @@ app-admin/salt:
     - refresh: False
     - pkgs:
       - {{ pkg.i('app-admin/salt', salt) }}
-      - {{ pkg.i('dev-python/dnspython', dnspython) }} 
+      - {{ pkg.i('dev-python/dnspython', dnspython) }}
       - {{ pkg.i('dev-python/sleekxmpp', sleekxmpp) }}
     - reload_modules: true
     - require:

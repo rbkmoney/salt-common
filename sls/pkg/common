@@ -9,7 +9,7 @@
     {%- endif -%}
   {%- if (flag_val) and (flag_val|length > 0) -%}
     {%- if join -%}
-{{ "[" + ",".join(flag_val) + "]" }}
+[{{ ",".join(flag_val) }}]
     {%- else -%}
 {{ flag_val }}
     {%- endif -%}
@@ -43,7 +43,7 @@
 
 {%- macro i(name, params) -%}
 {% if ((params is iterable) and (params is not string) ) and (('use' in params) or ('version' in params)) %}
-{{- name -}}": {{- getf(params, 'version') -}}{{- getf(params, 'use', join=True) -}}"
+{{- name -}}: "{{- getf(params, 'version') -}}{{- getf(params, 'use', join=True) -}}"
 {% else %}
 {{- name -}}
 {% endif %}
