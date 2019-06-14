@@ -1,4 +1,4 @@
-{% import 'pkg/common_vars' as pkg %}
+{% import 'pkg/common' as pkg %}
 {% set packages = salt.pillar.get(pillar.get("pkg_root", "gentoo:portage:packages")) %}
 {% set salt = packages.get('app-admin/salt') %}
 include:
@@ -23,9 +23,7 @@ app-admin/salt:
     - require:
       - pkg: cython
       - pkg: python2
-  portage_config.flags:
-    - accept_keywords: {{ pkg.getf(salt, 'accept_keywords') }}
-    - use: {{ pkg.getf(salt, 'use') }}
+  {{ pkg.getpc(salt) }}
 
 
 /etc/logrotate.d/salt:

@@ -1,4 +1,4 @@
 pkg_bird:
-  pkg.installed:
+  pkg.latest:
     - pkgs:
-      - net-misc/bird: "~>=2.0.0"
+      - net-misc/bird
