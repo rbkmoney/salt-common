@@ -33,10 +33,10 @@
 {% if flag in params %}
 {{ "- " + flag + ": " + getf(params, flag) }}
 {% endif %}
+{% endfor %}
 {% if watch_in %}
 {{ "- watch_in: " -}}{{- watch_in }}
 {% endif %}
-{% endfor %}
 {% endif %}
 {%- endmacro -%}
 
