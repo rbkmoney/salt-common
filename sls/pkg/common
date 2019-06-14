@@ -22,12 +22,12 @@
 {%- endmacro -%}
 
 {%- macro getpc(params) -%}
-{%- if ('use' in params) or ('mask' in params) or ('accept_keywords' in params) -%}
+{% if ('use' in params) or ('mask' in params) or ('accept_keywords' in params) %}
 {{ "portage_config.flags:" }}
-{%- for flag in ('use', 'mask', 'accept_keywords') %}
-{%- if flag in params %}
-{{ "  - " + flag + ": " + getf(params, flag) -}}
+{% for flag in ('use', 'mask', 'accept_keywords') %}
+{% if flag in params %}
+{{ "- " + flag + ": " + getf(params, flag) }}
 {% endif %}
-{%- endfor %}
-{%- endif -%}
+{% endfor %}
+{% endif %}
 {%- endmacro -%}
