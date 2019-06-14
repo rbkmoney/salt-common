@@ -21,6 +21,11 @@
   {%- endif -%}
 {%- endmacro -%}
 
+{# ### generate portage_config.flags ### #}
+{# ### must be used with indent filter like this: ### #}
+{# ### {{ pkg.getpc(salt)|indent(8) }} ### #}
+{# ### since jinja doens't keep relative indentation ### #}
+{# ### PR that fixes with - https://github.com/pallets/jinja/pull/919 ####}
 {%- macro getpc(params) -%}
 {% if ('use' in params) or ('mask' in params) or ('accept_keywords' in params) %}
 {{ "portage_config.flags:" }}
@@ -31,3 +36,4 @@
 {% endfor %}
 {% endif %}
 {%- endmacro -%}
+

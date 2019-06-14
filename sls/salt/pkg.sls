@@ -23,7 +23,7 @@ app-admin/salt:
     - require:
       - pkg: cython
       - pkg: python2
-  {{ pkg.getpc(salt) }}
+  {{ pkg.getpc(salt)|indent(8) }}
 
 
 /etc/logrotate.d/salt:
