@@ -42,7 +42,7 @@
 
 
 {%- macro i(name, params) -%}
-{% if ('use' in params) or ('version' in params) %}
+{% if ((params is interable) and (params is not string) ) and (('use' in params) or ('version' in params)) %}
 {{- name -}}": {{- getf(params, 'version') -}}{{- getf(params, 'use', join=True) -}}"
 {% else %}
 {{- name -}}
