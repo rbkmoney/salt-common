@@ -1,6 +1,8 @@
 {% import 'pkg/common' as pkg %}
 {% set packages = salt.pillar.get(pillar.get("pkg_root", "gentoo:portage:packages")) %}
 {% set salt = packages.get('app-admin/salt') %}
+{% set dnspython = packages.get('dev-python/dnspython') %}
+{% set sleekxmpp = packages.get('dev-python/sleekxmpp') %}
 include:
   - python.python2
 
@@ -14,9 +16,9 @@ app-admin/salt:
   pkg.installed:
     - refresh: False
     - pkgs:
-      - app-admin/salt: "{{- pkg.getf(salt, 'version') -}}{{- pkg.getf(salt, 'use', join=True) -}}"
-      - dev-python/dnspython: ">=1.16.0_pre20170831-r1"
-      - dev-python/sleekxmpp: "~>=1.3.1"
+      - {{ pkg.i('app-admin/salt', salt) }}
+      - {{ pkg.i('dev-python/dnspython', dnspython) }} 
+      - {{ pkg.i('dev-python/sleekxmpp', sleekxmpp) }}
     - reload_modules: true
     - require:
       - pkg: cython

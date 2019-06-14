@@ -40,3 +40,11 @@
 {% endif %}
 {%- endmacro -%}
 
+
+{%- macro i(name, params) -%}
+{% if ('use' in params) or ('version' in params) %}
+{{- name -}}": {{- getf(params, 'version') -}}{{- getf(params, 'use', join=True) -}}"
+{% else %}
+{{- name -}}
+{% endif %}
+{%- endmacro -%}
