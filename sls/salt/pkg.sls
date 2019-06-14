@@ -17,8 +17,6 @@ app-admin/salt:
       - app-admin/salt: "{{- pkg.getf(salt, 'version') -}}{{- pkg.getf(salt, 'use', join=True) -}}"
       - dev-python/dnspython: ">=1.16.0_pre20170831-r1"
       - dev-python/sleekxmpp: "~>=1.3.1"
-#    - watch:
-#      - portage_config: app-admin/salt
     - reload_modules: true
     - require:
       - pkg: cython
