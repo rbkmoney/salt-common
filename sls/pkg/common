@@ -8,7 +8,7 @@
       {%- set flag_val = [] -%}
     {%- endif -%}
     {%- if flag == 'use' -%}
-      {%- set flag_val = flag_val + [] -%}
+      {%- set flag_val = flag_val + extra_use -%}
     {%- endif -%}
     {%- if (flag_val) and (flag_val|length > 0) -%}
       {%- if join -%}
