@@ -1,5 +1,5 @@
 {# ### getf stands for "get flags" ### #}
-{%- macro getf(params, flag, join=False) -%}
+{%- macro _getf(params, flag, join=False) -%}
   {%- set flag_val = params.get(flag) -%}
   {%- if flag in ('use', 'mask', 'accept_keywords') -%}
     {%- if flag_val -%}
@@ -26,12 +26,13 @@
 {# ### {{ pkg.getpc(salt)|indent(8) }} ### #}
 {# ### since jinja doens't keep relative indentation ### #}
 {# ### PR that fixes with - https://github.com/pallets/jinja/pull/919 ####}
-{%- macro getpc(params, watch_in=False) -%}
+{%- macro gen_portage_config(package_name, watch_in=False) -%}
+{% set params = salt.pillar.get("gentoo:portage:packages" + ":" + package_name, {}) %}
 {% if ('use' in params) or ('mask' in params) or ('accept_keywords' in params) %}
 {{ "portage_config.flags:" }}
 {% for flag in ('use', 'mask', 'accept_keywords') %}
 {% if flag in params %}
-{{ "- " + flag + ": " + getf(params, flag) }}
+{{ "- " + flag + ": " + _getf(params, flag) }}
 {% endif %}
 {% endfor %}
 {% if watch_in %}
@@ -41,10 +42,12 @@
 {%- endmacro -%}
 
 
-{%- macro i(name, params) -%}
+{%- macro gen_atom(package_name) -%}
+{% set params = salt.pillar.get("gentoo:portage:packages" + ":" + package_name, {}) %}
 {% if ((params is iterable) and (params is not string) ) and (('use' in params) or ('version' in params)) %}
-{{- name -}}: "{{- getf(params, 'version') -}}{{- getf(params, 'use', join=True) -}}"
+{{- package_name -}}: "{{- _getf(params, 'version') -}}{{- _getf(params, 'use', join=True) -}}"
 {% else %}
-{{- name -}}
+{{- package_name -}}
 {% endif %}
 {%- endmacro -%}
+
