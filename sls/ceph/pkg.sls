@@ -3,7 +3,7 @@ ceph:
   pkg.installed:
     - pkgs:
       - {{ pkg.gen_atom('sys-cluster/ceph') }}
-  {{ pkg.gen_portage_config('sys-cluster/ceph', watch_in={'pkg': 'sys-cluster/ceph'})|indent(8) }}
+  {{ pkg.gen_portage_config('sys-cluster/ceph', watch_in={'pkg': 'ceph'})|indent(8) }}
   user.present:
     - system: True
     - home: /var/lib/ceph
