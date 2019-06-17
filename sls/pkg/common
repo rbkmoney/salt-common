@@ -1,5 +1,5 @@
 {# ### getf stands for "get flags" ### #}
-{%- macro _getf(params, flag, join=False) -%}
+{%- macro _getf(params, flag, join=False, extra_use=[]) -%}
   {%- set flag_val = params.get(flag) -%}
   {%- if flag in ('use', 'mask', 'accept_keywords') -%}
     {%- if flag_val -%}
@@ -7,13 +7,16 @@
     {%- else -%}
       {%- set flag_val = [] -%}
     {%- endif -%}
-  {%- if (flag_val) and (flag_val|length > 0) -%}
-    {%- if join -%}
-[{{ ",".join(flag_val) }}]
-    {%- else -%}
-{{ flag_val }}
+    {%- if flag == 'use' -%}
+      {%- set flag_val = flag_val + [] -%}
     {%- endif -%}
-  {%- endif -%}
+    {%- if (flag_val) and (flag_val|length > 0) -%}
+      {%- if join -%}
+[{{ ",".join(flag_val) }}]
+      {%- else -%}
+{{ flag_val }}
+      {%- endif -%}
+    {%- endif -%}
   {%- else -%}
     {%- if (flag_val) -%}
 {{ flag_val }}
@@ -42,10 +45,10 @@
 {%- endmacro -%}
 
 
-{%- macro gen_atom(package_name) -%}
+{%- macro gen_atom(package_name, extra_use=[]) -%}
 {% set params = salt.pillar.get("gentoo:portage:packages" + ":" + package_name, {}) %}
 {% if ((params is iterable) and (params is not string) ) and (('use' in params) or ('version' in params)) -%}
-{{- package_name -}}: "{{- _getf(params, 'version') -}}{{- _getf(params, 'use', join=True) -}}"
+{{- package_name -}}: "{{- _getf(params, 'version') -}}{{- _getf(params, 'use', join=True, extra_use=extra_use) -}}"
 {%- else %}
 {{- package_name -}}
 {% endif %}
