@@ -1,7 +1,6 @@
+{% import 'pkg/common' as pkg %}
 include:
   - gentoo.makeconf
-  - lib.glibc
-  - lib.libmicrohttpd
 
 {% set extra_plugins = salt.pillar.get('collectd:extra-plugins', []) %}
 
