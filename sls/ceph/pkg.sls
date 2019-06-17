@@ -1,14 +1,9 @@
-{% set ceph_version = salt['pillar.get']('ceph:version', '=12.2.8-r1') %}
-{% set ceph_use = salt['pillar.get']('ceph:use', ('radosgw', 'tcmalloc', 'xfs')) %}
-{% set ceph_packaged = salt['pillar.get']('ceph:packaged', True) %}
-
+{% import 'pkg/common' as pkg %}
 ceph:
   pkg.installed:
-    {% if ceph_packaged %}
-    - binhost: force
-    {% endif %}
     - pkgs:
-      - sys-cluster/ceph: "{{ ceph_version }}[{{ ','.join(ceph_use) }}]"
+      - {{ pkg.gen_atom('sys-cluster/ceph') }}
+  {{ pkg.gen_portage_config('sys-cluster/ceph', watch_in={'pkg': 'sys-cluster/ceph'})|indent(8) }}
   user.present:
     - system: True
     - home: /var/lib/ceph
