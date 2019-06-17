@@ -44,9 +44,9 @@
 
 {%- macro gen_atom(package_name) -%}
 {% set params = salt.pillar.get("gentoo:portage:packages" + ":" + package_name, {}) %}
-{% if ((params is iterable) and (params is not string) ) and (('use' in params) or ('version' in params)) %}
+{% if ((params is iterable) and (params is not string) ) and (('use' in params) or ('version' in params)) -%}
 {{- package_name -}}: "{{- _getf(params, 'version') -}}{{- _getf(params, 'use', join=True) -}}"
-{% else %}
+{%- else %}
 {{- package_name -}}
 {% endif %}
 {%- endmacro -%}
