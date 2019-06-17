@@ -2,5 +2,5 @@ augeas:
   pkg.installed:
     - refresh: false
     - pkgs:
-      - app-admin/augeas
-      - dev-python/python-augeas
+      - {{ pkg.gen_atom('app-admin/augeas') }}
+      - {{ pkg.gen_atom('dev-python/python-augeas') }}

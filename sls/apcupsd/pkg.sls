@@ -1,4 +1,5 @@
+{% import 'pkg/common' as pkg %}
 apcupsd_pkg:
   pkg.latest:
     - pkgs:
-      - sys-power/apcupsd: "~"
+      - {{ pkg.gen_atom('sys-power/apcupsd') }}

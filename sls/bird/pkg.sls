@@ -1,4 +1,4 @@
 pkg_bird:
   pkg.latest:
     - pkgs:
-      - net-misc/bird
+      - {{ pkg.gen_atom('net-misc/bird') }}
