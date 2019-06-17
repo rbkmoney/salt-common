@@ -1,3 +1,4 @@
+{% import 'pkg/common' as pkg %}
 pkg_bird:
   pkg.latest:
     - pkgs:

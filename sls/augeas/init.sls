@@ -1,3 +1,4 @@
+{% import 'pkg/common' as pkg %}
 augeas:
   pkg.installed:
     - refresh: false
