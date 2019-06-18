@@ -1,16 +1,13 @@
+{% import 'pkg/common' as pkg %}
 include:
   - consul
 
 app-admin/consul-template:
   pkg.installed:
     - pkgs:
-      - app-admin/consul-template: ">=0.18.0"
-    - require:
-      - portage_config: app-admin/consul-template
-  portage_config.flags:
-    - name: "<consul-template-0.19"
-    - accept_keywords:
-      - "~*"
+      - {{ pkg.gen_atom('app-admin/consul-template') }}
+  {{ pkg.gen_portage_config('app-admin/consul-template', watch_in={'pkg': 'app-admin/consul-template'})|indent(8) }}
+
 
 /etc/conf.d/consul-template:
   file.managed:
