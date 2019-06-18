@@ -1,4 +1,8 @@
 {% import 'pkg/common' as pkg %}
+{% set arch_conf = salt.pillar.get('arch_conf') %}
+{% set binutils_version = salt.pillar.get('gentoo:portage:packages:sys-devel/binutils:version') %}
+{% set binutils_target = arch_conf['CHOST'] + '-' + binutils_version.split('-')[0] %}
+
 sys-devel/binutils:
   pkg.installed:
    - pkgs:
