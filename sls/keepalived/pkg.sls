@@ -1,4 +1,6 @@
+{% import 'pkg/common' as pkg %}
 pkg_keepalived:
   pkg.installed:
     - pkgs:
-      - sys-cluster/keepalived: '[ipv6,snmp]'
+      - {{ pkg.gen_atom('sys-cluster/keepalived') }}
+  {{ pkg.gen_portage_config('sys-cluster/keepalived', watch_in={'pkg': 'pkg_keepalived'})|indent(8) }}

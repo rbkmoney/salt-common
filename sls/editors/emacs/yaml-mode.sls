@@ -1,10 +1,7 @@
+{% import 'pkg/common' as pkg %}
 include:
   - .pkg
 
 app-emacs/yaml-mode:
-  pkg.installed:
-    - version: '~>=0.0.13'
-    - require:
-      - pkg: emacs
-
-
+  pkg.latest
+  {{ pkg.gen_portage_config('app-emacs/yaml-mode', watch_in={'pkg': 'app-emacs/yaml-mode'})|indent(8) }}

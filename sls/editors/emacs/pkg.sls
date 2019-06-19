@@ -1,4 +1,5 @@
+{% import 'pkg/common' as pkg %}
 emacs:
   pkg.installed:
-    - name: app-editors/emacs
-    - version: '>=26.1:26'
+    - pkgs:
+      - {{ pkg.gen_atom('app-editors/emacs') }} 

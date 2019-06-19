@@ -1,18 +1,12 @@
+{% import 'pkg/common' as pkg %}
 include:
   - vcs.git
 
 sys-apps/portage:
   pkg.latest:
     - pkgs:
-      - sys-apps/portage: "[xattr,-rsync-verify]"
-    - watch:
-      - portage_config: sys-apps/portage
-  portage_config.flags:
-    - accept_keywords: []
-    - use:
-      - xattr
-      - -rsync-verify
-    - reload_modules: true
+      - {{ pkg.gen_atom('sys-apps/portage') }}
+  {{ pkg.gen_portage_config('sys-apps/portage', watch_in={'pkg': 'sys-apps/portage'})|indent(8) }}
 
 app-portage-purged:
   pkg.purged:

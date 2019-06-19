@@ -1,13 +1,11 @@
-{% set glibc_use = salt['pillar.get']('glibc:use', ['-audit','caps','-docs','gd','multiarch','hardened']) %}
-{% set libs_packaged = salt['pillar.get']('libs:packaged', False) %}
+{% import 'pkg/common' as pkg %}
 sys-libs/glibc:
   pkg.latest:
-    - version: "[{{ ','.join(glibc_use) }}]"
-    {% if libs_packaged %}
-    - binhost: force
-    {% endif %}
     - require:
       - file: /etc/locale.gen
+    - pkgs:
+      - {{ pkg.gen_atom('sys-libs/glibc') }}
+  {{ pkg.gen_portage_config('sys-libs/glibc', watch_in={'pkg': 'sys-libs/glibc'})|indent(8) }}
 
 /etc/env.d/02locale:
   file.managed:

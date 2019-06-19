@@ -1,16 +1,9 @@
-{% set filebeat_version = salt['pillar.get']('filebeat:version', '>=6.3') %}
-{% set filebeat_packaged = salt['pillar.get']('filebeat:packaged', True) %}
-{% if not filebeat_packaged %}
-include:
-  - go
-{% endif %}
-
+{% import 'pkg/common' as pkg %}
 app-admin/filebeat:
   pkg.installed:
-    - version: "{{ filebeat_version }}"
-    {% if filebeat_packaged %}
-    - binhost: force
-    {% endif %}
+    - pkgs:
+      - {{ pkg.gen_atom('app-admin/filebeat') }}
+  {{ pkg.gen_portage_config('app-admin/filebeat', watch_in={'pkg': 'app-admin/filebeat'})|indent(8) }}
 
 /var/lib/filebeat/module/:
   file.recurse:

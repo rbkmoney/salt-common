@@ -50,4 +50,3 @@
 {{- package_name -}}
 {% endif %}
 {%- endmacro -%}
-
