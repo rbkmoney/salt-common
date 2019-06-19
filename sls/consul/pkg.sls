@@ -1,5 +1,5 @@
 {% import 'pkg/common' as pkg %}
-app-admin/consul:
+app-admin/consuela:
   pkg.installed:
     - pkgs:
       - {{ pkg.gen_atom('app-admin/consul') }}
