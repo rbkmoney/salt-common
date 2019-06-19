@@ -1,7 +1,9 @@
+{% import 'pkg/common' as pkg %}
 lm_sensors:
   pkg.installed:
     - pkgs:
-      - sys-apps/lm_sensors: '[-sensord]'
+      - {{ pkg.gen_atom('sys-apps/lm_sensors') }}
+  {{ pkg.gen_portage_config('sys-apps/lm_sensors', watch_in={'pkg': 'lm_sensors'})|indent(8) }}  
   service.running:
     - enable: True
     - watch:

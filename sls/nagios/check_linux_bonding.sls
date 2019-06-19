@@ -1,10 +1,8 @@
+{% import 'pkg/common' as pkg %}
 net-analyzer/nagios-check_linux_bonding:
-  pkg.latest:
-    - require:
-      - portage_config: net-analyzer/nagios-check_linux_bonding
-  portage_config.flags:
-    - accept_keywords:
-      - ~amd64
+  pkg.latest
+  {{ pkg.gen_portage_config('net-analyzer/nagios-check_linux_bonding', watch_in={'pkg': 'net-analyzer/nagios-check_linux_bonding'})|indent(8) }}
+
 
 cron-check_linux_bonding:
   cron.absent:
