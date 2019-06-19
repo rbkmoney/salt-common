@@ -1,6 +1,6 @@
 {% import 'pkg/common' as pkg %}
-app-admin/consuela:
+app-admin/consul:
   pkg.installed:
     - pkgs:
       - {{ pkg.gen_atom('app-admin/consul') }}
-  {{ pkg.gen_portage_config('app-admin/consul', watch_in={'pkg': 'app-admin/consuela'})|indent(8) }}
+  {{ pkg.gen_portage_config('app-admin/consul', watch_in={'pkg': 'app-admin/consul'})|indent(8) }}
