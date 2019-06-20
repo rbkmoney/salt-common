@@ -21,7 +21,6 @@ util-net:
       - net-analyzer/iftop
       - net-ftp/ftp
       - net-analyzer/netcat
-      - net-misc/curl: "[ssl,adns]"
       - net-misc/iputils
       - net-misc/rsync
       - net-misc/netkit-telnetd
@@ -29,4 +28,5 @@ util-net:
       - net-misc/whois
       - sys-apps/iproute2
       - sys-apps/net-tools
-
+      - net-misc/ipv6calc: "~"
+      - net-misc/sipcalc

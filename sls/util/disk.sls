@@ -17,6 +17,7 @@ util-disk:
       - pkg: util-disk-purged
       {% endif %}
     - pkgs:
+      - sys-fs/ncdu
       {% if not salt['grains.get']('diskless', False) %}
       - sys-fs/e2fsprogs
       - sys-fs/xfsprogs
