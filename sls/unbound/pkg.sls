@@ -1,3 +1,4 @@
+{% import 'pkg/common' as pkg %}
 include:
   - lib.glibc
   - lib.ldns
@@ -6,4 +7,5 @@ include:
 
 net-dns/unbound:
   pkg.installed:
-    - version: "~>=1.9.0[dnscrypt,ecdsa]"
+    - pkgs:
+      - {{ pkg.gen_atom('net-dns/unbound') }}

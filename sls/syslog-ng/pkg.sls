@@ -1,7 +1,8 @@
+{% import 'pkg/common' as pkg %}
 include:
   - logrotate
 
 pkg_syslog-ng:
   pkg.installed:
     - pkgs:
-      - app-admin/syslog-ng: ">=3.7.3[caps,pacct,json]"
+      - {{ pkg.gen_atom('app-admin/syslog-ng') }}

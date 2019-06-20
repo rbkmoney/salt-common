@@ -9,8 +9,7 @@ unmask-docker-py-2.x:
     - mask: False
 
 docker-py:
-  pkg.installed:
-    - pkgs:
-      - dev-python/docker-py: "~>=2.4"
+  pkg.latest:
+    - name: dev-python/docker-py
     - require:
       - portage_config: unmask-docker-py-2.x

@@ -1,3 +1,4 @@
 app-misc/jq:
   pkg.latest:
-    - version: ">=1.5"
+    - pkgs:
+      - {{ pkg.gen_atom('app-misc/jq') }}

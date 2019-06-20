@@ -1,4 +1,5 @@
+{% import 'pkg/common' as pkg %}
 sudo:
   pkg.latest:
     - pkgs:
-      - app-admin/sudo: '[offensive]'
+      - {{ pkg.gen_atom('app-admin/sudo') }}
