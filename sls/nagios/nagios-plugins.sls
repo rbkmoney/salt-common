@@ -1,3 +1,4 @@
+{% import 'pkg/common' as pkg %}
 nagios-plugins:
   pkg.purged:
     - name: net-analyzer/nagios-plugins
@@ -8,26 +9,9 @@ nagios-plugins:
 monitoring-plugins:
   pkg.installed:
     - pkgs:
-      - net-analyzer/monitoring-plugins: "~2.1.2::{{ pillar.get('gentoo:portage:overlay', 'baka-bakka') }}"
-      - net-analyzer/fping: "~"
-      - dev-perl/Net-SNMP: "~"
-      - dev-perl/Crypt-DES: "~"
-      - dev-perl/Crypt-Rijndael: "~" # Required by dev-perl/Net-SNMP on arm.
+      - {{ pkg.gen_atom('net-analyzer/monitoring-plugins') }}
     - require:
-      - portage_config: monitoring-plugins
       - pkg: nagios-plugins
-  portage_config.flags:
-    {% set extra_use = salt['pillar.get']('monitoring-plugins:extra_use', []) %}
-    - use:
-      - ssh
-      - ssl
-      - dns
-      - fping
-      - snmp
-      {% for use in ('mysql', 'postgres', 'samba', 'ldap', 'game') %}
-      {% if use in extra_use %}
-      - {{ use }}
-      {% else %}
-      - "-{{ use }}"
-      {% endif %}
-      {% endfor %}
+
+net-analyzer/monitoring-plugins:
+  {{ pkg.gen_portage_config('net-analyzer/monitoring-plugins', watch_in={'pkg': 'monitoring-plugins'})|indent(8) }}
