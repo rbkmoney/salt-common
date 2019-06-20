@@ -1,9 +1,6 @@
 {% import 'pkg/common' as pkg %}
 include:
   - lib.glibc
-  - lib.ldns
-  - lib.libevent
-  - lib.libsodium
 
 net-dns/unbound:
   pkg.installed:

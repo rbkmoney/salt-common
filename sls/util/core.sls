@@ -1,3 +1,4 @@
+{% import 'pkg/common' as pkg %}
 include:
   - lib.glibc
 

@@ -8,8 +8,6 @@ manage-nginx-modules:
     - changes:
       - set NGINX_MODULES_HTTP '"{{ makeconf_nginx_modules_http }}"'
       - set NGINX_MODULES_MAIL '"{{ makeconf_nginx_modules_mail }}"'
-    - require:
-      - file: augeas-makeconf
 
 # TODO: move this to separate file
 dev-libs/libpcre:
