@@ -1,6 +1,6 @@
 {% import 'pkg/common' as pkg %}
 include:
-  - gentoo.repos.{{ pillar.get('gentoo:portage:overlay') }}
+  - gentoo.repos.{{ pillar.get('overlay') }}
 
 riak_nagios_pkg:
   pkg.installed:
