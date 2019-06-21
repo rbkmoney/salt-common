@@ -1,6 +1,7 @@
 #!pyobjects
 # -*- mode: python -*-
 from salt.ext import six
+import re
 
 def process_target(package, version_num):
     if version_num is None:
