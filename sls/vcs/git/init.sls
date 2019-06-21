@@ -1,10 +1,8 @@
-{% set git_use = salt['pillar.get']('git:use', ['-gpg','-pcre-jit']) %}
+{% import 'pkg/common' as pkg %}
 dev-vcs/git:
-  portage_config.flags:
-    - use: {{ git_use }}
   pkg.latest:
     - refresh: false
-    - version: "[{{ ','.join(git_use) }}]"
-    - require:
-      - portage_config: dev-vcs/git
     - reload_modules: true
+    - pkgs:
+      - {{ pkg.gen_atom('dev-vcs/git') }}
+  {{ pkg.gen_portage_config('dev-vcs/git', watch_in={'pkg': 'dev-vcs/git'})|indent(8) }}

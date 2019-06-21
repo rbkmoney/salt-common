@@ -17,27 +17,10 @@ manage-uwsgi-plugins:
 www-servers/uwsgi:
   pkg.installed:
     - pkgs:
-        - www-servers/uwsgi: ">=2.0.13.1-r1"
+      - {{ pkg.gen_atom('www-servers/uwsgi') }}
     - watch:
-      - portage_config: www-servers/uwsgi
       - augeas: manage-uwsgi-plugins
-  portage_config.flags:
-    - use:
-      - caps
-      - cgi
-      - embedded
-      - jemalloc
-      - lua
-      - pcre
-      - perl
-      - python
-      - python_gevent
-      - -python_asyncio
-      - -ruby
-      - routing
-      - ssl
-      - xml
-      - zeromq
+  {{ pkg.gen_portage_config('www-servers/uwsgi', watch_in={'pkg': 'www-servers/uwsgi'})|indent(8) }}
 
 /etc/conf.d/uwsgi:
   file.managed:

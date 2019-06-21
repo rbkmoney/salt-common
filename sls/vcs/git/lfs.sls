@@ -1,14 +1,8 @@
 include:
   - vcs.git
-  - go
 
 dev-vcs/git-lfs:
-  portage_config.flags:
-    - accept_keywords:
-      - ~*
-    - use:
-      - "-docs"
   pkg.latest:
-    - require:
-      - pkg: dev-lang/go
-      - portage_config: dev-vcs/git-lfs
+    - pkgs:
+      - {{ pkg.gen_atom('dev-vcs/git-lfs') }}
+  {{ pkg.gen_portage_config('dev-vcs/git-lfs', watch_in={'pkg': 'dev-vcs/git-lfs'})|indent(8) }}
