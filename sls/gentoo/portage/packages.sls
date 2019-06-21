@@ -6,7 +6,7 @@ def process_target(package, version_num):
     if version_num is None:
         return package
     else:
-        # PCRE modified a bit compared to one from ebuild.py since here we don't support list of USE flags in verstr 
+        # PCRE modified a bit compared to one from ebuild.py since here we don't support list of USE package_vars in verstr 
         match = re.match('^(~|-|\*)?([<>]?=?)?([^<>=\[\]]*)$', version_num)
         if match:
             keyword, prefix, verstr = match.groups()
@@ -22,16 +22,15 @@ def process_target(package, version_num):
                 format(repr(version_num), package))
 
 packages = pillar('gentoo:portage:packages', {})
-for packagefile in ('accept_keywords', 'use'):
-    filedata = []
-    for cp, config_data in packages.items():
-        if packagefile not in config_data:
+for var in ('accept_keywords', 'use'):
+    result = []
+    for cp, package_vars in packages.items():
+        if var not in package_vars:
             continue
-        value = config_data[packagefile] if isinstance(config_data[packagefile], six.string_types) 
-                                         else ' '.join(config_data[packagefile])
-        verspec = cp if packagefile == 'use' else process_target(cp)
-        filedata.append((verspec, value))
-    filedata_str = ''.join([ "{} {}\n".format(cp, value) for cp, value in filedata ])
-    filename = '/etc/portage/package.{}/SALT'.format(packagefile)
-    File.managed(filename, contents=filedata_str, mode='0640',
+        value = package_vars[var] if isinstance(package_vars[var], six.string_types) else ' '.join(package_vars[var])
+        verspec = cp if var == 'use' else process_target(cp)
+        result.append((verspec, value))
+    result_str = ''.join([ "{} {}\n".format(cp, value) for cp, value in result ])
+    filename = '/etc/portage/package.{}/SALT'.format(var)
+    File.managed(filename, contents=result_str, mode='0640',
                  user='root', group='portage', makedirs=True)
