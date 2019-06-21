@@ -28,7 +28,7 @@ for var in ('accept_keywords', 'use'):
         if var not in package_vars:
             continue
         value = package_vars[var] if isinstance(package_vars[var], six.string_types) else ' '.join(package_vars[var])
-        verspec = cp if var == 'use' else process_target(cp)
+        verspec = cp if var == 'use' else process_target(cp, package_vars.get('version'))
         result.append((verspec, value))
     result_str = ''.join([ "{} {}\n".format(cp, value) for cp, value in result ])
     filename = '/etc/portage/package.{}/SALT'.format(var)
