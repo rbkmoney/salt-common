@@ -23,7 +23,7 @@ def process_target(package, version_num):
                 format(repr(version_num), package))
 
 packages = pillar('gentoo:portage:packages', {})
-for var in ('accept_keywords', 'use'):
+for var in ('accept_keywords', 'use', 'mask'):
     result = []
     for cp, package_vars in packages.items():
         if var not in package_vars:
@@ -31,7 +31,7 @@ for var in ('accept_keywords', 'use'):
         value = package_vars[var] if isinstance(package_vars[var], six.string_types) else ' '.join(package_vars[var])
         verspec = cp if var == 'use' else process_target(cp, package_vars.get('version'))
         result.append((verspec, value))
-    result_str = ''.join([ "{} {}\n".format(cp, value) for cp, value in result ])
+    result_str = ''.join([ "{} {}\n".format(cp, value) for cp, value in result.sort(key=itemgetter(1)) ])
     filename = '/etc/portage/package.{}/SALT'.format(var)
     File.managed(filename, contents=result_str, mode='0640',
                  user='root', group='portage', makedirs=True)
