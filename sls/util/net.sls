@@ -20,7 +20,7 @@ util-net:
       - net-analyzer/traceroute
       - net-analyzer/iftop
       - net-ftp/ftp
-      - net-analyzer/netcat
+      - net-analyzer/openbsd-netcat
       - net-misc/iputils
       - net-misc/rsync
       - net-misc/netkit-telnetd
