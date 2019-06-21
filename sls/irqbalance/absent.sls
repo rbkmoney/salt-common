@@ -8,3 +8,5 @@ irqbalance:
   service.dead:
     - name: irqbalance
     - enable: False
+    - onfail:
+      - pkg: irqbalance
