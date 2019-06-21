@@ -30,7 +30,7 @@ for var in ('accept_keywords', 'use', 'mask'):
             continue
         value = package_vars[var] if isinstance(package_vars[var], six.string_types) else ' '.join(package_vars[var])
         result.append((cp, value))
-    result_str = ''.join([ "{} {}\n".format(process_target(cp, package_vars.get('version')), value) for cp, value in sorted(result) ])
+    result_str = ''.join([ "{} {}\n".format(process_target(cp, packages.get(cp, {}).get('version')), value) for cp, value in sorted(result) ])
     filename = '/etc/portage/package.{}/SALT'.format(var)
     File.managed(filename, contents=result_str, mode='0640',
                  user='root', group='portage', makedirs=True)
