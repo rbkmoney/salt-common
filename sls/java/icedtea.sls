@@ -1,5 +1,5 @@
-# -*- mode: yaml -*-
+{% import 'pkg/common' as pkg %}
 icedtea:
   pkg.installed:
     - pkgs:
-      - dev-java/icedtea-bin: "[headless-awt,-gtk,-cups,-webstart,-alsa]"
+      - {{ pkg.gen_atom('dev-java/icedtea-bin') }}

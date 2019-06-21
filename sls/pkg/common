@@ -37,6 +37,7 @@
 {% endfor %}
 {% if watch_in %}
 {{ "- watch_in: " -}}{{- watch_in }}
+{{ "- require_in: " -}}{{- watch_in }}
 {% endif %}
 {% endif %}
 {%- endmacro -%}
