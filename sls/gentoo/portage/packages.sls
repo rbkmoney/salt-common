@@ -1,4 +1,4 @@
-#!jinja|pyobjects
+#!pyobjects
 # -*- mode: python -*-
 from salt.ext import six
 
@@ -24,7 +24,7 @@ def process_target(package, version_num):
 packages = pillar('gentoo:portage:packages', {})
 for packagefile in ('accept_keywords','use'):
     filedata = []
-    for cp in packages:
+    for cp in packages.keys():
         if packagefile not in cp:
             continue
         value = cp[packagefile] if isinstance(cp[packagefile], six.string_types) else ' '.join(cp[packagefile])
