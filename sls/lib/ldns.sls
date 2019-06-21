@@ -1,17 +1,6 @@
-{% set libs_packaged = salt['pillar.get']('libs:packaged', False) %}
-
+{% import 'pkg/common' as pkg %}
 ldns:
-  pkg.latest:
+  pkg.installed:
     - pkgs:
-      - net-libs/ldns: "[ecdsa,dane,ssl]"
-    {% if libs_packaged %}
-    - binhost: force
-    {% endif %}
-  {% if grains['osarch'].startswith('arm') %}
-  portage_config.flags:
-    - name: net-libs/ldns
-    - accept_keywords:
-      - ~arm
-    - watch_in:
-      - pkg: ldns
-  {% endif %}
+      - {{ pkg.gen_atom('net-libs/ldns') }}
+  {{ pkg.gen_portage_config('net-libs/ldns', watch_in={'pkg': 'net-libs/ldns'})|indent(8) }}

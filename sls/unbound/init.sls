@@ -10,8 +10,6 @@ unbound:
       - pkg: net-dns/dnssec-root
       - pkg: sys-libs/glibc
       - pkg: ldns
-      - pkg: dev-libs/libevent
-      - pkg: dev-libs/libsodium
       - file: /etc/unbound/unbound.conf
       - file: /etc/unbound/unbound_server.pem
       - file: /etc/unbound/unbound_server.key
