@@ -22,12 +22,13 @@ def process_target(package, version_num):
                 format(repr(version_num), package))
 
 packages = pillar('gentoo:portage:packages', {})
-for packagefile in ('accept_keywords','use'):
+for packagefile in ('accept_keywords', 'use'):
     filedata = []
-    for cp in packages.keys():
-        if packagefile not in cp:
+    for cp, config_data in packages.items():
+        if packagefile not in config_data:
             continue
-        value = cp[packagefile] if isinstance(cp[packagefile], six.string_types) else ' '.join(cp[packagefile])
+        value = config_data[packagefile] if isinstance(config_data[packagefile], six.string_types) 
+                                         else ' '.join(config_data[packagefile])
         verspec = cp if packagefile == 'use' else process_target(cp)
         filedata.append((verspec, value))
     filedata_str = ''.join([ "{} {}\n".format(cp, value) for cp, value in filedata ])
