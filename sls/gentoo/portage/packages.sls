@@ -24,10 +24,10 @@ def process_target(package, version_num):
 packages = pillar('gentoo:portage:packages', {})
 for packagefile in ('accept_keywords','use'):
     filedata = []
-    for cp in data:
+    for cp in packages:
         if packagefile not in cp:
             continue
-        value = [cp[packagefile]] if isinstance(cp[packagefile], six.string_types) else cp[packagefile]
+        value = cp[packagefile] if isinstance(cp[packagefile], six.string_types) else " ".join(cp[packagefile])
         verspec = cp if packagefile == 'use' else process_target(cp)
         filedata.append((verspec, value))
     filedata_str = ''.join([ "{} {}\n".format(cp, value) for cp, value in filedata ])
