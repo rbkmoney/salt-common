@@ -27,10 +27,10 @@ for packagefile in ('accept_keywords','use'):
     for cp in packages:
         if packagefile not in cp:
             continue
-        value = cp[packagefile] if isinstance(cp[packagefile], six.string_types) else " ".join(cp[packagefile])
+        value = cp[packagefile] if isinstance(cp[packagefile], six.string_types) else ' '.join(cp[packagefile])
         verspec = cp if packagefile == 'use' else process_target(cp)
         filedata.append((verspec, value))
     filedata_str = ''.join([ "{} {}\n".format(cp, value) for cp, value in filedata ])
-    filename = "/etc/portage/package.{}/SALT".format(packagefile)
-    File.managed(filename, contents=filedata_str, mode="0640",
-                 user=root, group=portage, makedirs=True)
+    filename = '/etc/portage/package.{}/SALT'.format(packagefile)
+    File.managed(filename, contents=filedata_str, mode='0640',
+                 user='root', group='portage', makedirs=True)
