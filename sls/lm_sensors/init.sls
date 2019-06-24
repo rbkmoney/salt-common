@@ -7,7 +7,7 @@ sys-apps/lm_sensors:
   service.running:
     - enable: True
     - watch:
-      - pkg: lm_sensors
+      - pkg: sys-apps/lm_sensors
       - file: /etc/init.d/lm_sensors
       - file: /etc/conf.d/lm_sensors
 
