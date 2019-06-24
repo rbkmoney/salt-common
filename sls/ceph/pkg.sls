@@ -1,6 +1,7 @@
 {% import 'pkg/common' as pkg %}
 ceph:
   pkg.installed:
+    - binhost: force
     - pkgs:
       - {{ pkg.gen_atom('sys-cluster/ceph') }}
   {{ pkg.gen_portage_config('sys-cluster/ceph', watch_in={'pkg': 'ceph'})|indent(8) }}
