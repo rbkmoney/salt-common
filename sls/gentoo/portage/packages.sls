@@ -1,5 +1,9 @@
 #!pyobjects
 # -*- mode: python -*-
+# To require this state in your state:
+# - require:
+#     - cmd: gentoo:portage:packages
+# (yes, cmd!)
 from salt.ext import six
 import re
 
