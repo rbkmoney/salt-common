@@ -1,4 +1,3 @@
-# TODO: edit g:p:p:app-metrics/collectd:use pillar for hosts with java - add 'java' USE flag 
 {% import 'pkg/common' as pkg %}
 include:
   - gentoo.makeconf
