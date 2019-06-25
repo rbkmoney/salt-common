@@ -726,7 +726,7 @@ def install(name=None,
         )
     if call['retcode'] != 0:
         raise CommandExecutionError(
-            'Unknown error occurred installing package(s). stdout: {}, stderr: {}'.format(call['stdout'], call['stderr'])
+            'unknown error stdout: {}, stderr: {}'.format(call['stdout'], call['stderr'])
         )        
     return changes
 
