@@ -706,7 +706,6 @@ def install(name=None,
     cmd.extend(oneshot)
     cmd.extend(targets)
 
-
     old = list_pkgs()
     call = __salt__['cmd.run_all'](cmd,
                                    output_loglevel='trace',
