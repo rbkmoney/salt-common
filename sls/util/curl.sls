@@ -1,3 +1,4 @@
+# TODO: флаги в gpp
 include:
   - lib.glibc
 

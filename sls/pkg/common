@@ -26,7 +26,7 @@
 {# ### {{ pkg.getpc(salt)|indent(8) }} ### #}
 {# ### since jinja doens't keep relative indentation ### #}
 {# ### PR that fixes with - https://github.com/pallets/jinja/pull/919 ####}
-{%- macro gen_portage_config(package_name, watch_in=False, reload_modules=False) -%}
+{%- macro gen_portage_config(package_name, watch_in=False) -%}
 {% set params = salt.pillar.get("gentoo:portage:packages" + ":" + package_name, {}) %}
 {% if ('use' in params) or ('mask' in params) or ('accept_keywords' in params) %}
 {{ "portage_config.flags:" }}
@@ -37,7 +37,6 @@
 {% endfor %}
 {% if watch_in %}
 {{ "- watch_in: " -}}{{- watch_in }}
-{{ "- require_in: " -}}{{- watch_in }}
 {% endif %}
 {% if reload_modules %}
 {{ "- reload_modules: True" }}

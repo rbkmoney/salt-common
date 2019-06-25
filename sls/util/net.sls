@@ -1,3 +1,4 @@
+{% import 'pkg/common' as pkg %}
 include:
   - lib.glibc
 
@@ -24,9 +25,9 @@ util-net:
       - net-misc/iputils
       - net-misc/rsync
       - net-misc/netkit-telnetd
-      - net-misc/wget: "~"
+      - net-misc/wget
       - net-misc/whois
       - sys-apps/iproute2
       - sys-apps/net-tools
-      - net-misc/ipv6calc: "~"
+      - {{ pkg.gen_atom('net-misc/ipv6calc') }}
       - net-misc/sipcalc

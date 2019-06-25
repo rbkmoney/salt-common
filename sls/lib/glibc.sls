@@ -1,3 +1,4 @@
+# TODO: change pkg -> cmd.run emerge -1 ...
 {% import 'pkg/common' as pkg %}
 sys-libs/glibc:
   pkg.latest:

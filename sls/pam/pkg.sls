@@ -1,3 +1,4 @@
+# TODO: remove from deps
 {% set pam_ver = salt['pillar.get']('pam:version', '>=1.3.0-r2') %}
 {% set pam_use = salt['pillar.get']('pam:use', ['-audit','-berkdb','cracklib','filecaps']) %}
 {% set pambase_use = salt['pillar.get']('pam:pambase:use', ['cracklib','nullok','sha512']) %}

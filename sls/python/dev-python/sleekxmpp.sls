@@ -1,3 +1,4 @@
+# TODO: вынести кейворд в gpp
 include:
   - python.dev-python.python-gnupg
   - python.dev-python.dnspython

@@ -1,3 +1,4 @@
+# TODO: edit g:p:p:app-metrics/collectd:use pillar for hosts with java - add 'java' USE flag 
 {% import 'pkg/common' as pkg %}
 include:
   - gentoo.makeconf
@@ -15,7 +16,7 @@ manage-collectd-plugins:
       - file: augeas-makeconf
 
 app-metrics/collectd:
-  pkg.installed:
+  pkg.latest:
     - pkgs:
       - {{ pkg.gen_atom('app-metrics/collectd') }}
     - watch:

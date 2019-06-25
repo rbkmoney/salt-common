@@ -1,5 +1,5 @@
 {% import 'pkg/common' as pkg %}
 nagios_pkg:
-  pkg.installed:
+  pkg.latest:
     - pkgs:
       - {{ pkg.gen_atom('net-analyzer/nagios-core') }}

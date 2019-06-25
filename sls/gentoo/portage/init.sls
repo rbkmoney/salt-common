@@ -4,9 +4,10 @@ include:
 
 sys-apps/portage:
   pkg.latest:
+    - reload_modules: True
     - pkgs:
       - {{ pkg.gen_atom('sys-apps/portage') }}
-  {{ pkg.gen_portage_config('sys-apps/portage', watch_in={'pkg': 'sys-apps/portage'}, reload_modules=True)|indent(8) }}
+  {{ pkg.gen_portage_config('sys-apps/portage', watch_in={'pkg': 'sys-apps/portage'})|indent(8) }}
 
 app-portage-purged:
   pkg.purged:

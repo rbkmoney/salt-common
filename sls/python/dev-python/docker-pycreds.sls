@@ -1,3 +1,4 @@
+# TODO: удалить, больше не используется
 docker-pycreds:
   pkg.installed:
     - pkgs:

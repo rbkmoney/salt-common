@@ -1,5 +1,5 @@
 {% import 'pkg/common' as pkg %}
 openssh:
-  pkg.installed:
+  pkg.latest:
     - pkgs:
       - {{ pkg.gen_atom('net-misc/openssh') }}

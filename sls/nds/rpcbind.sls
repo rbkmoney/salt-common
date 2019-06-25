@@ -1,3 +1,4 @@
+# TODO: remove deps on this
 {% set rpcbind_version = salt['pillar.get']('nds:rpcbind:version', '>=0.2.4') %}
 {% set rpcbind_use = salt['pillar.get']('nds:rpcbind:use', ['-tcpd']) %}
 include:
