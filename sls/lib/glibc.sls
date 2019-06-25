@@ -2,6 +2,7 @@
 {% import 'pkg/common' as pkg %}
 sys-libs/glibc:
   pkg.latest:
+    - oneshot: True
     - require:
       - file: /etc/locale.gen
     - pkgs:
