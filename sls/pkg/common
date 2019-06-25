@@ -38,9 +38,6 @@
 {% if watch_in %}
 {{ "- watch_in: " -}}{{- watch_in }}
 {% endif %}
-{% if reload_modules %}
-{{ "- reload_modules: True" }}
-{% endif %}
 {% endif %}
 {%- endmacro -%}
 
