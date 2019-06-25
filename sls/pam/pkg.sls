@@ -3,8 +3,6 @@
 {% set pam_use = salt['pillar.get']('pam:use', ['-audit','-berkdb','cracklib','filecaps']) %}
 {% set pambase_use = salt['pillar.get']('pam:pambase:use', ['cracklib','nullok','sha512']) %}
 {% set libs_packaged = salt['pillar.get']('libs:packaged', False) %}
-include:
-  - lib.cracklib
 
 sys-libs/pam:
   pkg.installed:
@@ -12,8 +10,6 @@ sys-libs/pam:
     {% if libs_packaged %}
     - binhost: force
     {% endif %}
-    - require:
-      - pkg: sys-libs/cracklib
 
 sys-auth/pambase:
   pkg.latest:
@@ -22,7 +18,6 @@ sys-auth/pambase:
     - binhost: force
     {% endif %}
     - require:
-      - pkg: sys-libs/cracklib
       - pkg: sys-libs/pam
 
 virtual/pam:
