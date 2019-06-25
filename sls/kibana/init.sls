@@ -1,6 +1,5 @@
 {% set kibana_version = salt.pillar.get('kibana:version', '~>=6.3') %}
 include:
-  - nodejs
   - kibana.config
 
 /etc/init.d/kibana:
@@ -12,7 +11,6 @@ www-apps/kibana-bin:
   pkg.installed:
     - version: "{{ kibana_version }}"
     - require:
-      - pkg: net-libs/nodejs
       - portage_config: www-apps/kibana-bin
   portage_config.flags:
     - accept_keywords: ["~*"]
@@ -22,7 +20,6 @@ kibana:
     - enable: True
     - watch:
       - pkg: www-apps/kibana-bin
-      - pkg: net-libs/nodejs
       - file: /etc/kibana/kibana.yml
       - file: /etc/init.d/kibana
 
