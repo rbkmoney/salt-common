@@ -724,7 +724,10 @@ def install(name=None,
             'Error occurred installing package(s)',
             info={'needed changes': needed_changes, 'changes': changes}
         )
-
+    if call['retcode'] != 0:
+        raise CommandExecutionError(
+            'Unknown error occurred installing package(s). stdout: {}, stderr: {}'.format(call['stdout'], call['stderr'])
+        )        
     return changes
 
 
