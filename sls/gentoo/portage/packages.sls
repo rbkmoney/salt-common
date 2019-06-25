@@ -33,7 +33,7 @@ for var in ('accept_keywords', 'use', 'mask'):
         result.append((cp, value))
     result_str = ''.join([ "{} {}\n".format(process_target(cp, packages.get(cp, {}).get('version')), value) for cp, value in sorted(result) ])
     filename = '/etc/portage/package.{}/SALT'.format(var)
-    filenames.append(filenames)
+    filenames.append({'file', filename})
     File.managed(filename, contents=result_str, mode='0640',
                  user='root', group='portage', makedirs=True)
 Cmd.run('gentoo.portage.packages', name='/bin/true', require=filenames)
