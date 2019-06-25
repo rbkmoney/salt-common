@@ -1,8 +1,12 @@
 {% import 'pkg/common' as pkg %}
+include:
+  - gentoo.portage.packages
+
 sys-libs/glibc:
   pkg.latest:
     - oneshot: True
     - require:
+      - cmd: gentoo.portage.packages
       - file: /etc/locale.gen
     - pkgs:
       - {{ pkg.gen_atom('sys-libs/glibc') }}
