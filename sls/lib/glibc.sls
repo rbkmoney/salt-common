@@ -4,6 +4,7 @@ sys-libs/glibc:
     - oneshot: True
     - require:
       - file: /etc/locale.gen
+      - cmd: gentoo.portage.packages
     - pkgs:
       - {{ pkg.gen_atom('sys-libs/glibc') }}
   {{ pkg.gen_portage_config('sys-libs/glibc', watch_in={'pkg': 'sys-libs/glibc'})|indent(8) }}

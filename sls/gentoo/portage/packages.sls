@@ -2,7 +2,7 @@
 # -*- mode: python -*-
 # To require this state in your state:
 # - require:
-#     - cmd: gentoo:portage:packages
+#     - cmd: gentoo.portage.packages
 # (yes, cmd!)
 from salt.ext import six
 import re
@@ -40,4 +40,4 @@ for var in ('accept_keywords', 'use', 'mask'):
     filenames.append({'file': filename})
     File.managed(filename, contents=result_str, mode='0640',
                  user='root', group='portage', makedirs=True)
-Cmd.run('gentoo.portage.packages', name='/bin/true', require=filenames)
+Cmd.run('gentoo.portage.packages', name='', require=filenames)
