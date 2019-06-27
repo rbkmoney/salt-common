@@ -1,10 +1,14 @@
 {% import 'pkg/common' as pkg %}
+include:
+  - gentoo.portage.packages
+
 ceph:
   pkg.installed:
     - binhost: force
     - pkgs:
       - {{ pkg.gen_atom('sys-cluster/ceph') }}
-  {{ pkg.gen_portage_config('sys-cluster/ceph', watch_in={'pkg': 'ceph'})|indent(8) }}
+    - require:
+      - file: gentoo.portage.packages
   user.present:
     - system: True
     - home: /var/lib/ceph

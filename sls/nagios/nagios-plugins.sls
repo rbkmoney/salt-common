@@ -1,4 +1,7 @@
 {% import 'pkg/common' as pkg %}
+include:
+  - gentoo.portage.packages
+
 nagios-plugins:
   pkg.purged:
     - name: net-analyzer/nagios-plugins
@@ -12,6 +15,4 @@ monitoring-plugins:
       - {{ pkg.gen_atom('net-analyzer/monitoring-plugins') }}
     - require:
       - pkg: nagios-plugins
-
-net-analyzer/monitoring-plugins:
-  {{ pkg.gen_portage_config('net-analyzer/monitoring-plugins', watch_in={'pkg': 'monitoring-plugins'})|indent(8) }}
+      - file: gentoo.portage.packages      

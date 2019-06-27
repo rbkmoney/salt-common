@@ -1,6 +1,7 @@
 {% import 'pkg/common' as pkg %}
 include:
   - python.python2
+  - gentoo.portage.packages  
 
 # TODO: move cython to another state
 cython:
@@ -19,7 +20,7 @@ app-admin/salt:
     - require:
       - pkg: cython
       - pkg: python2
-  {{ pkg.gen_portage_config('app-admin/salt', watch_in={'pkg': 'app-admin/salt'})|indent(8) }}
+      - file: gentoo.portage.packages
 
 
 /etc/logrotate.d/salt:

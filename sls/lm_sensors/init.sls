@@ -1,9 +1,13 @@
 {% import 'pkg/common' as pkg %}
+include:
+  - gentoo.portage.packages
+
 sys-apps/lm_sensors:
   pkg.installed:
     - pkgs:
       - {{ pkg.gen_atom('sys-apps/lm_sensors') }}
-  {{ pkg.gen_portage_config('sys-apps/lm_sensors', watch_in={'pkg': 'sys-apps/lm_sensors'})|indent(8) }}  
+    - require:
+      - file: gentoo.portage.packages
   service.running:
     - enable: True
     - watch:

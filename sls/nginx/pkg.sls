@@ -3,6 +3,7 @@
 {% set makeconf_nginx_modules_mail = 'smtp imap pop3' -%}
 include:
   - gentoo.makeconf
+  - gentoo.portage.packages
 
 manage-nginx-modules:
   augeas.change:
@@ -25,5 +26,5 @@ www-servers/nginx:
       - {{ pkg.gen_atom('www-servers/nginx') }}
     - watch:
       - augeas: manage-nginx-modules
-  {{ pkg.gen_portage_config('www-servers/nginx', watch_in={'pkg': 'www-servers/nginx'})|indent(8) }}
-
+    - require:
+      - file: gentoo.portage.packages

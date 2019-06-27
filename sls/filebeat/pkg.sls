@@ -1,9 +1,13 @@
 {% import 'pkg/common' as pkg %}
+include:
+  - gentoo.portage.packages
+
 app-admin/filebeat:
   pkg.installed:
     - pkgs:
       - {{ pkg.gen_atom('app-admin/filebeat') }}
-  {{ pkg.gen_portage_config('app-admin/filebeat', watch_in={'pkg': 'app-admin/filebeat'})|indent(8) }}
+    - require:
+      - file: gentoo.portage.packages
 
 /var/lib/filebeat/module/:
   file.recurse:

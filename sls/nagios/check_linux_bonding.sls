@@ -1,10 +1,13 @@
 {% import 'pkg/common' as pkg %}
+include:
+  - gentoo.portage.packages
+
 net-analyzer/nagios-check_linux_bonding:
   pkg.latest:
     - pkgs:
       - {{ pkg.gen_atom('net-analyzer/nagios-check_linux_bonding') }}
-  {{ pkg.gen_portage_config('net-analyzer/nagios-check_linux_bonding', watch_in={'pkg': 'net-analyzer/nagios-check_linux_bonding'})|indent(8) }}
-
+    - require:
+      - file: gentoo.portage.packages
 
 cron-check_linux_bonding:
   cron.absent:

@@ -1,6 +1,8 @@
 {% import 'pkg/common' as pkg %}
 include:
   - .pkg
+  - gentoo.portage.packages
+
 
 app-emacs/yaml-mode:
   pkg.latest:
@@ -8,4 +10,4 @@ app-emacs/yaml-mode:
       - {{ pkg.gen_atom('app-emacs/yaml-mode') }}
     - require: 
       - pkg: emacs
-  {{ pkg.gen_portage_config('app-emacs/yaml-mode', watch_in={'pkg': 'app-emacs/yaml-mode'})|indent(8) }}
+      - file: gentoo.portage.packages

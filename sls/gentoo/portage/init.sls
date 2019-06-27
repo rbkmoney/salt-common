@@ -1,13 +1,15 @@
 {% import 'pkg/common' as pkg %}
 include:
   - vcs.git
+  - gentoo.portage.packages
 
 sys-apps/portage:
   pkg.latest:
     - reload_modules: True
     - pkgs:
       - {{ pkg.gen_atom('sys-apps/portage') }}
-  {{ pkg.gen_portage_config('sys-apps/portage', watch_in={'pkg': 'sys-apps/portage'})|indent(8) }}
+    - require:
+      - file: gentoo.portage.packages
 
 app-portage-purged:
   pkg.purged:

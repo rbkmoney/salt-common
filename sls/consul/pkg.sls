@@ -1,6 +1,10 @@
 {% import 'pkg/common' as pkg %}
+include:
+  - gentoo.portage.packages
+
 app-admin/consul:
   pkg.installed:
     - pkgs:
       - {{ pkg.gen_atom('app-admin/consul') }}
-  {{ pkg.gen_portage_config('app-admin/consul', watch_in={'pkg': 'app-admin/consul'})|indent(8) }}
+    - require:
+      - file: gentoo.portage.packages
