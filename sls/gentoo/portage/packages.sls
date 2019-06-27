@@ -40,4 +40,5 @@ for var in ('accept_keywords', 'use', 'mask'):
     filenames.append({'file': filename})
     File.managed(filename, contents=result_str, mode='0640',
                  user='root', group='portage', makedirs=True)
-Cmd.run('gentoo.portage.packages', name='', require=filenames)
+File.managed('gentoo.portage.packages', name='/etc/portage/.gentoo.portage.packages', mode='0640',
+             user='root', group='portage', contents="Stub file for convenient usage of gentoo.portage.packages state\n", require=filenames)
