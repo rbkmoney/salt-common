@@ -1,4 +1,3 @@
-# TODO: rename ldns -> net-libs/ldns, check other states
 {% import 'pkg/common' as pkg %}
 include:
   - gentoo.portage.packages

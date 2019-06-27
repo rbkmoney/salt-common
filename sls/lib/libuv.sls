@@ -1,11 +1,11 @@
-{% set libs_packaged = salt['pillar.get']('libs:packaged', False) %}
-{% set libuv_version = salt['pillar.get']('libuv:version', '~>=1.25.0') %}
+{% import 'pkg/common' as pkg %}
+include:
+  - gentoo.portage.packages
 
 dev-libs/libuv:
-  pkg.installed:
-    - version: "{{ libuv_version }}"
-    {% if libs_packaged %}
-    - binhost: force
-    {% else %}
-    - binhost: try
-    {% endif %}
+  pkg.latest:
+    - oneshot: True
+    - pkgs:
+      - {{ pkg.gen_atom('dev-libs/libuv') }}
+    - require:
+      - file: gentoo.portage.packages

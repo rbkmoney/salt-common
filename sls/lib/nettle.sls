@@ -1,7 +1,13 @@
+{% import 'pkg/common' as pkg %}
 include:
-  - .glibc
+  - gentoo.portage.packages
+  - .glibc  
 
 dev-libs/nettle:
   pkg.latest:
+    - oneshot: True
+    - pkgs:
+      - {{ pkg.gen_atom('dev-libs/nettle') }}
     - require:
-      - pkg: sys-libs/glibc
+      - file: gentoo.portage.packages
+      - pkg: sys-libs/glibc      

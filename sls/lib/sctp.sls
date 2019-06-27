@@ -1,12 +1,14 @@
-{% set libs_packaged = salt['pillar.get']('libs:packaged', False) %}
+{% import 'pkg/common' as pkg %}
+include:
+  - gentoo.portage.packages
 
 lksctp-tools:
   pkg.latest:
+    - oneshot: True
     - pkgs:
-      - net-misc/lksctp-tools
-    {% if libs_packaged %}
-    - binhost: force
-    {% endif %}
+      - {{ pkg.gen_atom('net-misc/lksctp-tools') }}
+    - require:
+      - file: gentoo.portage.packages
   {% if grains['osarch'].startswith('arm') %}
   portage_config.flags:
     - name: net-misc/lksctp-tools
