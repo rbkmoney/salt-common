@@ -1,17 +1,13 @@
-# TODO: вынести кейворд в gpp
+{% import 'pkg/common' as pkg %}
 include:
-  - python.dev-python.python-gnupg
+  - gentoo.portage.packages
   - python.dev-python.dnspython
-  - python.dev-python.pyasn1
 
 dev-python/sleekxmpp:
-  portage_config.flags:
-    - accept_keywords:
-      - "~*"
   pkg.latest:
+    - oneshot: True
+    - pkgs:
+      - {{ pkg.gen_atom('dev-python/sleekxmpp') }}
     - require:
-      - portage_config: dev-python/sleekxmpp
-      - pkg: dev-python/python-gnupg
+      - file: gentoo.portage.packages
       - pkg: dev-python/dnspython
-      - pkg: dev-python/pyasn1
-      - pkg: dev-python/pyasn1-modules

@@ -2,7 +2,6 @@
 include:
   - python.dev-python.websocket-client
   - python.dev-python.backports-ssl-match-hostname
-  - python.dev-python.docker-pycreds
 
 mask-docker-py-2.x:
   portage_config.flags:

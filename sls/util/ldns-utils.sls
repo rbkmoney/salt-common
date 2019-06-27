@@ -1,5 +1,10 @@
-# TODO: флаги в gpp
-ldns-utils:
+{% import 'pkg/common' as pkg %}
+include:
+  - gentoo.portage.packages
+
+net-dns/ldns-utils:
   pkg.latest:
     - pkgs:
-      - net-dns/ldns-utils: "[ecdsa,dane,ssl]"
+      - {{ pkg.gen_atom('net-dns/ldns-utils') }}
+    - require:
+      - file: gentoo.portage.packages
