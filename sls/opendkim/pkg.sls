@@ -1,8 +1,12 @@
+{% import 'pkg/common' as pkg %}
 include:
+  - gentoo.portage.packages
   - unbound.pkg
 
 mail-filter/opendkim:
-  pkg.installed:
-    - version: '>=2.10.3[berkdb,ssl,unbound]'
+  pkg.latest:
+    - pkgs:
+      - {{ pkg.gen_atom('mail-filter/opendkim') }}
     - require:
-      - pkg: net-dns/unbound
+      - file: gentoo.portage.packages
+      - pkg: net-dns/unbound      
