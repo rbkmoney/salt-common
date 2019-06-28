@@ -1,6 +1,7 @@
 {% import 'pkg/common' as pkg %}
 include:
   - lib.glibc
+  - gentoo.portage.packages
 
 util-net-purged:
   pkg.purged:
@@ -15,6 +16,7 @@ util-net:
     - require:
       - pkg: sys-libs/glibc
       - pkg: util-net-purged
+      - file: gentoo.portage.packages
     - pkgs:
       - net-analyzer/mtr
       - net-analyzer/tcpdump
