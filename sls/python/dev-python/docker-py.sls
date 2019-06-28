@@ -1,7 +1,3 @@
-include:
-  - python.dev-python.websocket-client
-  - python.dev-python.backports-ssl-match-hostname
-
 unmask-docker-py-2.x:
   portage_config.flags:
     - name: '>=dev-python/docker-py-2.0'
