@@ -5,6 +5,11 @@ include:
   - ssl.openssl
   - lib.poco
   - lib.capnproto
+# - llvm
+# - clang
+# - jemalloc
+# - mariadb-connector-c
+
 
 dev-db/clickhouse:
   portage_config.flags:

@@ -1,5 +1,5 @@
 {% set arch_conf = salt['pillar.get']('arch_conf', False) %}
-{% set binutils_version = salt['pillar.get']('binutils:version', '2.31.1-r4') %}
+{% set binutils_version = salt['pillar.get']('binutils:version', '2.32-r1') %}
 {% set binutils_target = arch_conf['CHOST'] + '-' + binutils_version.split('-')[0] %}
 
 sys-devel/binutils:
