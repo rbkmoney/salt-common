@@ -1,15 +1,12 @@
 include:
   - unbound.pkg
-  - lib.dnssec-root
 
 unbound:
   service.running:
     - enable: True
     - watch:
       - pkg: net-dns/unbound
-      - pkg: net-dns/dnssec-root
       - pkg: sys-libs/glibc
-      - pkg: ldns
       - file: /etc/unbound/unbound.conf
       - file: /etc/unbound/unbound_server.pem
       - file: /etc/unbound/unbound_server.key
