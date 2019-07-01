@@ -1,5 +1,5 @@
 {% import 'pkg/common' as pkg %}
-import:
+include:
   - gentoo.portage.packages
 
 pkg_bird:
