@@ -27,6 +27,8 @@ bird6:
 bird:
   service.running:
     - enable: True
+    - require:
+      - file: /etc/bird.conf
     - watch:
       - file: /etc/init.d/bird
       - pkg: pkg_bird
