@@ -1,5 +1,6 @@
 {% import 'pkg/common' as pkg %}
 include:
+  - gentoo.repos.{{ pillar.get('overlay') }}
   - gentoo.portage.packages
 
 app-admin/uwsgitop:
