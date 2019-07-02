@@ -3,7 +3,7 @@ include:
   - gentoo.portage.packages
 
 dev-vcs/git:
-  pkg.latest:
+  pkg.install:
     - refresh: false
     - reload_modules: true
     - pkgs:
