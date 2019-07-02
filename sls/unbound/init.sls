@@ -13,6 +13,7 @@ unbound:
       - file: /etc/unbound/unbound_server.pem
       - file: /etc/unbound/unbound_server.key
       - file: /etc/unbound/unbound_control.key
+      - file: /etc/unbound/unbound_control.pem
       - file: /etc/dnssec/
 
 /etc/dnssec/:
