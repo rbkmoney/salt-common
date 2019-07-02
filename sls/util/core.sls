@@ -1,11 +1,13 @@
 {% import 'pkg/common' as pkg %}
 include:
+  - gentoo.portage.packages
   - lib.glibc
 
 util-core:
   pkg.latest:
     - require:
       - pkg: sys-libs/glibc
+      - file: gentoo.portage.packages
     - pkgs:
       - app-text/tree
       - sys-apps/attr
