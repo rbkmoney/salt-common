@@ -2,8 +2,10 @@
 include:
   - gentoo.portage.packages
 
+# must be pkg.installed and not pkg.latest to avoid chicken and egg problem
+# in 'gentoo' state; also git must be present in VM image
 dev-vcs/git:
-  pkg.install:
+  pkg.installed:
     - refresh: false
     - reload_modules: true
     - pkgs:
