@@ -17,6 +17,8 @@ gentoo:
     - force_clone: True
     - force_checkout: True
     - force_reset: True
+    - require_in:
+      - pkg: sys-apps/portage
   {% endif %}
 
 /etc/portage/repos.conf/gentoo.conf:
