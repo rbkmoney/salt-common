@@ -2,6 +2,7 @@
 include:
   - vcs.git
   - gentoo.portage.packages
+  - gentoo.repos.gentoo
 
 sys-apps/portage:
   pkg.latest:
