@@ -7,8 +7,8 @@ unbound:
     - enable: True
     - watch:
       - pkg: net-dns/unbound
-      - pkg: sys-libs/glibc
       - pkg: net-dns/dnssec-root
+      - pkg: sys-libs/glibc
       - file: /etc/unbound/unbound.conf
       - file: /etc/unbound/unbound_server.pem
       - file: /etc/unbound/unbound_server.key
