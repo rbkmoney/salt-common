@@ -1,6 +1,5 @@
 {% import 'pkg/common' as pkg %}
 include:
-  - vcs.git
   - gentoo.portage.packages
   - gentoo.repos.gentoo
 {% if pillar.get('overlay', False) %}
@@ -15,7 +14,7 @@ sys-apps/portage:
       - {{ pkg.gen_atom('sys-apps/portage') }}
     - require:
       - file: gentoo.portage.packages
-    {# need both repos here since 'refresh' of pkg module is executed once per run #}
+    {# need both repos here since 'refresh' of pkg module is executed once per run -#}
       - git: gentoo
     {% if pillar.get('overlay', False) %}
       - git: {{ pillar.get('overlay') }}
