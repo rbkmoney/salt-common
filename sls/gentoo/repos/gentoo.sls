@@ -17,6 +17,7 @@ gentoo:
     - force_clone: True
     - force_checkout: True
     - force_reset: True
+    - reload_modules: true
     - require_in:
       - pkg: sys-apps/portage
   {% endif %}
