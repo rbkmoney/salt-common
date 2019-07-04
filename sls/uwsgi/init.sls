@@ -1,4 +1,3 @@
-# -*- mode: yaml -*-
 include:
   - augeas
   - gentoo.makeconf
@@ -12,7 +11,6 @@ uwsgi:
       - pkg: www-servers/uwsgi
       - pkg: python2
       - pkg: python3
-      # TODO: more watch deps to restart on updates
       - file: /etc/conf.d/uwsgi
       - file: /etc/uwsgi.d/
 
