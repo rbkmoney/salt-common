@@ -4,7 +4,7 @@ sys-devel/binutils:
    - pkgs:
       - {{ pkg.gen_atom('sys-devel/binutils') }}
 
-'emerge -q --prune sys-devel/binutils':
+'emerge --prune sys-devel/binutils':
   cmd.run:
     - onchanges:
       - pkg: sys-devel/binutils

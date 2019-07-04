@@ -5,7 +5,6 @@ include:
 
 dev-python/sleekxmpp:
   pkg.latest:
-    - oneshot: True
     - pkgs:
       - {{ pkg.gen_atom('dev-python/sleekxmpp') }}
     - require:

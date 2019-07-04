@@ -4,7 +4,7 @@ sys-devel/gcc:
    - pkgs:
       - {{ pkg.gen_atom('sys-devel/gcc') }}
 
-'emerge -q --prune sys-devel/gcc':
+'emerge --prune sys-devel/gcc':
   cmd.run:
     - onchanges:
       - pkg: sys-devel/gcc
