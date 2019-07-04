@@ -3,14 +3,23 @@ include:
   - vcs.git
   - gentoo.portage.packages
   - gentoo.repos.gentoo
+{% if pillar.get('overlay', False) %}
+  - gentoo.repos.{{ pillar.get('overlay') }}
+{% endif %}  
 
 sys-apps/portage:
   pkg.latest:
     - reload_modules: True
+    - refresh: True
     - pkgs:
       - {{ pkg.gen_atom('sys-apps/portage') }}
     - require:
       - file: gentoo.portage.packages
+    {# need both repos here since 'refresh' of pkg module is executed once per run #}
+      - git: gentoo
+    {% if pillar.get('overlay', False) %}
+      - git: {{ pillar.get('overlay') }}
+    {% endif %}    
 
 app-portage-purged:
   pkg.purged:
