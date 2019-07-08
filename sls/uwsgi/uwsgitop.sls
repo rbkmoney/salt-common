@@ -1,7 +1,12 @@
+{% import 'pkg/common' as pkg %}
+include:
+  - gentoo.repos.{{ pillar.get('overlay') }}
+  - gentoo.portage.packages
+
 app-admin/uwsgitop:
-  portage_config.flags:
-    - accept_keywords:
-      - ~*
   pkg.latest:
+    - oneshot: True
+    - pkgs:
+      - {{ pkg.gen_atom('app-admin/uwsgitop') }}
     - require:
-      - portage_config: app-admin/uwsgitop
+      - file: gentoo.portage.packages

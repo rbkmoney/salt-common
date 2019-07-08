@@ -1,7 +1,5 @@
-{% set terminus_use_flags = salt['pillar.get']('terminus_use_flags',
-                                               '-pcf,psf,center-tilde,-ru-g,-a-like-o,distinct-l,ru-dv,ru-i') %}
-
+{% import 'pkg/common' as pkg %}
 terminus:
   pkg.installed:
     - pkgs:
-      - media-fonts/terminus-font: '[{{ terminus_use_flags }}]'
+      - {{ pkg.gen_atom('media-fonts/terminus-font') }}

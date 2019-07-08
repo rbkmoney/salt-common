@@ -1,16 +1,11 @@
-{% set nodejs_packaged = salt.pillar.get('nodejs:packaged', false) %}
-{% set nodejs_version = salt.pillar.get('nodejs:version', '~=8.15.1') %}
-{% set nodejs_use = salt.pillar.get('nodejs:use', ['npm']) %}
+{% import 'pkg/common' as pkg %}
 include:
-  - lib.libuv
-  - lib.http-parser
+  - gentoo.portage.packages
 
 net-libs/nodejs:
-  pkg.installed:
-    - version: "{{ nodejs_version }}[{{ ','.join(nodejs_use) }}]"
-    {% if nodejs_packaged %}
-    - binhost: force
-    {% endif %}
+  pkg.latest:
+    - oneshot: True
+    - pkgs:
+      - {{ pkg.gen_atom('net-libs/nodejs') }}
     - require:
-      - pkg: dev-libs/libuv
-      - pkg: net-libs/http-parser
+      - file: gentoo.portage.packages

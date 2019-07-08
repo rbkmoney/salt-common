@@ -1,8 +1,5 @@
-include:
-  - lib.ldns
-  - lib.sctp
-
+{% import 'pkg/common' as pkg %}
 openssh:
-  pkg.installed:
+  pkg.latest:
     - pkgs:
-      - net-misc/openssh: ">=7.3_p1[hpn,ldns,sctp]"
+      - {{ pkg.gen_atom('net-misc/openssh') }}

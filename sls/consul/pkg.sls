@@ -1,19 +1,10 @@
-{% set consul_version = salt['pillar.get']('consul:version', '<1.5') %}
-{% set consul_packaged = salt['pillar.get']('consul:packaged', True) %}
-{% if not consul_packaged %}
+{% import 'pkg/common' as pkg %}
 include:
-  - go.dev-go.go-tools
-  - go.dev-go.gox
-{% endif %}
+  - gentoo.portage.packages
 
 app-admin/consul:
   pkg.installed:
-    - version: "{{ consul_version }}"
-    {% if consul_packaged %}
-    - binhost: force
-    {% endif %}
+    - pkgs:
+      - {{ pkg.gen_atom('app-admin/consul') }}
     - require:
-      - portage_config: app-admin/consul
-  portage_config.flags:
-    - accept_keywords:
-      - "~*"
+      - file: gentoo.portage.packages

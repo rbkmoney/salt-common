@@ -4,9 +4,9 @@ include:
 app-portage/repoman:
   pkg.latest:
     - pkgs:
-      - dev-python/lxml: ">=3.6"
-      - sys-apps/portage: ">=2.3"
-      - app-portage/repoman: ">=2.3"
+      - dev-python/lxml
+      - sys-apps/portage
+      - app-portage/repoman
 
 app-portage/overlint:
   pkg.latest

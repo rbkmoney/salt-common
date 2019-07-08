@@ -1,9 +1,11 @@
-{% set libs_packaged = salt['pillar.get']('libs:packaged', False) %}
+{% import 'pkg/common' as pkg %}
+include:
+  - gentoo.portage.packages
 
 net-libs/libmicrohttpd:
   pkg.latest:
-    {% if libs_packaged %}
-    - binhost: force
-    {% else %}
-    - binhost: try
-    {% endif %}
+    - oneshot: True
+    - pkgs:
+      - {{ pkg.gen_atom('net-libs/libmicrohttpd') }}
+    - require:
+      - file: gentoo.portage.packages

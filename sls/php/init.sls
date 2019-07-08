@@ -1,10 +1,10 @@
+# TODO: все переделать
 # -*- mode: yaml -*-
 {% from "php/map.jinja" import php_config with context %}
 {% set php_version = php_config['version'] %}
 
-include:
-  - ssl.openssl
 {% if grains['os_family'] == 'Gentoo' %}
+include:
   - augeas.lenses
 
 manage-php-ini-version:

@@ -1,14 +1,11 @@
+{% import 'pkg/common' as pkg %}
 include:
   - vcs.git
-  - go
+  - gentoo.portage.packages  
 
 dev-vcs/git-lfs:
-  portage_config.flags:
-    - accept_keywords:
-      - ~*
-    - use:
-      - "-docs"
   pkg.latest:
+    - pkgs:
+      - {{ pkg.gen_atom('dev-vcs/git-lfs') }}
     - require:
-      - pkg: dev-lang/go
-      - portage_config: dev-vcs/git-lfs
+      - file: gentoo.portage.packages

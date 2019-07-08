@@ -1,5 +1,4 @@
 include:
-  - ssl.openssl
   - unbound.pkg
   - lib.dnssec-root
 
@@ -10,13 +9,11 @@ unbound:
       - pkg: net-dns/unbound
       - pkg: net-dns/dnssec-root
       - pkg: sys-libs/glibc
-      - pkg: openssl
-      - pkg: ldns
-      - pkg: dev-libs/libevent
-      - pkg: dev-libs/libsodium
       - file: /etc/unbound/unbound.conf
       - file: /etc/unbound/unbound_server.pem
       - file: /etc/unbound/unbound_server.key
+      - file: /etc/unbound/unbound_control.key
+      - file: /etc/unbound/unbound_control.pem
       - file: /etc/dnssec/
 
 /etc/dnssec/:

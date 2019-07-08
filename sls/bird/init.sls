@@ -29,6 +29,7 @@ bird:
     - enable: True
     - watch:
       - file: /etc/init.d/bird
+      - file: /etc/bird.conf
       - pkg: pkg_bird
 
 bird-reload:

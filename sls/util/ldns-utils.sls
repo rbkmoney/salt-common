@@ -1,15 +1,10 @@
+{% import 'pkg/common' as pkg %}
 include:
-  - lib.ldns
+  - gentoo.portage.packages
 
-ldns-utils:
+net-dns/ldns-utils:
   pkg.latest:
     - pkgs:
-      - net-dns/ldns-utils: "[ecdsa,dane,ssl]"
-  {% if grains['osarch'].startswith('arm') %}
-  portage_config.flags:
-    - name: net-dns/ldns-utils
-    - accept_keywords:
-      - ~arm
-    - watch_in:
-      - pkg: ldns-utils
-  {% endif %}
+      - {{ pkg.gen_atom('net-dns/ldns-utils') }}
+    - require:
+      - file: gentoo.portage.packages

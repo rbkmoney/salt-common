@@ -1,6 +1,8 @@
+{% import 'pkg/common' as pkg %}
 augeas:
   pkg.installed:
     - refresh: false
+    - reload_modules: True
     - pkgs:
-      - app-admin/augeas: ">=1.8.0"
-      - dev-python/python-augeas: "~>=0.5.0"
+      - {{ pkg.gen_atom('app-admin/augeas') }}
+      - {{ pkg.gen_atom('dev-python/python-augeas') }}

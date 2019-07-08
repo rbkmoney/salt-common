@@ -1,6 +1,3 @@
-include:
-  - ssl.openssl
-
 ">=dev-lang/erlang-18":
   portage_config.flags:
     - mask: True

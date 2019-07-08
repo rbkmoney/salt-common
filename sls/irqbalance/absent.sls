@@ -1,9 +1,12 @@
 irqbalance:
   pkg.purged:
     - pkgs:
-      - sys-apps/irqbalance: '[numa]'
+      - sys-apps/irqbalance
       - sys-process/numactl
-    - require:
-      - service: irqbalance
-  service.disabled:
+  service.dead:
     - name: irqbalance
+    - enable: False
+    - onfail:
+      - pkg: irqbalance
+    - onchanges:
+      - pkg: irqbalance      

@@ -1,5 +1,10 @@
-# -*- mode: yaml -*-
+{% import 'pkg/common' as pkg %}
+include:
+  - gentoo.portage.packages
+
 nagios-bird:
-  pkg.installed:
+  pkg.latest:
+    - require:
+      - file: gentoo.portage.packages
     - pkgs:
-      - net-analyzer/nagios-bird: "*"
+      - {{ pkg.gen_atom('net-analyzer/nagios-bird') }}

@@ -1,4 +1,10 @@
+{% import 'pkg/common' as pkg %}
+include:
+  - gentoo.portage.packages
+
 pkg_bird:
   pkg.installed:
     - pkgs:
-      - net-misc/bird: "~>=2.0.0"
+      - {{ pkg.gen_atom('net-misc/bird') }}
+    - require:
+      - file: gentoo.portage.packages

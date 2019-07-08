@@ -1,6 +1,4 @@
-include:
-  - augeas.lenses
-
+# TODO: перенести флаги в gpp
 qemu:
   pkg.installed:
     - pkgs:

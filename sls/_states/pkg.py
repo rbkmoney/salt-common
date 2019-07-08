@@ -2416,7 +2416,7 @@ def latest(
             failed = [x for x in targets
                       if not changes.get(x) or
                       changes[x].get('new') != targets[x] and
-                      targets[x] != 'latest']
+                      targets[x] and targets[x] != 'latest']
             successful = [x for x in targets if x not in failed]
 
             comments = []

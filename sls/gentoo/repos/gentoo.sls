@@ -13,10 +13,12 @@ gentoo:
     - name: '{{ sync_uri }}'
     - target: '/usr/portage'
     - rev: master
-    - depth: 1
+    - depth: 30
     - force_clone: True
     - force_checkout: True
-    - force_reset: True
+    - reload_modules: true
+    - require_in:
+      - pkg: sys-apps/portage
   {% endif %}
 
 /etc/portage/repos.conf/gentoo.conf:

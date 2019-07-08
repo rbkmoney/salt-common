@@ -683,6 +683,11 @@ def install(name=None,
     else:
         bin_opts = []
 
+    if 'oneshot' in kwargs and kwargs.get('oneshot') == True:
+        oneshot = ['--oneshot']
+    else:
+        oneshot = []
+
     changes = {}
 
     if not pkg_type == 'repository':
@@ -698,6 +703,7 @@ def install(name=None,
     cmd.extend(['emerge', '--ask', 'n', '--quiet'])
     cmd.extend(bin_opts)
     cmd.extend(emerge_opts)
+    cmd.extend(oneshot)
     cmd.extend(targets)
 
     old = list_pkgs()
@@ -718,7 +724,10 @@ def install(name=None,
             'Error occurred installing package(s)',
             info={'needed changes': needed_changes, 'changes': changes}
         )
-
+    if call['retcode'] != 0:
+        raise CommandExecutionError(
+            'unknown error stdout: {}, stderr: {}'.format(call['stdout'], call['stderr'])
+        )        
     return changes
 
 

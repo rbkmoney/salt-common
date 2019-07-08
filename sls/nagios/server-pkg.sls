@@ -1,9 +1,5 @@
-include:
-  - lib.gd
-
+{% import 'pkg/common' as pkg %}
 nagios_pkg:
-  pkg.installed:
+  pkg.latest:
     - pkgs:
-        - net-analyzer/nagios-core: ">=4.3.4[web,perl]"
-    - require:
-      - pkg: media-libs/gd
+      - {{ pkg.gen_atom('net-analyzer/nagios-core') }}

@@ -1,10 +1,13 @@
+{% import 'pkg/common' as pkg %}
 include:
   - .pkg
+  - gentoo.portage.packages
+
 
 app-emacs/yaml-mode:
-  pkg.installed:
-    - version: '~>=0.0.13'
-    - require:
+  pkg.latest:
+    - pkgs:
+      - {{ pkg.gen_atom('app-emacs/yaml-mode') }}
+    - require: 
       - pkg: emacs
-
-
+      - file: gentoo.portage.packages

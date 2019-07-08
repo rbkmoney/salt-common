@@ -1,6 +1,10 @@
+{% import 'pkg/common' as pkg %}
+include:
+  - gentoo.portage.packages
+
 dev-libs/jemalloc:
   pkg.latest:
     - pkgs:
-      - dev-libs/jemalloc: '[stats]'
-
-        
+      - {{ pkg.gen_atom('dev-libs/jemalloc') }}
+    - require:
+      - file: gentoo.portage.packages

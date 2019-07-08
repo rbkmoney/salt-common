@@ -1,7 +1,11 @@
-{% set elastic_version = salt['pillar.get']('elastic:version', '~>=6.3') %}
+{% import 'pkg/common' as pkg %}
 include:
   - java.icedtea3
+  - gentoo.portage.packages  
 
 app-misc/elasticsearch:
   pkg.installed:
-    - version: '{{ elastic_version }}'
+    - pkgs:
+      - {{ pkg.gen_atom('app-misc/elasticsearch') }}
+    - require:
+      - file: gentoo.portage.packages

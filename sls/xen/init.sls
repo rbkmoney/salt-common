@@ -1,3 +1,4 @@
+# TODO: изменить источник пилларов version и use
 # This definitely should be set
 {% set xen_version = salt['pillar.get']('xen:version', '~=4.10.3-r1') %}
 {% set xen_tools_version = salt['pillar.get']('xen:tools_version', '~=4.10.3-r2') %}

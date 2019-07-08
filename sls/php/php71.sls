@@ -1,6 +1,3 @@
-include:
-  - ssl.openssl
-
 php:
   pkg.installed:
     - pkgs:

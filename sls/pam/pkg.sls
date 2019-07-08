@@ -1,28 +1,23 @@
-{% set pam_ver = salt['pillar.get']('pam:version', '>=1.3.0-r2') %}
-{% set pam_use = salt['pillar.get']('pam:use', ['-audit','-berkdb','cracklib','filecaps']) %}
-{% set pambase_use = salt['pillar.get']('pam:pambase:use', ['cracklib','nullok','sha512']) %}
-{% set libs_packaged = salt['pillar.get']('libs:packaged', False) %}
+# TODO: remove from deps
+{% import 'pkg/common' as pkg %}
 include:
-  - lib.cracklib
+  - gentoo.portage.packages
 
 sys-libs/pam:
   pkg.installed:
-    - version: "{{ pam_ver }}[{{ ','.join(pam_use) }}]"
-    {% if libs_packaged %}
-    - binhost: force
-    {% endif %}
+    - oneshot: True
+    - pkgs:
+      - {{ pkg.gen_atom('sys-libs/pam') }}
     - require:
-      - pkg: sys-libs/cracklib
+      - file: gentoo.portage.packages
 
 sys-auth/pambase:
   pkg.latest:
-    - version: "[{{ ','.join(pambase_use) }}]"
-    {% if libs_packaged %}
-    - binhost: force
-    {% endif %}
+    - oneshot: True
+    - pkgs:
+      - {{ pkg.gen_atom('sys-auth/pambase') }}
     - require:
-      - pkg: sys-libs/cracklib
-      - pkg: sys-libs/pam
+      - file: gentoo.portage.packages
 
 virtual/pam:
   pkg.latest:

@@ -1,4 +1,10 @@
+{% import 'pkg/common' as pkg %}
+include:
+  - gentoo.portage.packages
+  
 pkg_keepalived:
   pkg.installed:
     - pkgs:
-      - sys-cluster/keepalived: '[ipv6,snmp]'
+      - {{ pkg.gen_atom('sys-cluster/keepalived') }}
+    - require:
+      - file: gentoo.portage.packages

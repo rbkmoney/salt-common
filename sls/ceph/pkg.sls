@@ -1,15 +1,14 @@
-{% set ceph_version = salt['pillar.get']('ceph:version', '=12.2.8-r1') %}
-{% set ceph_use = salt['pillar.get']('ceph:use', ('radosgw', 'tcmalloc', 'xfs')) %}
-{% set ceph_packaged = salt['pillar.get']('ceph:packaged', True) %}
+{% import 'pkg/common' as pkg %}
+include:
+  - gentoo.portage.packages
 
 ceph:
   pkg.installed:
-    {% if ceph_packaged %}
     - binhost: force
-    {% endif %}
     - pkgs:
-      - sys-cluster/ceph: "{{ ceph_version }}[{{ ','.join(ceph_use) }}]"
-      - dev-libs/boost: ">=1.65.0[python,context]"
+      - {{ pkg.gen_atom('sys-cluster/ceph') }}
+    - require:
+      - file: gentoo.portage.packages
   user.present:
     - system: True
     - home: /var/lib/ceph

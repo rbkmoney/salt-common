@@ -1,17 +1,10 @@
-{% set arch_conf = salt['pillar.get']('arch_conf', False) %}
-{% set gcc_version = salt['pillar.get']('gcc:version', '8.3.0-r1') %}
-{% set gcc_profile = arch_conf['CHOST'] + '-' + gcc_version.split('-')[0] %}
-sys-devel/gcc-config:
-  pkg.latest
-
+{% import 'pkg/common' as pkg %}
 sys-devel/gcc:
   pkg.installed:
-    - version: '{{ gcc_version }}[graphite,vtv,go]'
+   - pkgs:
+      - {{ pkg.gen_atom('sys-devel/gcc') }}
 
-set-gcc-profile:
+'emerge --prune sys-devel/gcc':
   cmd.run:
-    - name: gcc-config -f {{ gcc_profile }}
-    - onlyif: "test \"$(gcc-config -c)\" != {{ gcc_profile }}"
-    - watch:
+    - onchanges:
       - pkg: sys-devel/gcc
-      - pkg: sys-devel/gcc-config

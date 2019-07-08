@@ -1,10 +1,11 @@
-{% set libtirpc_version = salt['pillar.get']('nds:libtirpc:version', '>=1.0.2') %}
-{% set libtirpc_use = salt['pillar.get']('nds:libtirpc:use', ['kerberos']) %}
-{% set libs_packaged = salt['pillar.get']('libs:packaged', False) %}
+{% import 'pkg/common' as pkg %}
+include:
+  - gentoo.portage.packages
 
 net-libs/libtirpc:
-  pkg.installed:
-    - version: "{{ libtirpc_version }}[{{ ','.join(libtirpc_use) }}]"
-    {% if consul_packaged %}
-    - binhost: force
-    {% endif %}
+  pkg.latest:
+    - oneshot: True
+    - pkgs:
+      - {{ pkg.gen_atom('net-libs/libtirpc') }}
+    - require:
+      - file: gentoo.portage.packages

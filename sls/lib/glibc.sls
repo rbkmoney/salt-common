@@ -1,13 +1,15 @@
-{% set glibc_use = salt['pillar.get']('glibc:use', ['-audit','caps','-docs','gd','multiarch','hardened']) %}
-{% set libs_packaged = salt['pillar.get']('libs:packaged', False) %}
+{% import 'pkg/common' as pkg %}
+include:
+  - gentoo.portage.packages
+
 sys-libs/glibc:
   pkg.latest:
-    - version: "[{{ ','.join(glibc_use) }}]"
-    {% if libs_packaged %}
-    - binhost: force
-    {% endif %}
+    - oneshot: True
     - require:
       - file: /etc/locale.gen
+      - file: gentoo.portage.packages
+    - pkgs:
+      - {{ pkg.gen_atom('sys-libs/glibc') }}
 
 /etc/env.d/02locale:
   file.managed:

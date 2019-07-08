@@ -1,16 +1,14 @@
+{% import 'pkg/common' as pkg %}
 include:
   - consul
+  - gentoo.portage.packages
 
 app-admin/consul-template:
   pkg.installed:
     - pkgs:
-      - app-admin/consul-template: ">=0.18.0"
+      - {{ pkg.gen_atom('app-admin/consul-template') }}
     - require:
-      - portage_config: app-admin/consul-template
-  portage_config.flags:
-    - name: "<consul-template-0.19"
-    - accept_keywords:
-      - "~*"
+      - file: gentoo.portage.packages
 
 /etc/conf.d/consul-template:
   file.managed:

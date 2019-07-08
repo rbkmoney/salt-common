@@ -1,10 +1,13 @@
+{% import 'pkg/common' as pkg %}
 include:
+  - gentoo.portage.packages
   - lib.glibc
 
 util-core:
   pkg.latest:
     - require:
       - pkg: sys-libs/glibc
+      - file: gentoo.portage.packages
     - pkgs:
       - app-text/tree
       - sys-apps/attr
@@ -19,9 +22,9 @@ util-core:
       - sys-apps/less
       - sys-apps/man-pages
       - sys-apps/sed
-      - sys-apps/util-linux: "[tty-helpers,fdformat]"
+      - {{ pkg.gen_atom('sys-apps/util-linux') }}
       - sys-apps/which
-      - sys-process/atop: "~>=2.2"
+      - sys-process/atop
       - sys-process/iotop
       - sys-process/lsof
       - sys-process/ftop

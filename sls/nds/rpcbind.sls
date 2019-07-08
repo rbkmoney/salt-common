@@ -1,10 +1,10 @@
-{% set rpcbind_version = salt['pillar.get']('nds:rpcbind:version', '>=0.2.4') %}
-{% set rpcbind_use = salt['pillar.get']('nds:rpcbind:use', ['-tcpd']) %}
+{% import 'pkg/common' as pkg %}
 include:
-  - lib.libtirpc
+  - gentoo.portage.packages
 
 net-nds/rpcbind:
   pkg.installed:
-    - version: "{{ rpcbind_version }}[{{ ','.join(rpcbind_use) }}]"
+    - pkgs:
+      - {{ pkg.gen_atom('net-nds/rpcbind') }}
     - require:
-      - pkg: net-libs/libtirpc
+      - file: gentoo.portage.packages

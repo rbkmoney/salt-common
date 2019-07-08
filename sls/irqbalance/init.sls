@@ -1,8 +1,9 @@
+{% import 'pkg/common' as pkg %}
 irqbalance:
   pkg.installed:
     - pkgs:
-      - sys-apps/irqbalance: '[numa]'
-      - sys-process/numactl
+      - {{ pkg.gen_atom('sys-apps/irqbalance') }}
+      - {{ pkg.gen_atom('sys-process/numactl') }}
   service.running:
     - name: irqbalance
     - enable: True

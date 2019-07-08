@@ -1,8 +1,7 @@
-{% set salt_version = salt['pillar.get']('salt:version', '<2018.0.0') %}
-{% set salt_use = salt['pillar.get']('salt:use',
-('openssl', 'portage', 'gnupg', 'mako', '-mysql', '-raet')) %}
+{% import 'pkg/common' as pkg %}
 include:
   - python.python2
+  - gentoo.portage.packages  
 
 # TODO: move cython to another state
 cython:
@@ -14,24 +13,15 @@ app-admin/salt:
   pkg.installed:
     - refresh: False
     - pkgs:
-      - app-admin/salt: "{{ salt_version }}[{{ ','.join(salt_use) }}]"
-      - net-libs/zeromq: ">=4.1.4"
-      - dev-python/pyzmq: ">=14.4"
-      - dev-python/pyopenssl: ">=0.15.1"
-      - dev-python/psutil: ">=5.2.2"
-      - dev-python/python-gnupg: "~>=0.4.1"
-      - dev-python/pycryptodome: "~>=3.4.7"
-      - dev-python/dnspython: ">=1.16.0_pre20170831-r1"
-      - dev-python/sleekxmpp: "~>=1.3.1"
-    - watch:
-      - portage_config: app-admin/salt
+      - {{ pkg.gen_atom('app-admin/salt') }}
+      - {{ pkg.gen_atom('dev-python/dnspython') }}
+      - {{ pkg.gen_atom('dev-python/sleekxmpp') }}
     - reload_modules: true
     - require:
       - pkg: cython
       - pkg: python2
-  portage_config.flags:
-    - accept_keywords:
-      - ~*
+      - file: gentoo.portage.packages
+
 
 /etc/logrotate.d/salt:
   file.managed:

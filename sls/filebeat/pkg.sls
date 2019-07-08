@@ -1,16 +1,13 @@
-{% set filebeat_version = salt['pillar.get']('filebeat:version', '>=6.3') %}
-{% set filebeat_packaged = salt['pillar.get']('filebeat:packaged', True) %}
-{% if not filebeat_packaged %}
+{% import 'pkg/common' as pkg %}
 include:
-  - go
-{% endif %}
+  - gentoo.portage.packages
 
 app-admin/filebeat:
   pkg.installed:
-    - version: "{{ filebeat_version }}"
-    {% if filebeat_packaged %}
-    - binhost: force
-    {% endif %}
+    - pkgs:
+      - {{ pkg.gen_atom('app-admin/filebeat') }}
+    - require:
+      - file: gentoo.portage.packages
 
 /var/lib/filebeat/module/:
   file.recurse:

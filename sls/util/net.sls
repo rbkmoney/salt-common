@@ -1,6 +1,7 @@
+{% import 'pkg/common' as pkg %}
 include:
   - lib.glibc
-  - lib.openssl
+  - gentoo.portage.packages
 
 util-net-purged:
   pkg.purged:
@@ -14,21 +15,21 @@ util-net:
   pkg.latest:
     - require:
       - pkg: sys-libs/glibc
-      - pkg: openssl
       - pkg: util-net-purged
+      - file: gentoo.portage.packages
     - pkgs:
       - net-analyzer/mtr
       - net-analyzer/tcpdump
       - net-analyzer/traceroute
       - net-analyzer/iftop
       - net-ftp/ftp
-      - net-analyzer/netcat
+      - net-analyzer/openbsd-netcat
       - net-misc/iputils
       - net-misc/rsync
       - net-misc/netkit-telnetd
-      - net-misc/wget: "~"
-      - net-misc/whois 
+      - net-misc/wget
+      - net-misc/whois
       - sys-apps/iproute2
       - sys-apps/net-tools
-      - net-misc/ipv6calc: "~"
+      - {{ pkg.gen_atom('net-misc/ipv6calc') }}
       - net-misc/sipcalc

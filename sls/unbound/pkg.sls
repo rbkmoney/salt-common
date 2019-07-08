@@ -1,10 +1,10 @@
+{% import 'pkg/common' as pkg %}
 include:
   - lib.glibc
-  - ssl.openssl
-  - lib.ldns
-  - lib.libevent
-  - lib.libsodium
 
 net-dns/unbound:
   pkg.installed:
-    - version: "~>=1.9.0[dnscrypt,ecdsa]"
+    - require:
+      - pkg: sys-libs/glibc
+    - pkgs:
+      - {{ pkg.gen_atom('net-dns/unbound') }}

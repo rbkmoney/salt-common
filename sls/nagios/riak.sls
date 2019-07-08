@@ -1,8 +1,11 @@
-# -*- mode: yaml -*-
+{% import 'pkg/common' as pkg %}
 include:
-  - gentoo.repos.baka-bakka
+  - gentoo.repos.{{ pillar.get('overlay') }}
+  - gentoo.portage.packages  
 
 riak_nagios_pkg:
   pkg.installed:
     - pkgs:
-      - net-analyzer/riak_nagios: "~>=9998-r1"
+      - {{ pkg.gen_atom('net-analyzer/riak_nagios') }}
+    - require:
+      - file: gentoo.portage.packages      

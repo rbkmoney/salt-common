@@ -1,3 +1,4 @@
+# TODO: add microcode into kernel
 sys-firmware/intel-microcode:
   pkg.latest
 
