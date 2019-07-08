@@ -2,9 +2,9 @@
 include:
   - gentoo.portage.packages
 
-nagios-bird:
-  pkg.latest:
+net-nds/rpcbind:
+  pkg.installed:
+    - pkgs:
+      - {{ pkg.gen_atom('net-nds/rpcbind') }}
     - require:
       - file: gentoo.portage.packages
-    - pkgs:
-      - {{ pkg.gen_atom('net-analyzer/nagios-bird') }}

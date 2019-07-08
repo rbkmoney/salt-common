@@ -8,6 +8,8 @@ sys-apps/lm_sensors:
       - {{ pkg.gen_atom('sys-apps/lm_sensors') }}
     - require:
       - file: gentoo.portage.packages
+
+lm_sensors:
   service.running:
     - enable: True
     - watch:
