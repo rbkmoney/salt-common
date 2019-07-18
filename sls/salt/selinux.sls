@@ -6,6 +6,8 @@
     - mode: '0600'
     - user: root
     - group: root
+    - required:
+      - pkg: app-admin/salt
 
 {% endif %}
 

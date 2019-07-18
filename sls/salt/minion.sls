@@ -1,5 +1,6 @@
 include:
   - salt.pkg
+  - .selinux
 
 salt-minion:
   service.running:
