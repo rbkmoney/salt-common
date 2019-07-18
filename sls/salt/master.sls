@@ -1,6 +1,7 @@
 include:
   - salt.pkg
   - salt.repos
+  - .selinux
 
 salt-master:
   service.running:
