@@ -83,3 +83,37 @@ collectd:
       - file: /etc/collectd/conf.d/
     - watch_in:
       - service: collectd
+
+/etc/collectd/conf.d/20-python.conf:
+  {% if extra_plugin_config.get('python', False) %}
+  file.managed:
+    - source: salt://collectd/files/conf.d/20-python.conf
+    - mode: 640
+    - user: root
+    - group: collectd
+    - require:
+      - file: /usr/share/collectd/consul-health/consul_health_plugin.py
+  {% else %}
+  file.absent:
+  {% endif %}
+    - require:
+      - file: /etc/collectd/conf.d/
+    - watch_in:
+      - service: collectd
+
+{% if extra_plugin_config.get('python', False) %}
+/usr/share/collectd/consul-health/consul_health_plugin.py:
+  file.managed:
+    - source: salt://collectd/files/consul_health_plugin.py
+    - mode: 640
+    - user: root
+    - group: collectd
+    - require:
+      - file: /usr/share/collectd/consul-health
+/usr/share/collectd/consul-health:
+  file.directory:
+    - create: True
+    - mode: 755
+    - user: root
+    - group: collectd
+{% endif %}
