@@ -84,10 +84,10 @@ collectd:
     - watch_in:
       - service: collectd
 
-/etc/collectd/conf.d/20-python.conf:
+/etc/collectd/conf.d/20-python-consul-health.conf:
   {% if extra_plugin_config.get('consul_health_plugin', False) %}
   file.managed:
-    - source: salt://collectd/files/conf.d/20-python.conf
+    - source: salt://collectd/files/conf.d/20-python-consul-health.conf
     - mode: 640
     - user: root
     - group: collectd
@@ -109,7 +109,7 @@ collectd:
     - require:
       - file: /usr/share/collectd/consul-health
     - require_in:
-      - file: /etc/collectd/conf.d/20-python.conf
+      - file: /etc/collectd/conf.d/20-python-consul-health.conf
 /usr/share/collectd/consul-health:
   file.directory:
     - create: True
