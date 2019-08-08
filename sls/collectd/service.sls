@@ -85,14 +85,12 @@ collectd:
       - service: collectd
 
 /etc/collectd/conf.d/20-python.conf:
-  {% if extra_plugin_config.get('python', False) %}
+  {% if extra_plugin_config.get('consul_health_plugin', False) %}
   file.managed:
     - source: salt://collectd/files/conf.d/20-python.conf
     - mode: 640
     - user: root
     - group: collectd
-    - require:
-      - file: /usr/share/collectd/consul-health/consul_health_plugin.py
   {% else %}
   file.absent:
   {% endif %}
@@ -101,7 +99,7 @@ collectd:
     - watch_in:
       - service: collectd
 
-{% if extra_plugin_config.get('python', False) %}
+{% if extra_plugin_config.get('consul_health_plugin', False) %}
 /usr/share/collectd/consul-health/consul_health_plugin.py:
   file.managed:
     - source: salt://collectd/files/consul_health_plugin.py
@@ -110,6 +108,8 @@ collectd:
     - group: collectd
     - require:
       - file: /usr/share/collectd/consul-health
+    - require_in:
+      - file: /etc/collectd/conf.d/20-python.conf
 /usr/share/collectd/consul-health:
   file.directory:
     - create: True
