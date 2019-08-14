@@ -40,4 +40,7 @@ run_init:
       - set /01/module pam_rootok.so
     - unless: grep -v "^#" /etc/pam.d/run_init | grep pam_rootok.so
 
+sec-policy/selinux-custom-server:
+  pkg.latest
+
 {% endif %}
