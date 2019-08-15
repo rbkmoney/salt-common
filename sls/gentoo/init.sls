@@ -4,4 +4,5 @@ include:
   - gentoo.repos.gentoo
   - gentoo.profile
   - gentoo.makeconf
+  - .selinux
 
