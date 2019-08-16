@@ -1,5 +1,8 @@
 {% if grains.selinux is defined and grains.selinux.enabled == True %}
 
+ {% set se_pol_name = salt['augeas.get']('/files/etc/selinux/config/SELINUXTYPE')['/files/etc/selinux/config/SELINUXTYPE'] %}
+ {% set seusers_file = '/etc/selinux/'+se_pol_name+'/seusers' %}
+
  {% for boolean in ['global_ssp','init_daemons_use_tty','tmpfiles_manage_all_non_security'] %}
 {{ boolean }}:
     selinux.boolean:
@@ -11,7 +14,7 @@
 
  {% for user in users.present recursive %}
   {% if users.present[user].groups is defined %}
-   {% if 'wheel' in users.present[user].groups and salt['cmd.retcode']('semanage login -l -C | grep "^"'+user, python_shell=true) != 0  %}
+   {% if 'wheel' in users.present[user].groups and not salt['file.contains'](seusers_file, user+':staff_u') %}
 semanage login -a -s staff_u {{ user }}:
   cmd.run
 
@@ -24,7 +27,7 @@ restorecon -Frv /home/{{ user }}:
  {% endfor %}
 
  {% for user in users.absent recursive %}
-  {% if salt['cmd.retcode']('semanage login -l -C | grep "^"'+user, python_shell=true) == 0  %}
+  {% if salt['file.contains'](seusers_file, user+':staff_u') %}
 semanage login -d {{ user }}:
   cmd.run
   {% endif %}
