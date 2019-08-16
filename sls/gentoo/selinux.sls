@@ -14,7 +14,7 @@
 
  {% for user in users.present recursive %}
   {% if users.present[user].groups is defined %}
-   {% if 'wheel' in users.present[user].groups and salt['file.grep'](seusers_file, user+':staff_u') == '' %}
+   {% if 'wheel' in users.present[user].groups and not salt['file.contains'](seusers_file, user+':staff_u') %}
 semanage login -a -s staff_u {{ user }}:
   cmd.run
 
@@ -27,7 +27,7 @@ restorecon -Frv /home/{{ user }}:
  {% endfor %}
 
  {% for user in users.absent recursive %}
-  {% if salt['file.grep'](seusers_file, user+':staff_u') != '' %}
+  {% if salt['file.contains'](seusers_file, user+':staff_u') %}
 semanage login -d {{ user }}:
   cmd.run
   {% endif %}
