@@ -1,6 +1,6 @@
 {% if grains.selinux is defined and grains.selinux.enabled == True %}
 
- {% set se_pol_name = salt['augeas.get']('/files/etc/selinux/config/SELINUXTYPE')|attr("/files/etc/selinux/config/SELINUXTYPE")|string %}
+ {% set se_pol_name = salt['augeas.get']('/files/etc/selinux/config/SELINUXTYPE')|string %}
  {% set seusers_file = '/etc/selinux/'+se_pol_name+'/seusers' %}
 
  {% for boolean in ['global_ssp','init_daemons_use_tty','tmpfiles_manage_all_non_security'] %}
