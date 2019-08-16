@@ -27,7 +27,7 @@ restorecon -Frv /home/{{ user }}:
  {% endfor %}
 
  {% for user in users.absent recursive %}
-  {% if salt['file.contains'](seusers_file, user+':staff_u') %}
+  {% if salt['file.contains'](seusers_file, user+':') %}
 semanage login -d {{ user }}:
   cmd.run
   {% endif %}
