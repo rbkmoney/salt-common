@@ -118,6 +118,7 @@ salt-repo-{{ reponame }}-{{ branch }}:
       - git: salt-repo-{{ reponame }}-_mirror
     - require_in:
       - file: /etc/salt/master.d/roots.conf
+    - parallel: True
 {% endfor %}
 {% endif %}
 {% endfor %}
