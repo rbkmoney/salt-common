@@ -27,7 +27,7 @@ http {
 
     connection_pool_size 256;
     client_header_buffer_size 1k;
-    large_client_header_buffers 4 2k;
+    large_client_header_buffers 4 4k;
     request_pool_size 4k;
 
     # TODO: parametrize with pillar data
