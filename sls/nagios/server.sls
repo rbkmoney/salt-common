@@ -84,6 +84,15 @@ include:
     - require:
       - user: nagios
 
+/var/nagios/spool/checkresults/:
+  file.directory:
+    - create: True
+    - user: nagios
+    - group: nagios
+    - mode: 750
+    - require:
+      - file: /var/nagios/spool/
+
 /var/nagios/spool/graphios/:
   file.directory:
     - create: True
@@ -102,6 +111,7 @@ nagios:
       - file: /etc/nagios/
       - file: /etc/nagios/nagios.cfg
       - file: /var/nagios/spool/
+      - file: /var/nagios/spool/checkresults/
       - file: /var/nagios/spool/graphios/
 
 nagios-reload:
