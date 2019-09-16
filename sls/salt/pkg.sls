@@ -1,7 +1,8 @@
 {% import 'pkg/common' as pkg %}
 include:
   - python.python2
-  - gentoo.portage.packages  
+  - gentoo.portage.packages
+  - salt.minion-config
 
 # TODO: move cython to another state
 cython:
@@ -21,6 +22,8 @@ app-admin/salt:
       - pkg: cython
       - pkg: python2
       - file: gentoo.portage.packages
+    - require_in:
+      - file: /etc/salt/minion
 
 
 /etc/logrotate.d/salt:

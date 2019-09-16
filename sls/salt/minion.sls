@@ -1,5 +1,6 @@
 include:
-  - salt.pkg
+  - .pkg
+  - .minion-config
   - .selinux
 
 salt-minion:
@@ -11,12 +12,4 @@ salt-minion:
       - pkg: app-admin/salt
       - file: /etc/salt/minion
 
-/etc/salt/minion:
-  file.serialize:
-    - dataset_pillar: 'salt:minion:conf'
-    - formatter: yaml
-    - user: root
-    - group: root
-    - mode: 640
-    - require:
-      - pkg: app-admin/salt
+
