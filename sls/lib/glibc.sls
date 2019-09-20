@@ -18,7 +18,7 @@ sys-libs/glibc:
     - group: root
     - contents: |
         en_US.UTF-8 UTF-8
-        en_DK.UTF-8 UTF-8
+        en_IE.UTF-8 UTF-8
         ru_RU.UTF-8 UTF-8
 
 locale-gen:
