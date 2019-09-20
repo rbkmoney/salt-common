@@ -11,13 +11,6 @@ sys-libs/glibc:
     - pkgs:
       - {{ pkg.gen_atom('sys-libs/glibc') }}
 
-/etc/env.d/02locale:
-  file.managed:
-    - source: salt://core/env.d/02locale
-    - mode: 644
-    - user: root
-    - group: root
-
 /etc/locale.gen:
   file.managed:
     - mode: 644
@@ -26,6 +19,7 @@ sys-libs/glibc:
     - contents: |
         en_US.UTF-8 UTF-8
         en_DK.UTF-8 UTF-8
+        ru_RU.UTF-8 UTF-8
 
 locale-gen:
   cmd.wait:
