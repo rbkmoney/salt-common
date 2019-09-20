@@ -1,6 +1,11 @@
+include:
+  - lib.glibc
+
 locale:
   eselect.set:
     - target: {{ salt.pillar.get('locale:LANG','en_IE.utf8') }}
+    - require:
+      - file: /etc/locale.gen
 
 /etc/env.d/02locale:
   augeas.change:
