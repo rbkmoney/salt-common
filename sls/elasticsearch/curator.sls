@@ -18,7 +18,7 @@ config = {
   'logging': {
     'loglevel': 'INFO',
     'logformat': 'json',
-    'logfile': log_dir + 'curator.json'
+    'logfile': log_path + 'curator.json'
   }
 }
 
