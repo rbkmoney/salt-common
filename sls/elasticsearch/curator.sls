@@ -24,7 +24,7 @@ config = {
 
 tls = pillar('elastic:curator:tls', {})
 if tls:
-  for proto in ('http'):
+  for proto in ('http',):
     for pemtype in ('cert', 'key', 'ca'):
       pem_path = conf_path + proto + '-' + pemtype + '.pem'
       if pemtype == 'ca':
