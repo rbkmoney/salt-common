@@ -24,16 +24,17 @@ config = {
 
 tls = pillar('elastic:curator:tls', {})
 if tls:
-  for proto in ('http',):
-    for pemtype in ('cert', 'key', 'ca'):
-      pem_path = conf_path + proto + '-' + pemtype + '.pem'
-      if pemtype == 'ca':
-        config['certificate'] = pem_path
-      else:
-        config['client_' + pemtype] = pem_path
-      File.managed(
-        pem_path, mode=600, user='root', group='root',
-        contents=tls[proto].get(pemtype, tls.get(pemtype, '')))
+  config['client']['use_ssl'] = True
+  proto = 'http'
+  for pemtype in ('cert', 'key', 'ca'):
+    pem_path = conf_path + 'curator-' + proto + '-' + pemtype + '.pem'
+    if pemtype == 'ca':
+      config['client']['certificate'] = pem_path
+    else:
+      config['client']['client_' + pemtype] = pem_path
+    File.managed(
+      pem_path, mode=600, user='root', group='root',
+      contents=tls[proto].get(pemtype, tls.get(pemtype, '')))
 
 dictupdate.update(config, pillar('elastic:curator:config', {}))
 
