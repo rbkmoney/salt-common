@@ -1,4 +1,3 @@
-# -*- mode: yaml -*-
 icedtea3:
   pkg.installed:
     - pkgs:
