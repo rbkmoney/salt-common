@@ -64,7 +64,6 @@ config = {
   'http': { 'port': 9200 },
   'gateway': { 'recover_after_nodes': len(hosts)/2 },
   'discovery': { 'zen': {
-    'minimum_master_nodes': 1,
     'ping': { 'unicast': {}},
   }},
 }
