@@ -1,7 +1,7 @@
 {% import 'pkg/common' as pkg %}
 include:
-  - java.icedtea3
   - gentoo.portage.packages  
+  - java.openjdk-bin11-system
 
 app-misc/elasticsearch:
   pkg.installed:
