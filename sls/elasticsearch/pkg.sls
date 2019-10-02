@@ -1,6 +1,6 @@
 {% import 'pkg/common' as pkg %}
 include:
-  - gentoo.portage.packages  
+  - gentoo.portage.packages
   - java.openjdk-bin11-system
 
 app-misc/elasticsearch:
