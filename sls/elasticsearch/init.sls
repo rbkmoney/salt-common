@@ -1,6 +1,5 @@
 {% set tls_enabled = salt.pillar.get('elastic:tls:enabled', False) %}
 include:
-  - java.icedtea3
   - elasticsearch.pkg
   - elasticsearch.config
 
@@ -25,7 +24,7 @@ elasticsearch:
   service.running:
     - enable: True
     - watch:
-      - pkg: icedtea3
+      - pkg: openjdk-bin11
       - pkg: app-misc/elasticsearch
       - file: /etc/elasticsearch/elasticsearch.yml
       - file: /etc/elasticsearch/jvm.options

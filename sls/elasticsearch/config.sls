@@ -21,7 +21,12 @@ File.directory(
 
 fqdn = grains('fqdn')
 fqdn_ipv6 = grains('fqdn_ipv6')
-hosts = pillar('elastic:hosts', [])
+nodes = pillar('elastic:nodes', {})
+master_nodes = nodes.get('master', {})
+if not 'data' in nodes:
+  nodes['data'] = master_nodes
+if not 'ingest' in nodes:
+  nodes['ingest'] = nodes['data']
 
 data_count = pillar('elastic:data-dir-count', False)
 if data_count:
@@ -62,15 +67,22 @@ config = {
   'bootstrap': {'memory_lock': True},
   'network': { 'host': '${HOSTNAME}' },
   'http': { 'port': 9200 },
-  'gateway': { 'recover_after_nodes': len(hosts)/2 },
-  'discovery': { 'zen': {
-    'ping': { 'unicast': {}},
-  }},
+  'cluster': {
+    'initial_master_nodes': pillar('elastic:initial_master_nodes', master_nodes) },
+  'discovery': {
+    'seed_hosts': pillar('elastic:seed_hosts', master_nodes) },
+  'gateway': {
+    'expected_master_nodes': len(master_nodes),
+    'expected_data_nodes': len(nodes['data']),
+    'recover_after_time': '5m',
+    'recover_after_master_nodes': len(master_nodes)/2,
+  },
 }
 
-config['discovery']['zen']['ping']['unicast']['hosts'] = filter(
-  lambda x: x != fqdn and x not in fqdn_ipv6,
-  hosts)
+for node_type in ('master', 'data', 'ingest'):
+  if any(name in nodes[node_type] for name in (fqdn, fqdn_ipv6)):
+    config['node'][node_type] = True
+
 if tls:
   config['opendistro_security'] = {
     'ssl': {
