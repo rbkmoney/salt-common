@@ -72,7 +72,7 @@ for var in ('accept_keywords', 'mask', 'unmask', 'use', 'use.mask', 'use.force',
             result.append((cp, ' '.join(value)))
         else:
             result.append((cp, value))
-    result_str = ''.join([ "{} {}\n".format(process_target(cp, profiles.get(cp, {}).get('version')), value) for cp, value in sorted(result) ])
+    result_str = ''.join([ "{} {}\n".format(process_target(cp, profile.get(cp, {}).get('version')), value) for cp, value in sorted(result) ])
     filename = '/etc/portage/profile/package.{}/SALT'.format(var)
     filenames.append({'file': filename})
     File.managed(filename, contents=result_str, mode='0640',
