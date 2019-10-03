@@ -63,7 +63,7 @@ for var in ('accept_keywords', 'mask', 'unmask', 'use', 'use.mask', 'use.force',
     for cp, profile_vars in profile.items():
         if var not in profile_vars:
             continue
-        value = package_vars[var]
+        value = profile_vars[var]
         if value is True:
             result.append((cp, ''))
         elif value is False:
