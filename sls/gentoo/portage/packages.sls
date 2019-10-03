@@ -45,7 +45,7 @@ for var in ('accept_keywords', 'mask', 'unmask', 'use', 'env', 'license', 'prope
         elif value is False:
             pass
         elif hasattr(value, '__iter__'):
-            result.append((cp, ' '.join(value))
+            result.append((cp, ' '.join(value)))
         else:
             result.append((cp, value))
     result_str = ''.join([ "{} {}\n".format(process_target(cp, packages.get(cp, {}).get('version')), value) for cp, value in sorted(result) ])
