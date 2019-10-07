@@ -3,10 +3,9 @@ import collectd
 import json
 import logging
 import time
-import urllib
-import urllib.error
-import urllib.request
-from urllib.request import HTTPSHandler
+import six.moves.urllib as urllib
+from six.moves.urllib.error import HTTPError, URLError
+from six.moves.urllib.request import HTTPSHandler
 import ssl
 
 
@@ -327,10 +326,10 @@ class ConsulAgent(object):
             response = opener.open(url)
             data = response.read()
             data = json.loads(data)
-        except urllib.error.HTTPError as e:
+        except HTTPError as e:
             LOGGER.error('HTTPError - status code: {0}, '
                          'received from {1}'.format(e.code, url))
-        except urllib.error.URLError as e:
+        except URLError as e:
             LOGGER.error('URLError - {0} {1}'.format(url, e.reason))
         except ValueError as e:
             LOGGER.error('Error parsing JSON for url {0}. {1}'.format(url, e))
