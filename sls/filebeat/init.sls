@@ -2,7 +2,7 @@
 {% set tls = salt.pillar.get('filebeat:tls', {}) %}
 include:
   - .pkg
-  - .conf
+  - .config
   - .service
 
 extend:
