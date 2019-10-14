@@ -4,11 +4,11 @@ from salt.utils import dictupdate
 import yaml
 import json
 
-File.directory('/etc/filebeat/', create=True, mode=755, user='root', group='root')
-
 fqdn = grains('fqdn')
 fqdn_ipv6 = grains('fqdn_ipv6')
 conf_path = '/etc/filebeat/'
+
+File.directory(conf_path, create=True, mode=755, user='root', group='root')
 
 tls = pillar('filebeat:tls', {})
 
@@ -37,7 +37,6 @@ config = {
 elastic_template = pillar('template', False)
 config['filebeat']['inputs'] = pillar('filebeat:inputs')
 config['output'] = pillar('filebeat:output')
-dictupdate.update(config, pillar('filebeat:config', {}))
 
 if elastic_template:
   File.managed(
@@ -63,6 +62,8 @@ for out in config['output'].keys():
       File.managed(
         path, mode=600, user='root', group='root',
         contents=contents, require=[File(conf_path)])
+
+dictupdate.update(config, pillar('filebeat:config', {}))
 
 File.managed(
   conf_path + 'filebeat.yml',
