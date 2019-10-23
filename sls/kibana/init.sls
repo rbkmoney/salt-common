@@ -1,5 +1,6 @@
-{% set kibana_version = salt.pillar.get('kibana:version', '~>=6.3') %}
+{% import 'pkg/common' as pkg %}
 include:
+  - gentoo.portage.packages
   - kibana.config
 
 /etc/init.d/kibana:
@@ -9,11 +10,8 @@ include:
 
 www-apps/kibana-bin:
   pkg.installed:
-    - version: "{{ kibana_version }}"
-    - require:
-      - portage_config: www-apps/kibana-bin
-  portage_config.flags:
-    - accept_keywords: ["~*"]
+    - pkgs:
+      - {{ pkg.gen_atom('www-apps/kibana') }}
 
 kibana:
   service.running:
