@@ -146,7 +146,7 @@ auto_assign_org_role = {{ users.get('auto-assign-org-role', 'Viewer') }}
 login_hint = {{ users.get('login-hint', 'email or username') }}
 
 # Default UI theme ("dark" or "light")
-default_theme = login_hint = {{ users.get('default-theme', 'dark') }}
+default_theme = {{ users.get('default-theme', 'dark') }}
 
 # External user management, these options affect the organization users view
 ;external_manage_link_url =
