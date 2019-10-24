@@ -1,7 +1,9 @@
-# TODO: изменить источник пилларов version и use
 # This definitely should be set
-{% set xen_version = salt['pillar.get']('xen:version', '~=4.10.3-r1') %}
-{% set xen_tools_version = salt['pillar.get']('xen:tools_version', '~=4.10.3-r2') %}
+{% set packages = salt['pillar.get']('gentoo:portage:packages', {}) %}
+{% set packages_xen = packages.get('app-emulation/xen', {}) %}
+{% set packages_xen_tools = packages.get('app-emulation/xen-tools', {}) %}
+{% set xen_version = packages_xen.get('version', '~=4.10.3-r1') %}
+{% set xen_tools_version = packages_xen_tools.get('version', '~=4.10.3-r2') %}
 {% set xen_version_short = xen_version.rsplit('-', 1)[0].lstrip('-~*<>=') %}
 {% set efi = salt['grains.get']('efi', False) %}
 # This should be set when we shall not install xen from here;
@@ -39,8 +41,8 @@ xen:
       - app-emulation/xen: "{{ xen_version }}[{{ 'efi' if efi else '-efi' }}]"
       {% endif %}
       - app-emulation/xen-tools: "{{ xen_tools_version }}[api,hvm,screen,system-qemu,-qemu,system-seabios]"
-      - app-emulation/qemu: "[numa,nfs,xen,xfs,rbd]"
-      - dev-libs/libnl
+      - {{ pkg.gen_atom('app-emulation/qemu') }}
+      - {{ pkg.gen_atom('dev-libs/libnl') }}
     {% if xen_packaged %}
     - binhost: force
     {% endif %}
