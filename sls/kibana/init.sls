@@ -15,3 +15,6 @@ kibana:
       - pkg: www-apps/kibana-bin
       - file: /etc/kibana/kibana.yml
       - file: /etc/init.d/kibana
+      {% if opendistro_enabled %}
+      - pkg: app-misc/opendistro-security-kibana-plugin
+      {% endif %}

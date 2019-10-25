@@ -10,6 +10,3 @@ app-misc/opendistro-security-kibana-plugin:
     - require:
       - file: gentoo.portage.packages
       - git: rbkmoney
-    - watch_in:
-      - service: kibana
-

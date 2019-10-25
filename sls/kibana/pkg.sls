@@ -6,7 +6,7 @@ include:
 /etc/init.d/kibana:
   file.managed:
     - source: salt://kibana/files/kibana.initd
-    - mode: 755www-apps/kibana-bin
+    - mode: 755
 
 www-apps/kibana-bin:
   pkg.installed:
