@@ -14,5 +14,3 @@ www-apps/kibana-bin:
       - {{ pkg.gen_atom('www-apps/kibana-bin') }}
     - require:
       - file: gentoo.portage.packages
-
-
