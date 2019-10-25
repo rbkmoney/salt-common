@@ -17,3 +17,14 @@ kibana:
       {% if opendistro_enabled %}
       - pkg: app-misc/opendistro-security-kibana-plugin
       {% endif %}
+      - file: /var/lib/kibana/
+
+/var/lib/kibana/:
+  file.directory:
+    - mode: 755
+    - user: kibana
+    - group: kibana
+    - recurse:
+      - user
+      - group
+
