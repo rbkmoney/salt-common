@@ -71,7 +71,8 @@ log file = /var/log/ceph/$cluster-$name.log
 
 # Determines if logging messages should appear in syslog.
 log to syslog = {{ 'true' if ceph_conf.get('log-to-syslog', True) else 'false' }}
-ms bind ipv6 = true
+ms bind ipv6 = {{ 'true' if ceph_conf.get('ms-bind-ipv6', True) else 'false' }}
+ms bind ipv4 = {{ 'true' if ceph_conf.get('ms-bind-ipv4', False) else 'false' }}
 
 {% set ceph_mon = ceph_conf.get('mon', {}) %}
 {% set ceph_mon_clock = ceph_mon.get('clock', {}) %}
