@@ -1,17 +1,11 @@
-{% import 'pkg/common' as pkg %}
+{% set opendistro_enabled = salt.pillar.get('kibana:opendistro:enabled', False) %}
+
 include:
-  - gentoo.portage.packages
-  - kibana.config
-
-/etc/init.d/kibana:
-  file.managed:
-    - source: salt://kibana/files/kibana.initd
-    - mode: 755
-
-www-apps/kibana-bin:
-  pkg.installed:
-    - pkgs:
-      - {{ pkg.gen_atom('www-apps/kibana') }}
+  - .pkg
+  - .config
+  {% if opendistro_enabled %}
+  - .opendistro-security
+  {% endif %}
 
 kibana:
   service.running:
@@ -20,4 +14,6 @@ kibana:
       - pkg: www-apps/kibana-bin
       - file: /etc/kibana/kibana.yml
       - file: /etc/init.d/kibana
-
+      {% if opendistro_enabled %}
+      - pkg: app-misc/opendistro-security-kibana-plugin
+      {% endif %}
