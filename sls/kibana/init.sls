@@ -17,6 +17,7 @@ kibana:
       {% if opendistro_enabled %}
       - pkg: app-misc/opendistro-security-kibana-plugin
       {% endif %}
+      - file: /var/lib/kibana/
 
 /var/lib/kibana/:
   file.directory:
@@ -26,5 +27,4 @@ kibana:
     - recurse:
       - user
       - group
-    watch: 
-      - pkg: app-misc/opendistro-security-kibana-plugin
+
