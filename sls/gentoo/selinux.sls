@@ -19,7 +19,7 @@
 
 check parent dir for {{ user }} homedir:
   cmd.run:
-    - name: semanage fcontext -a -e '/home' '{{ parenthomedir }}':
+    - name: semanage fcontext -a -e '/home' '{{ parenthomedir }}'
     - unless:
       - semanage fcontext -l|grep -E '^{{ parenthomedir }}\s'
 
