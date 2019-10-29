@@ -17,15 +17,16 @@
    {% set homedir = salt['user.info'](user).home %}
    {% set parenthomedir = salt['user.info'](user).home|replace(user, "") %}
 
-semanage fcontext -a -e '/home' '{{ parenthomedir }}':
+check parent dir for {{ user }} homedir:
   cmd.run:
+    - name: semanage fcontext -a -e '/home' '{{ parenthomedir }}':
     - unless:
       - semanage fcontext -l|grep -E '^{{ parenthomedir }}\s'
 
 restorecon -v {{ parenthomedir }}:
   cmd.run:
     - onchages:
-      - cmd: semanage fcontext -a -e '/home' '{{ parenthomedir }}'
+      - cmd: check parent dir for {{ user }} homedir
 
 restorecon -Frv {{ homedir }}:
    {% if 'wheel' in users.present[user].groups and not salt['file.contains'](seusers_file, user+':staff_u') %}
