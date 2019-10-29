@@ -15,7 +15,7 @@
  {% for user in users.present recursive %}
   {% if salt['user.info'](user) != {} and users.present[user].keys is defined %}
    {% set homedir = salt['user.info'](user).home %}
-   {% set parenthomedir = salt['user.info'](user).home|replace("/home/"+user, "/home" %}
+   {% set parenthomedir = salt['user.info'](user).home|replace("/home/"+user, "/home") %}
 
 check parent dir for {{ user }} homedir:
   cmd.run:
