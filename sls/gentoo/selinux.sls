@@ -23,8 +23,9 @@ check parent dir for {{ user }} homedir:
     - unless:
       - semanage fcontext -l|grep -E '^{{ parenthomedir }}\s'
 
-restorecon -v {{ parenthomedir }}:
+restorecon parent dir for {{ user }} homedir:
   cmd.run:
+    - name: restorecon -v {{ parenthomedir }}
     - onchages:
       - cmd: check parent dir for {{ user }} homedir
 
