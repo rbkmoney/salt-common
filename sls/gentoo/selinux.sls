@@ -25,7 +25,7 @@ semanage fcontext -a -e '/home' '{{ parenthomedir }}':
 restorecon -v {{ parenthomedir }}:
   cmd.run:
     - onchages:
-      - cmd: semanage fcontext -a -e '/home' '{{ parenthomedir }}':
+      - cmd: semanage fcontext -a -e '/home' '{{ parenthomedir }}'
 
 restorecon -Frv {{ homedir }}:
    {% if 'wheel' in users.present[user].groups and not salt['file.contains'](seusers_file, user+':staff_u') %}
