@@ -13,7 +13,7 @@
  {% set users = pillar['users'] %}
 
  {% for user in users.present recursive %}
-  {% if salt['user.info'](user) != {} and users.present[user].groups is defined %}
+  {% if salt['user.info'](user) != {} and users.present[user].keys ) %}
    {% set homedir = salt['user.info'](user).home %}
    {% set parenthomedir = salt['user.info'](user).home|replace("/home/"+user, "/home") %}
 
@@ -28,19 +28,20 @@ restorecon parent dir for {{ user }} homedir:
     - name: restorecon -v {{ parenthomedir }}
     - onchages:
       - cmd: check parent dir for {{ user }} homedir
-
+   {% if salt['user.info'](user) != {} and users.present[user].groups is defined %}
 restorecon -Frv {{ homedir }}:
-   {% if 'wheel' in users.present[user].groups and not salt['file.contains'](seusers_file, user+':staff_u') %}
+    {% if 'wheel' in users.present[user].groups and not salt['file.contains'](seusers_file, user+':staff_u') %}
   cmd.wait
 
 semanage login -a -s staff_u {{ user }}:
   cmd.run:
     - watch_in:
         - cmd: restorecon -Frv {{ homedir }}
-   {% elif 'user_home_dir_t' not in salt['file.get_selinux_context'](homedir) %}
+    {% elif 'user_home_dir_t' not in salt['file.get_selinux_context'](homedir) %}
   cmd.run
-   {% else %}
+    {% else %}
   cmd.wait
+    {% endif %}
    {% endif %}
   {% endif %}
  {% endfor %}
