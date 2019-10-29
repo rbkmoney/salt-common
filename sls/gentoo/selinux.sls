@@ -13,7 +13,8 @@
  {% set users = pillar['users'] %}
 
  {% for user in users.present recursive %}
-  {% if salt['user.info'](user) != {} and users.present[user].keys is defined %}
+  {% set userinfo = salt['user.info'](user) %}
+  {% if userinfo != {} and users.present[user].keys is defined and userinfo.home != '/root' and userinfo.shell == "/bin/bash" %}
    {% set homedir = salt['user.info'](user).home %}
    {% set parenthomedir = salt['user.info'](user).home|replace("/home/"+user, "/home") %}
 
