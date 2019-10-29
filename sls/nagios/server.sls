@@ -58,14 +58,14 @@ include:
     - require:
       - file: /root/.ssh/nagios-objects-access
 
-/var/nagios/home/.ssh/config:
+/var/nagios/home/nagios/.ssh/config:
   file.managed:
     - source: salt://nagios/files/ssh-config
     - mode: 750
     - user: nagios
     - group: nagios
 
-/var/nagios/home/.ssh/nagios-hosts-access-key:
+/var/nagios/home/nagios/.ssh/nagios-hosts-access-key:
   file.managed:
     - source: salt://ssl/openssh-privkey.tpl
     - template: jinja
