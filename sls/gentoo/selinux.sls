@@ -21,7 +21,7 @@
 check parent dir for {{ user }} homedir:
   cmd.run:
     - name: semanage fcontext -a -e '/home' '{{ parenthomedir }}'
-    - unless:
+    - onlyif:
       - semanage fcontext -l|grep -E '^{{ parenthomedir }}\s'
 
 restorecon parent dir for {{ user }} homedir:
@@ -29,9 +29,9 @@ restorecon parent dir for {{ user }} homedir:
     - name: restorecon -v {{ parenthomedir }}
     - onchages:
       - cmd: check parent dir for {{ user }} homedir
-   {% if salt['user.info'](user) != {} and users.present[user].groups is defined %}
+   {% if salt['user.info'](user) != {} %}
 restorecon -Frv {{ homedir }}:
-    {% if 'wheel' in users.present[user].groups and not salt['file.contains'](seusers_file, user+':staff_u') %}
+    {% if users.present[user].groups is defined and 'wheel' in users.present[user].groups and not salt['file.contains'](seusers_file, user+':staff_u') %}
   cmd.wait
 
 semanage login -a -s staff_u {{ user }}:
