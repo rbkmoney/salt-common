@@ -21,8 +21,8 @@
 check parent dir for {{ user }} homedir:
   cmd.run:
     - name: semanage fcontext -a -e '/home' '{{ parenthomedir }}'
-    - onlyif:
-      - semanage fcontext -l|grep -E '^{{ parenthomedir }}\s'
+    - unless:
+      - grep -E '^{{ parenthomedir }}\s' /etc/selinux/{{ se_pol_name }}/contexts/files/file_contexts*
 
 restorecon parent dir for {{ user }} homedir:
   cmd.run:
