@@ -27,7 +27,7 @@ check parent dir for {{ user }} homedir:
 restorecon parent dir for {{ user }} homedir:
   cmd.run:
     - name: restorecon -v {{ parenthomedir }}
-    - onchages:
+    - onchanges:
       - cmd: check parent dir for {{ user }} homedir
    {% if salt['user.info'](user) != {} %}
 restorecon -Frv {{ homedir }}:
