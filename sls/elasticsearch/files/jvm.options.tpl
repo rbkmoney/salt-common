@@ -19,7 +19,7 @@
 
 ## GC configuration
 -XX:+UseConcMarkSweepGC
--XX:CMSInitiatingOccupancyFraction=75
+-XX:CMSInitiatingOccupancyFraction={{ gc_occupancy_value }}
 -XX:+UseCMSInitiatingOccupancyOnly
 
 ## optimizations
