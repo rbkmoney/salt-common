@@ -50,6 +50,7 @@ jvm = pillar('elastic:jvm', {})
 jvm_heap_size = jvm.get('heap_size', '1g')
 jvm_stack_size = jvm.get('stack_size', '1m')
 jvm_extra_options = jvm.get('extra_options', {})
+jvm_gc_occupancy_value = jvm.get('gc_occupancy_value', '75')
 
 tls = pillar('elastic:tls', {})
 tls_enabled = tls.get('enabled', False)
@@ -118,7 +119,7 @@ File.managed(
   mode=644, user='root', group='root',
   template='jinja', source='salt://elasticsearch/files/jvm.options.tpl',
   defaults={'heap_size': jvm_heap_size, 'stack_size': jvm_stack_size,
-            'extra_options': jvm_extra_options},
+            'extra_options': jvm_extra_options, 'gc_occupancy_value':jvm_gc_occupancy_value},
   require=[File(conf_path)])
 
 File.managed(
