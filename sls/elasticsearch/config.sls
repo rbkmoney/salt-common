@@ -7,7 +7,7 @@ conf_path = '/etc/elasticsearch/'
 log_path = '/var/log/elasticsearch/'
 data_path = '/var/lib/elasticsearch/'
 
-packages_es = packages.get('gentoo:portage:packages:app-misc/elasticsearch', {})
+packages_es = pillar('gentoo:portage:packages:app-misc/elasticsearch', {})
 es_version = packages_es.get('version', '=7.0.0')
 es_version_short = es_version.rsplit('-', 1)[0].lstrip('-~*<>=')
 
