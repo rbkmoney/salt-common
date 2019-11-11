@@ -7,7 +7,9 @@ conf_path = '/etc/elasticsearch/'
 log_path = '/var/log/elasticsearch/'
 data_path = '/var/lib/elasticsearch/'
 
-version=Pkg.version('app-misc/elasticsearch')
+packages_es = packages.get('gentoo:portage:packages:app-misc/elasticsearch', {})
+es_version = packages_es.get('version', '=7.0.0')
+es_version_short = es_version.rsplit('-', 1)[0].lstrip('-~*<>=')
 
 File.directory(
   conf_path, create=True,
@@ -78,7 +80,7 @@ config = {
   },
 }
 
-if version.startswith('6'):
+if es_version_short.startswith('6'):
   config['discovery'] = {'zen.ping.unicast.hosts': pillar('elastic:seed_hosts', master_nodes)},
 else:
   config['cluster'] = {'initial_master_nodes': pillar('elastic:initial_master_nodes', master_nodes)},
