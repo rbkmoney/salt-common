@@ -71,7 +71,7 @@ config = {
   },
   'bootstrap': {'memory_lock': True},
   'discovery': {},
-  'cluster': {}
+  'cluster': {},
   'network': { 'host': '${HOSTNAME}' },
   'http': { 'port': 9200 },
   'gateway': {
