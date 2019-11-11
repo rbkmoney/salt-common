@@ -7,6 +7,10 @@ conf_path = '/etc/elasticsearch/'
 log_path = '/var/log/elasticsearch/'
 data_path = '/var/lib/elasticsearch/'
 
+packages_es = packages.get('gentoo:portage:packages:app-misc/elasticsearch', {})
+es_version = packages_es.get('version', '=7.0.0')
+es_version_short = es_version.rsplit('-', 1)[0].lstrip('-~*<>=')
+
 File.directory(
   conf_path, create=True,
   mode=755, user='root', group='root')
@@ -68,10 +72,6 @@ config = {
   'bootstrap': {'memory_lock': True},
   'network': { 'host': '${HOSTNAME}' },
   'http': { 'port': 9200 },
-  'cluster': {
-    'initial_master_nodes': pillar('elastic:initial_master_nodes', master_nodes) },
-  'discovery': {
-    'seed_hosts': pillar('elastic:seed_hosts', master_nodes) },
   'gateway': {
     'expected_master_nodes': len(master_nodes),
     'expected_data_nodes': len(nodes['data']),
@@ -79,6 +79,12 @@ config = {
     'recover_after_master_nodes': len(master_nodes)/2,
   },
 }
+
+if es_version_short.startswith('6'):
+  config['discovery'] = {'zen.ping.unicast.hosts': pillar('elastic:seed_hosts', master_nodes)},
+else:
+  config['cluster'] = {'initial_master_nodes': pillar('elastic:initial_master_nodes', master_nodes)},
+  config['discovery'] = {'seed_hosts': pillar('elastic:seed_hosts', master_nodes)},
 
 for node_type in ('master', 'data', 'ingest'):
   if any(name in nodes[node_type] for name in (fqdn, fqdn_ipv6)):
@@ -119,7 +125,7 @@ File.managed(
   mode=644, user='root', group='root',
   template='jinja', source='salt://elasticsearch/files/jvm.options.tpl',
   defaults={'heap_size': jvm_heap_size, 'stack_size': jvm_stack_size,
-            'gc_occupancy_value':jvm_gc_occupancy_value, 'extra_options': jvm_extra_options},
+            'gc_occupancy_value': jvm_gc_occupancy_value, 'extra_options': jvm_extra_options},
   require=[File(conf_path)])
 
 File.managed(
