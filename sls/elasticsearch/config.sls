@@ -82,11 +82,11 @@ config = {
   },
 }
 
-if es_version_short.startswith('6'):
-  config['discovery']['zen.ping.unicast.hosts'] = pillar('elastic:seed_hosts', master_nodes),
+if es_version_short.startswith('7'):
+  config['cluster']['initial_master_nodes'] = pillar('elastic:initial_master_nodes', master_nodes)
+  config['discovery']['seed_hosts'] = pillar('elastic:seed_hosts', master_nodes)
 else:
-  config['cluster']['initial_master_nodes'] = pillar('elastic:initial_master_nodes', master_nodes),
-  config['discovery']['seed_hosts'] = pillar('elastic:seed_hosts', master_nodes),
+  config['discovery']['zen.ping.unicast.hosts'] = pillar('elastic:seed_hosts', master_nodes)
 
 for node_type in ('master', 'data', 'ingest'):
   if any(name in nodes[node_type] for name in (fqdn, fqdn_ipv6)):
