@@ -32,9 +32,6 @@ if not 'data' in nodes:
 if not 'ingest' in nodes:
   nodes['ingest'] = nodes['data']
 
-seed_hosts = pillar('elastic:seed_hosts', master_nodes)
-initial_master_nodes = pillar('elastic:initial_master_nodes', master_nodes)
-
 data_count = pillar('elastic:data-dir-count', False)
 if data_count:
   _dirs = [data_path + 'data' + str(i) for i in range(0, data_count)]
@@ -66,46 +63,30 @@ if tls:
   tls_http = tls.get('http', {})
 
 # defaults
+config = {
+  'node': {
+    'name': '${HOSTNAME}',
+    'master': False, 'data': False, 'ingest': False,
+    'max_local_storage_nodes': 1,
+  },
+  'bootstrap': {'memory_lock': True},
+  'discovery': {},
+  'cluster': {},
+  'network': { 'host': '${HOSTNAME}' },
+  'http': { 'port': 9200 },
+  'gateway': {
+    'expected_master_nodes': len(master_nodes),
+    'expected_data_nodes': len(nodes['data']),
+    'recover_after_time': '5m',
+    'recover_after_master_nodes': len(master_nodes)/2,
+  },
+}
 
-
-if es_version_short.startswith('6'):
-  config = {
-    'node': {
-      'name': '${HOSTNAME}',
-      'master': False, 'data': False, 'ingest': False,
-      'max_local_storage_nodes': 1,
-    },
-    'bootstrap': {'memory_lock': True},
-    'discovery': {'zen.ping.unicast.hosts' : seed_hosts},
-    'cluster': {},
-    'network': { 'host': '${HOSTNAME}' },
-    'http': { 'port': 9200 },
-    'gateway': {
-      'expected_master_nodes': len(master_nodes),
-      'expected_data_nodes': len(nodes['data']),
-      'recover_after_time': '5m',
-      'recover_after_master_nodes': len(master_nodes)/2,
-    },
-  }
+if es_version_short.startswith('7'):
+  config['cluster']['initial_master_nodes'] = pillar('elastic:initial_master_nodes', master_nodes)
+  config['discovery']['seed_hosts'] = pillar('elastic:seed_hosts', master_nodes)
 else:
-  config = {
-    'node': {
-      'name': '${HOSTNAME}',
-      'master': False, 'data': False, 'ingest': False,
-      'max_local_storage_nodes': 1,
-    },
-    'bootstrap': {'memory_lock': True},
-    'discovery': {'seed_hosts': seed_hosts},
-    'cluster': {'initial_master_nodes': initial_master_nodes},
-    'network': { 'host': '${HOSTNAME}' },
-    'http': { 'port': 9200 },
-    'gateway': {
-      'expected_master_nodes': len(master_nodes),
-      'expected_data_nodes': len(nodes['data']),
-      'recover_after_time': '5m',
-      'recover_after_master_nodes': len(master_nodes)/2,
-    },
-  }
+  config['discovery']['zen.ping.unicast.hosts'] = pillar('elastic:seed_hosts', master_nodes)
 
 for node_type in ('master', 'data', 'ingest'):
   if any(name in nodes[node_type] for name in (fqdn, fqdn_ipv6)):
