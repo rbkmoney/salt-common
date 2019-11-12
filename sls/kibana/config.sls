@@ -32,6 +32,11 @@ config = {
   },
 }
 
+opendistro_enabled = pillar('kibana:opendistro:enabled', False)
+if opendistro_enabled:
+  config['opendistro_security'] = {'allow_client_certificates': True,
+                          'auth': {'type': 'proxy'}}
+
 out = 'elasticsearch'
 if out in tls.keys():
   out_ssl = {
