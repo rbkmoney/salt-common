@@ -18,10 +18,16 @@
 ################################################################
 
 ## GC configuration
+{% if gc_type == 'G1GC' %}
+-XX:+UseG1GC
+-XX:G1ReservePercent=25
+-XX:InitiatingHeapOccupancyPercent={{ gc_occupancy_value }}
+-Xlog:gc*,gc+age=trace,safepoint:file=/var/log/elasticsearch/gc.log:utctime,pid,tags:filecount=10,filesize=64m
+{% else %}
 -XX:+UseConcMarkSweepGC
 -XX:CMSInitiatingOccupancyFraction={{ gc_occupancy_value }}
 -XX:+UseCMSInitiatingOccupancyOnly
-
+{% endif %}
 ## optimizations
 
 # pre-touch memory pages used by the JVM during initialization
