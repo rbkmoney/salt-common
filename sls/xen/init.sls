@@ -1,3 +1,4 @@
+{% import 'pkg/common' as pkg %}
 # This definitely should be set
 {% set packages = salt['pillar.get']('gentoo:portage:packages', {}) %}
 {% set packages_xen = packages.get('app-emulation/xen', {}) %}

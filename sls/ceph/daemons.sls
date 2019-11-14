@@ -118,3 +118,17 @@ ceph-osd.{{ osd_id }}:
       - file: /etc/init.d/ceph-osd.{{ osd_id }}
       - file: /var/lib/ceph/osd/ceph-{{ osd_id }}/keyring
 {% endfor %}
+
+{% for client in salt['pillar.get']('ceph:radosgw:clients', []) %}
+/etc/init.d/radosgw.{{ client }}:
+  file.symlink:
+    - target: /etc/init.d/radosgw
+
+radosgw.{{ client }}:
+  service.running:
+    - enable: True
+    - watch:
+      - file: /etc/ceph/ceph.conf
+      - file: /etc/init.d/radosgw
+      - file: /etc/init.d/radosgw.{{ client }}
+{% endfor %}
