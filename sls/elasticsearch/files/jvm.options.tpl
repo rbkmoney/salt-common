@@ -18,7 +18,7 @@
 ################################################################
 
 ## GC configuration
-{% if gc_type == 'G1C1' %}
+{% if gc_type == 'G1GC' %}
 -XX:+UseG1GC
 -XX:G1ReservePercent=25
 -XX:InitiatingHeapOccupancyPercent={{ gc_occupancy_value }}
