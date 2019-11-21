@@ -57,7 +57,12 @@ for guest in __salt__['pillar.get']('xen:guests', []):
   if 'nomigrate' in guest:
     capkv(content, 'nomigrate', guest['nomigrate'])
 
-  capkv(content, 'kernel', guest['kernel'])
+  if 'bootloader' in guest:
+    capkv(content, 'bootloader', guest['bootloader'])
+  if 'kernel' in guest:
+    capkv(content, 'kernel', guest['kernel'])
+  elif 'bootloader' not in guest:
+    raise Exception('Neither kernel nor the bootloader are set')
   if 'ramdisk' in guest:
     capkv(content, 'ramdisk', guest['ramdisk'])
   if 'cmdline' in guest:
