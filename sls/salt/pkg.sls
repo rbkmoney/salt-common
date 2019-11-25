@@ -11,7 +11,7 @@ cython:
     - name: dev-python/cython
 
 app-admin/salt:
-  pkg.latest:
+  pkg.installed:
     - refresh: False
     - pkgs:
       - {{ pkg.gen_atom('app-admin/salt') }}
