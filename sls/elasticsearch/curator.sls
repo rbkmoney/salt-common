@@ -7,10 +7,7 @@ conf_path = '/etc/elasticsearch/'
 log_path = '/var/log/elasticsearch/'
 include('python.dev-python.elasticsearch-curator')
 
-hosts = pillar('elastic:hosts', [])
-if len(hosts) == 0:
-  hosts.extend(pillar('elastic:nodes:master', []))
-  hosts.extend(pillar('elastic:nodes:data', []))
+hosts = pillar('elastic:curator:hosts', pillar('elastic:nodes:master', []))
 
 # defaults
 config = {
