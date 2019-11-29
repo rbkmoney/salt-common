@@ -1,6 +1,8 @@
-="${RC_SERVICE%/*}/../conf.d/${RC_SVCNAME%-*}"
+#!/sbin/openrc-run
+
+_CONFD_FILE="${RC_SERVICE%/*}/../conf.d/${RC_SVCNAME%-*}"
 if [ -r "${_CONFD_FILE}" ]; then
-	. "${_CONFD_FILE}" || exit 1
+    . "${_CONFD_FILE}" || exit 1
 fi
 
 : "${ceph_conf:=/etc/ceph/ceph.conf}"
@@ -70,14 +72,13 @@ start_pre() {
         if [ "${daemon_type}" == "osd" ]; then
 	    if [ "${osd_automount_bluestore}" == "true" -a -z "${bluestore_osd_fsid}" ]; then
 		einfo "Trying to find bluestore fsid"
-		bluestore_osd_fsid="$(/sbin/lvs --noheadings --readonly --separator=';' -a -o lv_tags --select lv_tags={ceph.osd_id=${daemon_id},ceph.type=block} | perl -F/,/ -ane 'print /osd_fsid=(.+?),/' )"
+		bluestore_osd_fsid="$(/sbin/lvs --noheadings --readonly --separator=';' -a -o lv_tags --select "lv_tags={ceph.osd_id=${daemon_id},ceph.type=block}" | perl -F/,/ -ane 'print /osd_fsid=(.+?),/' )"
 	    fi
 	    if [ -n "${bluestore_osd_fsid}" ]; then
 		einfo "Mounting Bluestore"
 		ceph-volume lvm activate "${daemon_id}" "${bluestore_osd_fsid}" --no-systemd
 	    fi
         fi
-	fi
 
 	if [ "${daemon_type}" = radosgw ] && [ "${RADOSGW_WANT_NAME_PARAM}" = y ]; then
 		command_args="${command_args} --name client.${daemon_id}"
