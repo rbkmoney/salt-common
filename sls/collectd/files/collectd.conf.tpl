@@ -8,6 +8,7 @@
 {% set p_write_riemann = collectd.get('write_riemann', False) %}
 {% set p_ceph = collectd.get('ceph', False) %}
 {% set p_mysql = collectd.get('mysql', False) %}
+{% set p_processes = collectd.get('processes', False) %}
 FQDNLookup {{ collectd_conf.get('FQDNLookup', 'true') }}
 BaseDir     "/var/lib/collectd"
 PIDFile     "/run/collectd/collectd.pid"
@@ -723,9 +724,13 @@ LoadPlugin zookeeper
 #  LocalSocket "/opt/collectd/var/run/collectd-powerdns"
 #</Plugin>
 
-#<Plugin processes>
-#	Process "name"
-#</Plugin>
+{% if p_processes %}
+<Plugin processes>
+  {% for process in p_processes %}
+  Process "{{ process }}" "{{ process }}"
+  {% endfor %}
+</Plugin>
+{% endif %}
 
 #<Plugin protocols>
 #	Value "/^Tcp:/"
