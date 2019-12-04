@@ -32,5 +32,5 @@ vm.min_free_kbytes:
 
 vm.max_map_count:
   sysctl.present:
-    - config: /etc/sysctl.d/max_map_count.conf
+    - config: /etc/sysctl.d/vm.conf
     - value: {{ vm.get('max_map_count', 262144) }}
