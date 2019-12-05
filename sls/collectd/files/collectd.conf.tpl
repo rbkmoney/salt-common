@@ -147,10 +147,9 @@ LoadPlugin nginx
   Globals true
 </LoadPlugin>
 {% endif %}
-#LoadPlugin pinba
-# LoadPlugin ping
-#LoadPlugin powerdns
+{% if p_processes %}
 LoadPlugin processes
+{% endif %}
 #LoadPlugin protocols
 #LoadPlugin redis
 #LoadPlugin routeros
@@ -709,20 +708,7 @@ LoadPlugin zookeeper
 #		Qux "Baz"
 #	</Plugin>
 #</Plugin>
-
-#<Plugin powerdns>
-#  <Server "server_name">
-#    Collect "latency"
-#    Collect "udp-answers" "udp-queries"
-#    Socket "/var/run/pdns.controlsocket"
-#  </Server>
-#  <Recursor "recursor_name">
-#    Collect "questions"
-#    Collect "cache-hits" "cache-misses"
-#    Socket "/var/run/pdns_recursor.controlsocket"
-#  </Recursor>
-#  LocalSocket "/opt/collectd/var/run/collectd-powerdns"
-#</Plugin>
+{% endif %}
 
 {% if p_processes %}
 <Plugin processes>
@@ -732,6 +718,7 @@ LoadPlugin zookeeper
 </Plugin>
 {% endif %}
 
+{% if False %}
 #<Plugin protocols>
 #	Value "/^Tcp:/"
 #	IgnoreSelected false
