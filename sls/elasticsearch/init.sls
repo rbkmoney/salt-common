@@ -5,6 +5,8 @@ include:
 
 create-elasticsearch-keystore:
   cmd.run:
+    - env:
+      - ES_PATH_CONF: /etc/elasticsearch
     - name: /usr/share/elasticsearch/bin/elasticsearch-keystore
     - creates: /etc/elasticsearch/elasticsearch.keystore
     - require:
