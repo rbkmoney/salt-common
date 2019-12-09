@@ -1,6 +1,12 @@
-# TODO: флаги и кврд в gpp
+{% import 'pkg/common' as pkg %}
+include:
+  - gentoo.portage.packages
+
 net-analyzer/suricata:
   pkg.installed:
-    - version: '~>=4.0.4[af-packet,nfqueue,control-socket,logrotate,-rules]'
+    - pkgs: 
+      - {{ pkg.gen_atom('net-analyzer/suricata') }}
+    - require:
+      - file: gentoo.portage.packages
   portage_config.flags:
     - accept_keywords: ["~*"]
