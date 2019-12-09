@@ -2,6 +2,10 @@
 include:
   - elasticsearch.pkg
   - elasticsearch.config
+  {% if tls_enabled %}
+  - elasticsearch.opendistro-security
+  {% endif %}
+
 
 create-elasticsearch-keystore:
   cmd.run:
