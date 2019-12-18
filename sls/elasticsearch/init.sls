@@ -11,7 +11,7 @@ create-elasticsearch-keystore:
   cmd.run:
     - env:
       - ES_PATH_CONF: /etc/elasticsearch
-    - name: /usr/share/elasticsearch/bin/elasticsearch-keystore
+    - name: /usr/share/elasticsearch/bin/elasticsearch-keystore create -s
     - creates: /etc/elasticsearch/elasticsearch.keystore
     - require:
       - pkg: app-misc/elasticsearch
