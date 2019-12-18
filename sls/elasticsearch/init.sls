@@ -15,7 +15,11 @@ create-elasticsearch-keystore:
     - creates: /etc/elasticsearch/elasticsearch.keystore
     - require:
       - pkg: app-misc/elasticsearch
-      - file: /etc/elasticsearch/
+      - file: /etc/elasticsearch/ 
+
+wipe-elasticsearch-keystore:
+  file.absent:
+    - name: /etc/elasticsearch/elasticsearch.keystore
 
 /etc/elasticsearch/elasticsearch.keystore:
   file.managed:
@@ -36,8 +40,6 @@ elasticsearch:
       - file: /etc/elasticsearch/jvm.options
       - file: /etc/security/limits.d/elasticsearch.conf
       - file: /etc/conf.d/elasticsearch
-      - cmd: create-elasticsearch-keystore
-      - file: /etc/elasticsearch/elasticsearch.keystore
       {% if tls_enabled %}
       {% for proto in ('transport', 'http') %}
       {% for pemtype in ('cert', 'key', 'ca') %}
@@ -45,3 +47,6 @@ elasticsearch:
       {% endfor %}
       {% endfor %}
       {% endif %}
+      - cmd: wipe-elasticsearch-keystore
+      - cmd: create-elasticsearch-keystore
+      - file: /etc/elasticsearch/elasticsearch.keystore
