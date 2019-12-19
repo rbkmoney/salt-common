@@ -17,6 +17,8 @@ create-elasticsearch-keystore:
       - pkg: app-misc/elasticsearch
       - file: /etc/elasticsearch/ 
       - file: wipe-elasticsearch-keystore
+    - watch:
+      - file: /etc/elasticsearch/*.pem
 
 wipe-elasticsearch-keystore:
   file.absent:
@@ -48,5 +50,4 @@ elasticsearch:
       {% endfor %}
       {% endfor %}
       {% endif %}
-      - cmd: create-elasticsearch-keystore
       - file: /etc/elasticsearch/elasticsearch.keystore
