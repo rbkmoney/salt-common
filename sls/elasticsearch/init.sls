@@ -31,7 +31,13 @@ wipe-elasticsearch-keystore:
     - require:
       - cmd: create-elasticsearch-keystore
     - watch:
-      - file: /etc/elasticsearch/*.pem
+      {% if tls_enabled %}
+      {% for proto in ('transport', 'http') %}
+      {% for pemtype in ('cert', 'key', 'ca') %}
+      - file: /etc/elasticsearch/{{ proto }}-{{ pemtype }}.pem
+      {% endfor %}
+      {% endfor %}
+      {% endif %}
 
 elasticsearch:
   service.running:
@@ -43,11 +49,4 @@ elasticsearch:
       - file: /etc/elasticsearch/jvm.options
       - file: /etc/security/limits.d/elasticsearch.conf
       - file: /etc/conf.d/elasticsearch
-      {% if tls_enabled %}
-      {% for proto in ('transport', 'http') %}
-      {% for pemtype in ('cert', 'key', 'ca') %}
-      - file: /etc/elasticsearch/{{ proto }}-{{ pemtype }}.pem
-      {% endfor %}
-      {% endfor %}
-      {% endif %}
       - file: /etc/elasticsearch/elasticsearch.keystore
