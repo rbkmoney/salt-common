@@ -17,8 +17,6 @@ create-elasticsearch-keystore:
       - pkg: app-misc/elasticsearch
       - file: /etc/elasticsearch/ 
       - file: wipe-elasticsearch-keystore
-    - watch:
-      - file: /etc/elasticsearch/*.pem
 
 wipe-elasticsearch-keystore:
   file.absent:
@@ -32,6 +30,8 @@ wipe-elasticsearch-keystore:
     - group: elasticsearch
     - require:
       - cmd: create-elasticsearch-keystore
+    - watch:
+      - file: /etc/elasticsearch/*.pem
 
 elasticsearch:
   service.running:
