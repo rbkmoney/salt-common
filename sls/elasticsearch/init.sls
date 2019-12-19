@@ -17,6 +17,14 @@ create-elasticsearch-keystore:
       - pkg: app-misc/elasticsearch
       - file: /etc/elasticsearch/ 
       - file: wipe-elasticsearch-keystore
+    - watch:
+      {% if tls_enabled %}
+      {% for proto in ('transport', 'http') %}
+      {% for pemtype in ('cert', 'key', 'ca') %}
+      - file: /etc/elasticsearch/{{ proto }}-{{ pemtype }}.pem
+      {% endfor %}
+      {% endfor %}
+      {% endif %}
 
 wipe-elasticsearch-keystore:
   file.absent:
@@ -28,16 +36,6 @@ wipe-elasticsearch-keystore:
     - mode: 660
     - user: elasticsearch
     - group: elasticsearch
-    - require:
-      - cmd: create-elasticsearch-keystore
-    - watch:
-      {% if tls_enabled %}
-      {% for proto in ('transport', 'http') %}
-      {% for pemtype in ('cert', 'key', 'ca') %}
-      - file: /etc/elasticsearch/{{ proto }}-{{ pemtype }}.pem
-      {% endfor %}
-      {% endfor %}
-      {% endif %}
 
 elasticsearch:
   service.running:
