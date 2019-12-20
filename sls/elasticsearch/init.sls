@@ -17,6 +17,13 @@ create-elasticsearch-keystore:
       - pkg: app-misc/elasticsearch
       - file: /etc/elasticsearch/ 
     - onchanges:
+      - file: wipe-elasticsearch-keystore
+
+
+wipe-elasticsearch-keystore:
+  file.absent:
+    - name: /etc/elasticsearch/elasticsearch.keystore
+    - watch:
       {% if tls_enabled %}
       {% for proto in ('transport', 'http') %}
       {% for pemtype in ('cert', 'key', 'ca') %}
@@ -24,10 +31,6 @@ create-elasticsearch-keystore:
       {% endfor %}
       {% endfor %}
       {% endif %}
-
-wipe-elasticsearch-keystore:
-  file.absent:
-    - name: /etc/elasticsearch/elasticsearch.keystore
 
 /etc/elasticsearch/elasticsearch.keystore:
   file.managed:
@@ -48,11 +51,4 @@ elasticsearch:
       - file: /etc/elasticsearch/jvm.options
       - file: /etc/security/limits.d/elasticsearch.conf
       - file: /etc/conf.d/elasticsearch
-      {% if tls_enabled %}
-      {% for proto in ('transport', 'http') %}
-      {% for pemtype in ('cert', 'key', 'ca') %}
-      - file: /etc/elasticsearch/{{ proto }}-{{ pemtype }}.pem
-      {% endfor %}
-      {% endfor %}
-      {% endif %}
-
+      - file: /etc/elasticsearch/elasticsearch.keystore
