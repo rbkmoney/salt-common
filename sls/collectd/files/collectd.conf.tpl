@@ -713,7 +713,7 @@ LoadPlugin zookeeper
 {% if p_processes %}
 <Plugin processes>
   {% for process in p_processes %}
-  Process "{{ process }}" "{{ process }}"
+  ProcessMatch "{{ process }}" "{{ process }}"
   {% endfor %}
 </Plugin>
 {% endif %}
