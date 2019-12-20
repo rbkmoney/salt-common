@@ -23,7 +23,7 @@ create-elasticsearch-keystore:
 wipe-elasticsearch-keystore:
   file.absent:
     - name: /etc/elasticsearch/elasticsearch.keystore
-    - watch:
+    - onchanges:
       {% if tls_enabled %}
       {% for proto in ('transport', 'http') %}
       {% for pemtype in ('cert', 'key', 'ca') %}
