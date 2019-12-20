@@ -8,7 +8,7 @@ include:
 
 
 create-elasticsearch-keystore:
-  cmd.wait:
+  cmd.run:
     - env:
       - ES_PATH_CONF: /etc/elasticsearch
     - name: /usr/share/elasticsearch/bin/elasticsearch-keystore create -s
@@ -17,7 +17,7 @@ create-elasticsearch-keystore:
       - pkg: app-misc/elasticsearch
       - file: /etc/elasticsearch/ 
       - file: wipe-elasticsearch-keystore
-  cmd.mod_watch:
+    - onchanges_in:
       {% if tls_enabled %}
       {% for proto in ('transport', 'http') %}
       {% for pemtype in ('cert', 'key', 'ca') %}
@@ -36,6 +36,8 @@ wipe-elasticsearch-keystore:
     - mode: 660
     - user: elasticsearch
     - group: elasticsearch
+    - watch:
+      - cmd: create-elasticsearch-keystore
 
 elasticsearch:
   service.running:
