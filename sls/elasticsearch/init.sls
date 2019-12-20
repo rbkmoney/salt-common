@@ -16,8 +16,7 @@ create-elasticsearch-keystore:
     - require:
       - pkg: app-misc/elasticsearch
       - file: /etc/elasticsearch/ 
-      - file: wipe-elasticsearch-keystore
-    - onchanges_in:
+    - onchanges:
       {% if tls_enabled %}
       {% for proto in ('transport', 'http') %}
       {% for pemtype in ('cert', 'key', 'ca') %}
