@@ -7,8 +7,8 @@
 
 /etc/clickhouse-server/config.xml:
   file.managed:
-    # - source: salt://clickhouse/files/server.xml
-    # - template: genshi
+    - source: salt://clickhouse/files/server.xml.tpl
+    - template: jinja
     - mode: 640
     - user: clickhouse
     - group: clickhouse
@@ -17,8 +17,8 @@
 
 /etc/clickhouse-server/users.xml:
   file.managed:
-    # - source: salt://clickhouse/files/user.xml
-    # - template: genshi
+    - source: salt://clickhouse/files/user.xml.tpl
+    - template: jinja
     - mode: 640
     - user: clickhouse
     - group: clickhouse
