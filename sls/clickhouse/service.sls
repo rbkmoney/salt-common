@@ -7,7 +7,7 @@
 
 /etc/clickhouse-server/config.xml:
   file.managed:
-    - source: salt://clickhouse/files/server.xml.tpl
+    - source: salt://clickhouse/files/config.xml.tpl
     - template: jinja
     - mode: 640
     - user: clickhouse
