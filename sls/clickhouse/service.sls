@@ -1,3 +1,6 @@
+{% set config_exists = salt.pillar.get('clickhouse:users:enabled', False) %}
+{% set users_exists = salt.pillar.get('elastic:tls:enabled', False) %}
+
 /etc/clickhouse-server/:
   file.directory:
    - create: True
@@ -17,7 +20,7 @@
 
 /etc/clickhouse-server/users.xml:
   file.managed:
-    - source: salt://clickhouse/files/user.xml.tpl
+    - source: salt://clickhouse/files/users.xml.tpl
     - template: jinja
     - mode: 640
     - user: clickhouse
