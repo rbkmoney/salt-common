@@ -52,7 +52,7 @@
   <max_connections>{{ config.get('server:max_connections', 4096) }}</max_connections>
   <keep_alive_timeout>{{ config.get('server:keep_alive_timeout', 3) }}</keep_alive_timeout>
   <!-- Maximum number of concurrent queries. -->
-  <max_concurrent_queries>{{ config.get('server:max_concurrent_queries', 100 }}</max_concurrent_queries>
+  <max_concurrent_queries>{{ config.get('server:max_concurrent_queries', 100) }}</max_concurrent_queries>
   <!-- Set limit on number of open files (default: maximum). This setting makes sense on Mac OS X because getrlimit() fails to retrieve
          correct maximum value. -->
   <!-- <max_open_files>262144</max_open_files> -->
