@@ -35,7 +35,7 @@ bird:
 
 bird-reload:
   cmd.run:
-    - name: birdc 'reload all'
+    - name: birdc reload all
     - onchanges:
       - file: /etc/bird.conf
     - require:
