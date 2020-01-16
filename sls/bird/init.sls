@@ -27,14 +27,16 @@ bird6:
 bird:
   service.running:
     - enable: True
+    - require:
+      - file: /etc/bird.conf
     - watch:
       - file: /etc/init.d/bird
-      - file: /etc/bird.conf
       - pkg: pkg_bird
 
 bird-reload:
-  service.running:
-    - name: bird
-    - reload: True
-    - require:
+  cmd.run:
+    - name: birdc 'reload all'
+    - onchanges:
       - file: /etc/bird.conf
+    - require:
+      - service: bird
