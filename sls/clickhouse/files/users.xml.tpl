@@ -1,6 +1,6 @@
 {% set config = salt['pillar.get']('clickhouse', {}) %}
-<!--# Managed by Salt -->
 <?xml version="1.0"?>
+<!--# Managed by Salt -->
 <yandex>
   <!-- Profiles of settings. -->
   <profiles>
@@ -8,7 +8,7 @@
     {% for profile in profiles %}
     <{{ profile }}>
       {% for param, value in profiles[profile].iteritems() %}
-      <{{ param }}>{{ value }}<\{{ param }}>
+      <{{ param }}>{{ value }}</{{ param }}>
       {% endfor %}
     </{{ profile }}>
     {% endfor %}
@@ -19,9 +19,23 @@
     {% set users = config.get('users', {}) %}
     {% for user in users %}
     <{{ user }}>
-      {% for param, value in users[user].iteritems() %}
-      <{{ param }}>{{ value }}<\{{ param }}>
+    {% for param, value in users[user].iteritems() %}
+    {% if value is mapping %}
+      <{{ param }}>
+      {% for p, v in value.iteritems() %}
+      {% if v is iterable %}
+        {% for i in v %}
+        <{{ p }}>{{ i }}</{{ p }}>
+        {%endfor%}
+        {% else %}
+        <{{ p }}>{{ v }}</{{ p }}>
+        {% endif %}
       {% endfor %}
+      </{{ param }}>
+    {% else %}
+      <{{ param }}>{{ value }}</{{ param }}>
+    {% endif %}
+    {% endfor %}
     </{{ user }}>
     {% endfor %}
   </users>
@@ -31,13 +45,17 @@
     {% set quotas = config.get('quotas', {}) %}
     {% for quota in quotas %}
     <{{ quota }}>
-      {% for param, value in quotas[quota].iteritems() %}
+    {% for param, value in quotas[quota].iteritems() %}
+    {% if value is mapping %}
       <{{ param }}>
-      	{% for p, v in value.iteritems() %}
-      	<{{ p }}>{{ v }}<\{{ p }}>
-      	{% endfor %}
-      <\{{ param }}>
+      {% for p, v in value.iteritems() %}
+        <{{ p }}>{{ v }}</{{ p }}>
       {% endfor %}
+      </{{ param }}>
+    {% else %}
+      <{{ param }}>{{ value }}</{{ param }}>
+    {% endif %}
+    {% endfor %}
     </{{ quota }}>
     {% endfor %}
   </quotas>

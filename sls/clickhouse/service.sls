@@ -42,7 +42,7 @@
 
 clickhouse-server:
   service.running:
-    - enabled: True
+    - enable: True
     - watch:
       - file: /etc/clickhouse-server/config.xml
       - file: /etc/clickhouse-server/users.xml

@@ -1,7 +1,7 @@
 {% set config = salt['pillar.get']('clickhouse', {}) %}
-{% set hostname = __grains__.get('fqdn') %}
-<!--# Managed by Salt -->
+{% set hostname = salt['grains.get']('fqdn') %}
 <?xml version="1.0"?>
+<!--# Managed by Salt -->
 <yandex>
   <logger>
     <!-- Possible levels: https://github.com/pocoproject/poco/blob/develop/Foundation/include/Poco/Logger.h#L105 -->
@@ -38,7 +38,7 @@
   <!-- Listen specified host. use :: (wildcard IPv6 address), if you want to accept connections both with IPv4 and IPv6 from everywhere. -->
   <!-- <listen_host>::</listen_host> -->
   <!-- Same for hosts with disabled ipv6: -->
-  <listen_host>{{ __grains__.get('fqdn_ip6')[0] }}</listen_host>
+  <listen_host>{{ salt['grains.get']('fqdn_ip6')[0] }}</listen_host>
   <!-- Default values - try listen localhost on ipv4 and ipv6: -->
   <!--
     <listen_host>::1</listen_host>
@@ -61,12 +61,12 @@
          Cache is used when 'use_uncompressed_cache' user setting turned on (off by default).
          Uncompressed cache is advantageous only for very short queries and in rare cases.
       -->
-  <uncompressed_cache_size>{{ config.get('server:uncompressed_cache_size', 8589934592 }}</uncompressed_cache_size>
+  <uncompressed_cache_size>{{ config.get('server:uncompressed_cache_size', 8589934592) }}</uncompressed_cache_size>
   <!-- Approximate size of mark cache, used in tables of MergeTree family.
          In bytes. Cache is single for server. Memory is allocated only on demand.
          You should not lower this value.
       -->
-  <mark_cache_size>{{ config.get('server:mark_cache_size', 5368709120 }}</mark_cache_size>
+  <mark_cache_size>{{ config.get('server:mark_cache_size', 5368709120) }}</mark_cache_size>
   <!-- Path to data directory, with trailing slash. -->
   <path>/var/lib/clickhouse/</path>
   <!-- Path to temporary data for processing hard queries. -->
@@ -103,7 +103,7 @@
       -->
 
   {% set clickhouse_shards = config.get('cluster:shards', {}) %}
-  {% if len(clickhouse_shards) > 0 %}
+  {% if clickhouse_shards|length > 0 %}
   <load_balancing>in_order</load_balancing>
   <insert_quorum>2</insert_quorum>
   <remote_servers>
@@ -141,9 +141,9 @@
   {% set zookeeper_nodes = salt['pillar.get']('zookeeper:nodes', {}) %}
   {% set zookeeper_port = config.get('zookeeper_port', 2181) %}
   <zookeeper>
-      {% for node_index in range(1, len(zookeeper_nodes) + 1) %}
-      <node index="{{ node_index }}">
-          <host>{{ zookeeper_nodes[node_index] }}</host>
+      {% for zookeeper_host, zookeeper_index in zookeeper_nodes.iteritems() %}
+      <node index="{{ zookeeper_index }}">
+          <host>{{ zookeeper_host }}</host>
           <port>{{ zookeeper_port }}</port>
       </node>
       {% endfor %}
@@ -165,11 +165,11 @@
   {% endfor %}
   </macros>
   <!-- Reloading interval for embedded dictionaries, in seconds. Default: 3600. -->
-  <builtin_dictionaries_reload_interval>{{ config.get('server:builtin_dictionaries_reload_interval', 3600 }}</builtin_dictionaries_reload_interval>
+  <builtin_dictionaries_reload_interval>{{ config.get('server:builtin_dictionaries_reload_interval', 3600) }}</builtin_dictionaries_reload_interval>
   <!-- Maximum session timeout, in seconds. Default: 3600. -->
-  <max_session_timeout>{{ config.get('server:max_session_timeout', 3600 }}</max_session_timeout>
+  <max_session_timeout>{{ config.get('server:max_session_timeout', 3600) }}</max_session_timeout>
   <!-- Default session timeout, in seconds. Default: 60. -->
-  <default_session_timeout>{{ config.get('server:default_session_timeout', 60 }}</default_session_timeout>
+  <default_session_timeout>{{ config.get('server:default_session_timeout', 60) }}</default_session_timeout>
   <!-- Sending data to Graphite for monitoring. Several sections can be defined. -->
   <!--
         interval - send every X second
@@ -180,13 +180,13 @@
         asynchronous_metrics - send data from table system.asynchronous_metrics
     -->
   <graphite>
-    <host>{{ config.get('server:graphite:host', 'carbon1.bst1.rbkmoney.net' }}</host>
-    <port>{{ config.get('server:graphite:port', 2003 }}</port>
-    <timeout>{{ config.get('server:graphite:timeout', 0.1 }}</timeout>
-    <interval>{{ config.get('server:graphite:interval', 1 }}</interval>
-    <metrics>{{ config.get('server:graphite:metrics', 'true' }}</metrics>
-    <events>{{ config.get('server:graphite:events', 'true' }}</events>
-    <asynchronous_metrics>{{ config.get('server:graphite:asynchronous_metrics', 'false' }}</asynchronous_metrics>
+    <host>{{ config.get('server:graphite:host', 'carbon1.bst1.rbkmoney.net') }}</host>
+    <port>{{ config.get('server:graphite:port', 2003) }}</port>
+    <timeout>{{ config.get('server:graphite:timeout', 0.1) }}</timeout>
+    <interval>{{ config.get('server:graphite:interval', 1) }}</interval>
+    <metrics>{{ config.get('server:graphite:metrics', 'true') }}</metrics>
+    <events>{{ config.get('server:graphite:events', 'true') }}</events>
+    <asynchronous_metrics>{{ config.get('server:graphite:asynchronous_metrics', 'false') }}</asynchronous_metrics>
   </graphite>
   <!-- Query log. Used only for queries with setting log_queries = 1. -->
   <query_log>
