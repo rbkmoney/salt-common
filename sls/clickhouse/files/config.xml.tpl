@@ -107,15 +107,15 @@
   <insert_quorum>2</insert_quorum>
   <remote_servers>
     <rbk>
-      {% for shard in clickhouse_shards %}
+      {% for shard,params in clickhouse_shards.iteritems() %}
       <shard>
-        <weight>{{ clickhouse_shards[shard]['weight'] }}</weight>
+        <weight>{{ params['weight'] }}</weight>
         <internal_replication>true</internal_replication>
         <replica>
-          <host>{{ clickhouse_shards[shard]['node'] }}</host>
+          <host>{{ params['node'] }}</host>
           <port>9000</port>
         </replica>
-        {% for replica in clickhouse_shards[shard]['replicas'] %}
+        {% for replica in params['replicas'] %}
         <replica>
           <host>{{ replica }}</host>
           <port>9000</port>
