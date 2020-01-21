@@ -109,13 +109,13 @@
     <rbk>
       {% for shard in clickhouse_shards %}
       <shard>
-        <weight>{{ shard['weight'] }}</weight>
+        <weight>{{ clickhouse_shards[shard]['weight'] }}</weight>
         <internal_replication>true</internal_replication>
         <replica>
-          <host>{{ shard['node'] }}</host>
+          <host>{{ clickhouse_shards[shard]['node'] }}</host>
           <port>9000</port>
         </replica>
-        {% for replica in shard['replicas'] %}
+        {% for replica in clickhouse_shards[shard]['replicas'] %}
         <replica>
           <host>{{ replica }}</host>
           <port>9000</port>
