@@ -153,13 +153,13 @@
          See https://clickhouse.yandex/docs/en/table_engines/replication/#creating-replicated-tables
       -->
   <macros>
-  {% for shard in clickhouse_shards %}
-    {% if hostname == shard['node'] %}
+  {% for shard, params in clickhouse_shards.iteritems() %}
+    {% if hostname == params['node'] %}
     <shard>s{{ shard }}</shard>
     <replica>r1</replica>
-    {% elif hostname in shard['replicas'] %}
+    {% elif hostname in params['replicas'] %}
     <shard>s{{ shard }}</shard>
-    <replica>r{{ shards['replicas'].index(hostname) + 2}}</replica>
+    <replica>r{{ params['replicas'].index(hostname) + 2}}</replica>
     {% endif %}
   {% endfor %}
   </macros>
