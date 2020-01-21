@@ -1,4 +1,3 @@
-{% set config = salt['pillar.get']('clickhouse', {}) %}
 {% set hostname = salt['grains.get']('fqdn') %}
 <?xml version="1.0"?>
 <!--# Managed by Salt -->
@@ -15,8 +14,8 @@
   </logger>
 
   <display_name>{{ hostname }}</display_name>
-  <http_port>{{ config.get('server.http_port', 8123) }}</http_port>
-  <tcp_port>{{ config.get('server.tcp_port', 9000) }}</tcp_port>
+  <http_port>{{ salt['pillar.get']('clickhouse:server:http_port', 8123) }}</http_port>
+  <tcp_port>{{ salt['pillar.get']('clickhouse:server:tcp_port', 9000) }}</tcp_port>
   <!-- For HTTPS and SSL over native protocol. -->
   <!--
     <https_port>8443</https_port>
@@ -29,7 +28,7 @@
     <http_server_default_response><![CDATA[<html ng-app="SMI2"><head><base href="http://ui.tabix.io/"></head><body><div ui-view="" class="content-ui"></div><script src="http://loader.tabix.io/master.js"></script></body></html>]]></http_server_default_response>
     -->
   <!-- Port for communication between replicas. Used for data exchange. -->
-  <interserver_http_port>{{ config.get('server.interserver_http_port', 9009) }}</interserver_http_port>
+  <interserver_http_port>{{ salt['pillar.get']('clickhouse:server:interserver_http_port', 9009) }}</interserver_http_port>
   <!-- Hostname that is used by other replicas to request this server.
          If not specified, than it is determined analoguous to 'hostname -f' command.
          This setting could be used to switch replication to another network interface.
@@ -49,10 +48,10 @@
   <!-- Allow listen on same address:port -->
   <!-- <listen_reuse_port>0</listen_reuse_port> -->
   <!-- <listen_backlog>64</listen_backlog> -->
-  <max_connections>{{ config.get('server.max_connections', 4096) }}</max_connections>
-  <keep_alive_timeout>{{ config.get('server.keep_alive_timeout', 3) }}</keep_alive_timeout>
+  <max_connections>{{ salt['pillar.get']('clickhouse:server:max_connections', 4096) }}</max_connections>
+  <keep_alive_timeout>{{ salt['pillar.get']('clickhouse:server:keep_alive_timeout', 3) }}</keep_alive_timeout>
   <!-- Maximum number of concurrent queries. -->
-  <max_concurrent_queries>{{ config.get('server.max_concurrent_queries', 100) }}</max_concurrent_queries>
+  <max_concurrent_queries>{{ salt['pillar.get']('clickhouse:server:max_concurrent_queries', 100) }}</max_concurrent_queries>
   <!-- Set limit on number of open files (default: maximum). This setting makes sense on Mac OS X because getrlimit() fails to retrieve
          correct maximum value. -->
   <!-- <max_open_files>262144</max_open_files> -->
@@ -61,12 +60,12 @@
          Cache is used when 'use_uncompressed_cache' user setting turned on (off by default).
          Uncompressed cache is advantageous only for very short queries and in rare cases.
       -->
-  <uncompressed_cache_size>{{ config.get('server.uncompressed_cache_size', 8589934592) }}</uncompressed_cache_size>
+  <uncompressed_cache_size>{{ salt['pillar.get']('clickhouse:server:uncompressed_cache_size', 8589934592) }}</uncompressed_cache_size>
   <!-- Approximate size of mark cache, used in tables of MergeTree family.
          In bytes. Cache is single for server. Memory is allocated only on demand.
          You should not lower this value.
       -->
-  <mark_cache_size>{{ config.get('server.mark_cache_size', 5368709120) }}</mark_cache_size>
+  <mark_cache_size>{{ salt['pillar.get']('clickhouse:server:mark_cache_size', 5368709120) }}</mark_cache_size>
   <!-- Path to data directory, with trailing slash. -->
   <path>/var/lib/clickhouse/</path>
   <!-- Path to temporary data for processing hard queries. -->
@@ -102,7 +101,7 @@
          https://clickhouse.yandex/docs/en/table_engines/distributed/
       -->
 
-  {% set clickhouse_shards = config.get('cluster.shards', {}) %}
+  {% set clickhouse_shards = salt['pillar.get']('clickhouse:shards', {}) %}
   {% if clickhouse_shards|length > 0 %}
   <load_balancing>in_order</load_balancing>
   <insert_quorum>2</insert_quorum>
@@ -139,7 +138,7 @@
       -->
   <!--    <zookeeper incl="zookeeper-servers" optional="true" /> -->
   {% set zookeeper_nodes = salt['pillar.get']('zookeeper:nodes', {}) %}
-  {% set zookeeper_port = config.get('zookeeper_port', 2181) %}
+  {% set zookeeper_port = salt['pillar.get']('clickhouse:server:zookeeper_port', 2181) %}
   <zookeeper>
       {% for zookeeper_host, zookeeper_index in zookeeper_nodes.iteritems() %}
       <node index="{{ zookeeper_index }}">
@@ -165,11 +164,11 @@
   {% endfor %}
   </macros>
   <!-- Reloading interval for embedded dictionaries, in seconds. Default: 3600. -->
-  <builtin_dictionaries_reload_interval>{{ config.get('server.builtin_dictionaries_reload_interval', 3600) }}</builtin_dictionaries_reload_interval>
+  <builtin_dictionaries_reload_interval>{{ salt['pillar.get']('clickhouse:server:builtin_dictionaries_reload_interval', 3600) }}</builtin_dictionaries_reload_interval>
   <!-- Maximum session timeout, in seconds. Default: 3600. -->
-  <max_session_timeout>{{ config.get('server.max_session_timeout', 3600) }}</max_session_timeout>
+  <max_session_timeout>{{ salt['pillar.get']('clickhouse:server:max_session_timeout', 3600) }}</max_session_timeout>
   <!-- Default session timeout, in seconds. Default: 60. -->
-  <default_session_timeout>{{ config.get('server.default_session_timeout', 60) }}</default_session_timeout>
+  <default_session_timeout>{{ salt['pillar.get']('clickhouse:server:default_session_timeout', 60) }}</default_session_timeout>
   <!-- Sending data to Graphite for monitoring. Several sections can be defined. -->
   <!--
         interval - send every X second
@@ -180,13 +179,13 @@
         asynchronous_metrics - send data from table system.asynchronous_metrics
     -->
   <graphite>
-    <host>{{ config.get('server.graphite.host', 'carbon1.bst1.rbkmoney.net') }}</host>
-    <port>{{ config.get('server.graphite.port', 2003) }}</port>
-    <timeout>{{ config.get('server.graphite.timeout', 0.1) }}</timeout>
-    <interval>{{ config.get('server.graphite.interval', 1) }}</interval>
-    <metrics>{{ config.get('server.graphite.metrics', 'true') }}</metrics>
-    <events>{{ config.get('server.graphite.events', 'true') }}</events>
-    <asynchronous_metrics>{{ config.get('server.graphite.asynchronous_metrics', 'false') }}</asynchronous_metrics>
+    <host>{{ salt['pillar.get']('clickhouse:server:graphite:host', 'carbon1.bst1.rbkmoney.net') }}</host>
+    <port>{{ salt['pillar.get']('clickhouse:server:graphit:port', 2003) }}</port>
+    <timeout>{{ salt['pillar.get']('clickhouse:server:graphite:timeout', 0.1) }}</timeout>
+    <interval>{{ salt['pillar.get']('clickhouse:server:graphite:interval', 1) }}</interval>
+    <metrics>{{ salt['pillar.get']('clickhouse:server:graphite:metrics', 'true') }}</metrics>
+    <events>{{ salt['pillar.get']('clickhouse:server:graphite:events', 'true') }}</events>
+    <asynchronous_metrics>{{ salt['pillar.get']('clickhouse:server:graphite:asynchronous_metrics', 'false') }}</asynchronous_metrics>
   </graphite>
   <!-- Query log. Used only for queries with setting log_queries = 1. -->
   <query_log>
@@ -271,3 +270,4 @@
       -->
   <format_schema_path>/var/lib/clickhouse/format_schemas/</format_schema_path>
 </yandex>
+`
