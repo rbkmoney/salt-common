@@ -102,7 +102,7 @@
       -->
 
   {% set clickhouse_shards = salt['pillar.get']('clickhouse:shards', {}) %}
-  {{% if clickhouse_shards != {} %}}
+  {% if clickhouse_shards != {} %}
   <load_balancing>in_order</load_balancing>
   <insert_quorum>2</insert_quorum>
   <remote_servers>
