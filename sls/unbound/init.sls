@@ -47,12 +47,5 @@ unbound-control-setup:
     - unless:
       - test -f /etc/unbound/unbound_control.key
     - watch_in:
-      - cmd: unbound-control_reload
-    - require_in:
-      - cmd: unbound-control_reload
-
-unbound-control_reload:
-  cmd.wait:
-    - name: /usr/sbin/unbound-control reload
-    - require:
       - service: unbound
+
