@@ -270,4 +270,3 @@
       -->
   <format_schema_path>/var/lib/clickhouse/format_schemas/</format_schema_path>
 </yandex>
-`

@@ -60,6 +60,3 @@
     {% endfor %}
   </quotas>
 </yandex>
-
-
-
