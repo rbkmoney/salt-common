@@ -100,7 +100,7 @@
   <!-- Configuration of clusters that could be used in Distributed tables.
          https://clickhouse.yandex/docs/en/table_engines/distributed/
       -->
-
+  {% set password = salt['pillar.get']('clickhouse:users:default:password', '') %}
   {% set clickhouse_shards = salt['pillar.get']('clickhouse:cluster:shards', {}) %}
   {% if clickhouse_shards != {} %}
   <load_balancing>in_order</load_balancing>
@@ -114,11 +114,13 @@
         <replica>
           <host>{{ params['node'] }}</host>
           <port>9000</port>
+          <password>{{ password }}</password>
         </replica>
         {% for replica in params['replicas'] %}
         <replica>
           <host>{{ replica }}</host>
           <port>9000</port>
+          <password>{{ password }}</password>
         </replica>
         {% endfor %}
       </shard>
