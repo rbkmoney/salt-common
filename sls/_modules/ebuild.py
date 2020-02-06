@@ -349,7 +349,7 @@ def version(*names, **kwargs):
     '''
     if len(names) == 0:
         return ''
-    
+
     ret = {}
     # Initialize the dict with empty strings
     for name in names:
@@ -489,7 +489,7 @@ def process_target(param, version_num):
                 format(repr(version_num), param))
 
     changes = {}
-        
+
     if '[' in target:
         # Clean target from use flags, since some of them may not exist.
         # This will raise an AttributeError, or some weird stack trace if portage_config is not patched.
@@ -727,7 +727,7 @@ def install(name=None,
     if call['retcode'] != 0:
         raise CommandExecutionError(
             'unknown error stdout: {}, stderr: {}'.format(call['stdout'], call['stderr'])
-        )        
+        )
     return changes
 
 
@@ -1075,7 +1075,7 @@ def version_cmp(pkg1, pkg2, **kwargs):
     if kwargs:
         salt.utils.invalid_kwargs(kwargs)
 
-    regex = r'^(?:~|-|\*)?([^:\[\~\-\*]+):?[^\[]*\[?.*$'
+    regex = r'^(?:~|-|\*)?([^:\[\~\*]+):?[^\[]*\[?.*$'
     ver1 = re.match(regex, pkg1)
     ver2 = re.match(regex, pkg2)
 
