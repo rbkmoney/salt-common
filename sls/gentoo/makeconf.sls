@@ -24,7 +24,7 @@ def chap(key, value):
 default_features = ["xattr sandbox userfetch parallel-fetch parallel-install clean-logs",
                     "compress-build-logs unmerge-logs splitdebug compressdebug fail-clean",
                     "unmerge-orphans getbinpkg -news"]
-emerge_default_opts = '--quiet-build --verbose --keep-going'
+emerge_default_opts = '--quiet-build --verbose --keep-going --changed-deps --with-bdeps=y --verbose-conflicts --newrepo'
 default_makeopts = ('-j'+str(num_jobs)+' --load-average '+str(max_la))
 
 if make_conf:
