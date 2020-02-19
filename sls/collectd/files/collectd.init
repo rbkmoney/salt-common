@@ -17,11 +17,11 @@ command_background=true
 command_user="${COLLECTD_USER}"
 # Java path workaround
 if command -v java-config-2 >/dev/null 2>&1; then
-        java_LDPATH_workaround="--env LD_LIBRARY_PATH=\"$(java-config-2 -g LDPATH)\""
+        java_LDPATH="--env LD_LIBRARY_PATH=\"$(java-config-2 -g LDPATH)\""
 else
-        java_LDPATH_workaround=""
+        java_LDPATH=""
 fi
-start_stop_daemon_args="${COLLECTD_SSDARGS} --nice ${COLLECTD_NICELEVEL} ${java_LDPATH_workaround}"
+start_stop_daemon_args="${COLLECTD_SSDARGS} --nice ${COLLECTD_NICELEVEL} ${java_LDPATH}"
 pidfile="${COLLECTD_PIDFILE}"
 retry="${COLLECTD_TERMTIMEOUT}"
 
