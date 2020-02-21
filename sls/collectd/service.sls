@@ -10,6 +10,14 @@ collectd:
       - file: /etc/collectd/collectd.conf
       - file: /etc/collectd/types.db
       - file: /etc/collectd/conf.d/
+      - file: /etc/init.d/collectd
+
+/etc/init.d/collectd:
+  file.managed:
+    - source: salt://collectd/files/collectd.init
+    - mode: 755
+    - user: root
+    - group: root
 
 /etc/conf.d/collectd:
   file.managed:
