@@ -9,6 +9,7 @@ manage-rc-conf:
     - context: /files/etc/rc.conf
     - changes:
       - set rc_parallel {{ 'YES' if rc_conf.get('parallel', True) else 'NO' }}
+      - set rc_controller_cgroups "YES"
       - set rc_logger {{ 'YES' if rc_conf.get('logger', True) else 'NO' }}
       - set rc_log_path {{ rc_conf.get('log_path', '/var/log/rc.log') }}
       - set rc_crashed_start {{ 'YES' if rc_conf.get('crashed_start', True) else 'NO' }}
