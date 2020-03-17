@@ -8,9 +8,14 @@ from __future__ import absolute_import
 import logging
 import os
 import shutil
+try:
+    from importlib import reload
+except ImportError:
+    pass
 
 # Import salt libs
 import salt.utils
+from salt.utils.files import fopen
 
 # Import third party libs
 import salt.ext.six as six
@@ -161,7 +166,7 @@ def _unify_keywords():
             for triplet in os.walk(old_path):
                 for file_name in triplet[2]:
                     file_path = '{0}/{1}'.format(triplet[0], file_name)
-                    with salt.utils.fopen(file_path) as fh_:
+                    with fopen(file_path) as fh_:
                         for line in fh_:
                             line = line.strip()
                             if line and not line.startswith('#'):
@@ -169,7 +174,7 @@ def _unify_keywords():
                                     'accept_keywords', string=line)
             shutil.rmtree(old_path)
         else:
-            with salt.utils.fopen(old_path) as fh_:
+            with fopen(old_path) as fh_:
                 for line in fh_:
                     line = line.strip()
                     if line and not line.startswith('#'):
@@ -189,7 +194,7 @@ def _package_conf_file_to_dir(file_name):
             else:
                 os.rename(path, path + '.tmpbak')
                 os.mkdir(path, 0o755)
-                with salt.utils.fopen(path + '.tmpbak') as fh_:
+                with fopen(path + '.tmpbak') as fh_:
                     for line in fh_:
                         line = line.strip()
                         if line and not line.startswith('#'):
@@ -220,12 +225,12 @@ def _package_conf_ordering(conf, clean=True, keep_backup=False):
                 backup_files.append(file_path + '.bak')
 
                 if cp[0] == '/' or cp.split('/') > 2:
-                    with salt.utils.fopen(file_path) as fp_:
+                    with fopen(file_path) as fp_:
                         rearrange.extend(fp_.readlines())
                     os.remove(file_path)
                 else:
                     new_contents = ''
-                    with salt.utils.fopen(file_path, 'r+') as file_handler:
+                    with fopen(file_path, 'r+') as file_handler:
                         for line in file_handler:
                             try:
                                 atom = line.strip().split()[0]
@@ -363,9 +368,9 @@ def append_to_package_conf(conf, atom='', flags=None, string='', overwrite=False
             pass
 
         try:
-            file_handler = salt.utils.fopen(complete_file_path, 'r+')  # pylint: disable=resource-leakage
+            file_handler = fopen(complete_file_path, 'r+')  # pylint: disable=resource-leakage
         except IOError:
-            file_handler = salt.utils.fopen(complete_file_path, 'w+')  # pylint: disable=resource-leakage
+            file_handler = fopen(complete_file_path, 'w+')  # pylint: disable=resource-leakage
 
         new_contents = ''
         added = False
@@ -468,7 +473,7 @@ def get_flags_from_package_conf(conf, atom):
 
         flags = []
         try:
-            with salt.utils.fopen(package_file) as fp_:
+            with fopen(package_file) as fp_:
                 for line in fp_:
                     line = line.strip()
                     line_package = line.split()[0]
@@ -566,7 +571,7 @@ def is_present(conf, atom):
             match_list = set(_porttree().dbapi.xmatch("match-all", atom))
 
         try:
-            with salt.utils.fopen(package_file) as fp_:
+            with fopen(package_file) as fp_:
                 for line in fp_:
                     line = line.strip()
                     line_package = line.split()[0]

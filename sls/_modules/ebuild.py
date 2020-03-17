@@ -19,6 +19,10 @@ from __future__ import absolute_import
 import copy
 import logging
 import re
+try:
+    from importlib import reload
+except ImportError:
+    pass
 
 # Import salt libs
 import salt.utils
@@ -241,9 +245,6 @@ def latest_version(*names, **kwargs):
     if len(names) == 1:
         return ret[names[0]]
     return ret
-
-# available_version is being deprecated
-available_version = salt.utils.alias_function(latest_version, 'available_version')
 
 
 def _get_upgradable(backtrack=3):

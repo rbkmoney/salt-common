@@ -1,6 +1,6 @@
 {% import 'pkg/common' as pkg %}
 include:
-  - python.python2
+  - python.python3
   - gentoo.portage.packages
   - salt.minion-config
 
@@ -20,11 +20,10 @@ app-admin/salt:
     - reload_modules: true
     - require:
       - pkg: cython
-      - pkg: python2
+      - pkg: python3
       - file: gentoo.portage.packages
     - require_in:
       - file: /etc/salt/minion
-
 
 /etc/logrotate.d/salt:
   file.managed:
