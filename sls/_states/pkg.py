@@ -864,8 +864,7 @@ def _preflight_check(desired, fromrepo, **kwargs):
         return {}
     ret = {'suggest': {}, 'no_suggest': []}
     pkginfo = __salt__['pkg.check_db'](
-        *list(desired, fromrepo=fromrepo, **kwargs
-    )
+        *list(desired), fromrepo=fromrepo, **kwargs)
     for pkgname in pkginfo:
         if pkginfo[pkgname]['found'] is False:
             if pkginfo[pkgname]['suggestions']:
@@ -1543,9 +1542,9 @@ def installed(
     elif sources:
         oldsources = sources
         sources = [x for x in oldsources
-                   if next(iter(list(x)) in targets]
+                   if next(iter(list(x))) in targets]
         sources.extend([x for x in oldsources
-                        if next(iter(list(x)) in to_reinstall])
+                        if next(iter(list(x))) in to_reinstall])
 
     comment = []
     if __opts__['test']:
@@ -2452,7 +2451,7 @@ def latest(
                            .format(', '.join(sorted(targets))))
             else:
                 comment = 'Package {0} failed to ' \
-                          'update.'.format(next(iter(list(targets)))
+                          'update.'.format(next(iter(list(targets))))
             if up_to_date:
                 if len(up_to_date) <= 10:
                     comment += ' The following packages were already ' \
