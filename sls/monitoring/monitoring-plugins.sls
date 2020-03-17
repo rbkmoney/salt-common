@@ -5,9 +5,6 @@ include:
 nagios-plugins:
   pkg.purged:
     - name: net-analyzer/nagios-plugins
-  portage_config.flags:
-    - accept_keywords: []
-    - use: []
 
 monitoring-plugins:
   pkg.installed:
