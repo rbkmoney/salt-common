@@ -864,7 +864,7 @@ def _preflight_check(desired, fromrepo, **kwargs):
         return {}
     ret = {'suggest': {}, 'no_suggest': []}
     pkginfo = __salt__['pkg.check_db'](
-        *list(desired.keys()), fromrepo=fromrepo, **kwargs
+        *list(desired, fromrepo=fromrepo, **kwargs
     )
     for pkgname in pkginfo:
         if pkginfo[pkgname]['found'] is False:
@@ -1543,9 +1543,9 @@ def installed(
     elif sources:
         oldsources = sources
         sources = [x for x in oldsources
-                   if next(iter(list(x.keys()))) in targets]
+                   if next(iter(list(x)) in targets]
         sources.extend([x for x in oldsources
-                        if next(iter(list(x.keys()))) in to_reinstall])
+                        if next(iter(list(x)) in to_reinstall])
 
     comment = []
     if __opts__['test']:
@@ -2282,7 +2282,7 @@ def latest(
                     'result': False,
                     'comment': 'Invalidly formatted "pkgs" parameter. See '
                                'minion log.'}
-        desired_pkgs = pkgs.keys()
+        desired_pkgs = list(pkgs)
     else:
         if isinstance(pkgs, list) and len(pkgs) == 0:
             return {
@@ -2358,7 +2358,7 @@ def latest(
             for x in pkgs:
                 if not isinstance(x, basestring):
                     # For the awful list of dicts case.
-                    x = x.keys()[0]
+                    x = list(x)[0]
                 if x not in targets:
                     up_to_date += x
 
@@ -2390,7 +2390,7 @@ def latest(
                     'comment': '\n'.join(comments)}
 
         # Build updated list of pkgs to exclude non-targeted ones
-        targeted_pkgs = list(targets.keys()) if pkgs else None
+        targeted_pkgs = list(targets) if pkgs else None
 
         try:
             # No need to refresh, if a refresh was necessary it would have been
@@ -2452,7 +2452,7 @@ def latest(
                            .format(', '.join(sorted(targets))))
             else:
                 comment = 'Package {0} failed to ' \
-                          'update.'.format(next(iter(list(targets.keys()))))
+                          'update.'.format(next(iter(list(targets)))
             if up_to_date:
                 if len(up_to_date) <= 10:
                     comment += ' The following packages were already ' \
