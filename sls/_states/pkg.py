@@ -2356,7 +2356,7 @@ def latest(
         up_to_date = []
         if pkgs:
             for x in pkgs:
-                if not isinstance(x, basestring):
+                if not isinstance(x, str):
                     # For the awful list of dicts case.
                     x = list(x)[0]
                 if x not in targets:
