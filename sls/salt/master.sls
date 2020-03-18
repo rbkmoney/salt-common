@@ -7,7 +7,6 @@ salt-master:
   service.running:
     - enable: True
     - watch:
-      - pkg: python3
       - pkg: cython
       - pkg: app-admin/salt
       - file: /etc/salt/master

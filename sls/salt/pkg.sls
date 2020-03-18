@@ -19,8 +19,6 @@ app-admin/salt:
       - {{ pkg.gen_atom('dev-python/sleekxmpp') }}
     - reload_modules: true
     - require:
-      - pkg: cython
-      - pkg: python3
       - file: gentoo.portage.packages
     - require_in:
       - file: /etc/salt/minion
