@@ -4,14 +4,11 @@ Configure ``portage(5)``
 '''
 
 # Import python libs
-from __future__ import absolute_import
+
 import logging
 import os
 import shutil
-try:
-    from importlib import reload
-except ImportError:
-    pass
+import importlib
 
 # Import salt libs
 import salt.utils
@@ -59,7 +56,7 @@ def _get_portage():
     portage module must be reloaded or it can't catch the changes
     in portage.* which had been added after when the module was loaded
     '''
-    return reload(portage)
+    return importlib.reload(portage)
 
 
 def _porttree():
