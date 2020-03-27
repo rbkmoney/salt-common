@@ -310,7 +310,7 @@ def _find_download_targets(name=None,
             problems.append(exc.strerror)
             continue
 
-        if not _fulfills_version_spec(list(cver.keys()), oper, verstr,
+        if not _fulfills_version_spec(cver.keys(), oper, verstr,
                                       ignore_epoch=ignore_epoch):
             targets[pkgname] = pkgver
 
@@ -607,7 +607,7 @@ def _find_install_targets(name=None,
             # Perform platform-specific pre-flight checks
             not_installed = dict([
                 (name, version)
-                for name, version in list(desired.items())
+                for name, version in esired.items()
                 if not (name in cur_pkgs and version in (None, cur_pkgs[name]))
             ])
             if not_installed:
