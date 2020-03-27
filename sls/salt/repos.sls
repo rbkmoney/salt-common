@@ -32,7 +32,7 @@ include:
 {% set common_remote_uri = salt['pillar.get']('salt:repos:common:remote',
   "git+ssh://git@git.bakka.su/salt-common.git") %}
 {% set extra_repos = salt['pillar.get']('salt:repos:extra', {} ) %}
-{% set extra_reponames = extra_repos.keys() %}
+{% set extra_reponames = extra_repos|list %}
 
 {% set sync_reponames = salt['pillar.get']('tmp-salt-git-reponames',[]) %}
 {% set sync_branches = salt['pillar.get']('tmp-salt-git-branches', []) %}
