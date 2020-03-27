@@ -607,7 +607,7 @@ def _find_install_targets(name=None,
             # Perform platform-specific pre-flight checks
             not_installed = dict([
                 (name, version)
-                for name, version in esired.items()
+                for name, version in desired.items()
                 if not (name in cur_pkgs and version in (None, cur_pkgs[name]))
             ])
             if not_installed:
@@ -801,7 +801,7 @@ def _verify_install(desired, new_pkgs, ignore_epoch=False):
     '''
     ok = []
     failed = []
-    for pkgname, pkgver in list(desired.items()):
+    for pkgname, pkgver in desired.items():
         # FreeBSD pkg supports `openjdk` and `java/openjdk7` package names.
         # Homebrew for Mac OSX does something similar with tap names
         # prefixing package names, separated with a slash.
