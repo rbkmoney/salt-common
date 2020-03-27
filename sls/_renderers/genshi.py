@@ -3,7 +3,7 @@
 Genshi Renderer for Salt
 '''
 
-from __future__ import absolute_import, print_function, unicode_literals
+
 import logging
 log = logging.getLogger(__name__)
 
@@ -21,24 +21,24 @@ except ImportError:
     HAS_LIBS = False
 
 def render(genshi_data, saltenv='base', sls='', method='xml', **kws):
-    '''
-    Render a Genshi template. A method should be passed in as part of the
-    kwargs. If no method is passed in, xml is assumed. Valid methods are:
+  '''
+  Render a Genshi template. A method should be passed in as part of the
+  kwargs. If no method is passed in, xml is assumed. Valid methods are:
 
-    .. code-block:
+  .. code-block:
 
-        - xml
-        - xhtml
-        - html
-        - text
-        - newtext
-        - oldtext
+      - xml
+      - xhtml
+      - html
+      - text
+      - newtext
+      - oldtext
 
-    Note that the ``text`` method will call ``NewTextTemplate``. If ``oldtext``
-    is desired, it must be called explicitly
+  Note that the ``text`` method will call ``NewTextTemplate``. If ``oldtext``
+  is desired, it must be called explicitly
 
-    :rtype: A Python data structure
-    '''
+  :rtype: A Python data structure
+  '''
   if not HAS_LIBS:
     raise SaltRenderError('Failed to import genshi template')
 

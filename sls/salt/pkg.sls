@@ -1,6 +1,6 @@
 {% import 'pkg/common' as pkg %}
 include:
-  - python.python2
+  - python.python3
   - gentoo.portage.packages
   - salt.minion-config
 
@@ -19,12 +19,9 @@ app-admin/salt:
       - {{ pkg.gen_atom('dev-python/sleekxmpp') }}
     - reload_modules: true
     - require:
-      - pkg: cython
-      - pkg: python2
       - file: gentoo.portage.packages
     - require_in:
       - file: /etc/salt/minion
-
 
 /etc/logrotate.d/salt:
   file.managed:

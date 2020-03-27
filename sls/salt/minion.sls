@@ -8,7 +8,6 @@ salt-minion:
     - enable: True
     - watch:
       - pkg: cython
-      - pkg: python2
       - pkg: app-admin/salt
       - file: /etc/salt/minion
 
