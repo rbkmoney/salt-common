@@ -20,10 +20,6 @@ import copy
 import logging
 import re
 import importlib
-try:
-    from importlib import reload
-except ImportError:
-    pass
 
 # Import salt libs
 import salt.utils
