@@ -2325,7 +2325,7 @@ def latest(
 
     targets = {}
     problems = []
-    for pkg, version in list(pkgs.items()):
+    for pkg, version in pkgs.items():
         if cur[pkg]:
             if _fulfills_version_spec([cur[pkg]], '!=', avail[pkg]):
                  targets[pkg] = avail[pkg]
