@@ -157,7 +157,7 @@ def _filter_return(data):
     if not isinstance(data, dict):
         return data
     ret = {}
-    for k,v in list(data.items()):
+    for k,v in data.items():
         if (('changes' in v and v['changes'])
             or ('pchanges' in v and v['pchanges'])):
             ret[k] = v
