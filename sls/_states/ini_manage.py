@@ -11,7 +11,7 @@ Manage ini files
 '''
 
 # Import Python libs
-from __future__ import absolute_import
+
 
 # Import Salt libs
 import salt.ext.six as six
@@ -76,11 +76,11 @@ def options_present(name, sections=None, separator='=', strict=False):
     try:
         changes = {}
         if sections:
-            for section_name, section_body in sections.items():
+            for section_name, section_body in list(sections.items()):
                 changes[section_name] = {}
                 if strict:
                     original = __salt__['ini.get_section'](name, section_name, separator)
-                    for key_to_remove in set(original.keys()).difference(section_body.keys()):
+                    for key_to_remove in set(original.keys()).difference(list(section_body.keys())):
                         orig_value = __salt__['ini.get_option'](name, section_name, key_to_remove, separator)
                         __salt__['ini.remove_option'](name, section_name, key_to_remove, separator)
                         changes[section_name].update({key_to_remove: ''})
@@ -100,7 +100,7 @@ def options_present(name, sections=None, separator='=', strict=False):
         ret['comment'] = 'Errors encountered. {0}'.format(changes['error'])
         ret['changes'] = {}
     else:
-        if all(value == {} for value in changes.values()):
+        if all(value == {} for value in list(changes.values())):
             ret['changes'] = {}
             ret['comment'] = 'No changes take effect'
         else:

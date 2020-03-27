@@ -13,12 +13,13 @@ Support for Portage
 For now all package names *MUST* include the package category,
 i.e. ``'vim'`` will not work, ``'app-editors/vim'`` will.
 '''
-from __future__ import absolute_import
+
 
 # Import python libs
 import copy
 import logging
 import re
+import importlib
 try:
     from importlib import reload
 except ImportError:
@@ -64,13 +65,13 @@ def __virtual__():
 
 def _vartree():
     import portage  # pylint: disable=3rd-party-module-not-gated
-    portage = reload(portage)
+    portage = importlib.reload(portage)
     return portage.db[portage.root]['vartree']
 
 
 def _porttree():
     import portage  # pylint: disable=3rd-party-module-not-gated
-    portage = reload(portage)
+    portage = importlib.reload(portage)
     return portage.db[portage.root]['porttree']
 
 

@@ -74,7 +74,7 @@ state module
 '''
 
 # Import python libs
-from __future__ import absolute_import
+
 import fnmatch
 import logging
 import os
@@ -310,7 +310,7 @@ def _find_download_targets(name=None,
             problems.append(exc.strerror)
             continue
 
-        if not _fulfills_version_spec(cver.keys(), oper, verstr,
+        if not _fulfills_version_spec(list(cver.keys()), oper, verstr,
                                       ignore_epoch=ignore_epoch):
             targets[pkgname] = pkgver
 
@@ -607,7 +607,7 @@ def _find_install_targets(name=None,
             # Perform platform-specific pre-flight checks
             not_installed = dict([
                 (name, version)
-                for name, version in desired.items()
+                for name, version in list(desired.items())
                 if not (name in cur_pkgs and version in (None, cur_pkgs[name]))
             ])
             if not_installed:
@@ -801,7 +801,7 @@ def _verify_install(desired, new_pkgs, ignore_epoch=False):
     '''
     ok = []
     failed = []
-    for pkgname, pkgver in desired.items():
+    for pkgname, pkgver in list(desired.items()):
         # FreeBSD pkg supports `openjdk` and `java/openjdk7` package names.
         # Homebrew for Mac OSX does something similar with tap names
         # prefixing package names, separated with a slash.
@@ -2325,7 +2325,7 @@ def latest(
 
     targets = {}
     problems = []
-    for pkg, version in pkgs.items():
+    for pkg, version in list(pkgs.items()):
         if cur[pkg]:
             if _fulfills_version_spec([cur[pkg]], '!=', avail[pkg]):
                  targets[pkg] = avail[pkg]
