@@ -9,10 +9,6 @@ import logging
 import os
 import shutil
 import importlib
-try:
-    from importlib import reload
-except ImportError:
-    pass
 
 # Import salt libs
 import salt.utils
