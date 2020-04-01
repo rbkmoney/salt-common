@@ -84,7 +84,7 @@ import re
 import salt.utils
 import salt.utils.pkg
 from salt.output import nested
-from salt.utils import namespaced_function as _namespaced_function
+from salt.utils.functools import namespaced_function as _namespaced_function
 from salt.utils.odict import OrderedDict as _OrderedDict
 from salt.exceptions import (
     CommandExecutionError, MinionError, SaltInvocationError
@@ -97,7 +97,7 @@ import salt.ext.six as six
 # pylint: disable=invalid-name
 _repack_pkgs = _namespaced_function(_repack_pkgs, globals())
 
-if salt.utils.is_windows():
+if salt.utils.platform.is_windows():
     # pylint: disable=import-error,no-name-in-module,unused-import
     from salt.ext.six.moves.urllib.parse import urlparse as _urlparse
     from salt.exceptions import SaltRenderError
