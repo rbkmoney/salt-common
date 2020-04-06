@@ -31,8 +31,8 @@ include:
 {% set extra_repos = salt['pillar.get']('salt:repos:extra', {} ) %}
 {% set extra_reponames = extra_repos|list %}
 
-{% set sync_reponames = salt['pillar.get']('salt:repos:sync-reponames', False) %}
-{% set sync_branches = salt['pillar.get']('salt:repos:sync-branches', False) %}
+{% set sync_reponames = salt['pillar.get']('salt:repos:sync-reponames', []) %}
+{% set sync_branches = salt['pillar.get']('salt:repos:sync-branches', []) %}
 
 # if a pillar was not passed in, then get the list of branches from main remote.
 {% if not sync_reponames or not sync_branches %}
