@@ -28,9 +28,6 @@ include:
 
 {% set main_reponame = salt['pillar.get']('salt:repos:main:name', 'local') %}
 {% set main_remote_uri = salt['pillar.get']('salt:repos:main:remote') %}
-{% set common_reponame = salt['pillar.get']('salt:repos:common:name', 'common') %}
-{% set common_remote_uri = salt['pillar.get']('salt:repos:common:remote',
-  "git+ssh://git@git.bakka.su/salt-common.git") %}
 {% set extra_repos = salt['pillar.get']('salt:repos:extra', {} ) %}
 {% set extra_reponames = extra_repos|list %}
 
@@ -121,26 +118,6 @@ salt-repo-{{ reponame }}-{{ branch }}:
 {% endfor %}
 {% endif %}
 {% endfor %}
-
-/var/salt/{{ common_reponame }}:
-  file.directory:
-    - user: root
-    - group: root
-    - file_mode: 644
-    - dir_mode: 755
-  git.latest:
-    - name: {{ common_remote_uri }}
-    - target: /var/salt/{{ common_reponame }}
-    - rev: master
-    - force_clone: True
-    - force_checkout: True
-    - force_fetch: True
-    - force_reset: True
-    - identity: /var/salt/ssh/salt
-    - require:
-      - file: /var/salt/ssh/salt
-    - require_in:
-      - file: /etc/salt/master.d/roots.conf
 
 salt-roots-restart:
   service.running:
