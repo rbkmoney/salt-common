@@ -31,11 +31,11 @@ include:
 {% set extra_repos = salt['pillar.get']('salt:repos:extra', {} ) %}
 {% set extra_reponames = extra_repos|list %}
 
-{% set sync_reponames = salt['pillar.get']('tmp-salt-git-reponames',[]) %}
-{% set sync_branches = salt['pillar.get']('tmp-salt-git-branches', []) %}
+{% set sync_reponames = salt['pillar.get']('salt:repos:sync-reponames', False) %}
+{% set sync_branches = salt['pillar.get']('salt:repos:sync-branches', False) %}
 
 # if a pillar was not passed in, then get the list of branches from main remote.
-{% if not sync_reponames or sync_branches == [] %}
+{% if not sync_reponames or not sync_branches %}
 {% set sync_reponames = [main_reponame] + extra_reponames %}
 {% for origin_branch in salt['git.ls_remote'](remote=main_remote_uri, opts='--heads', user='root') %}
 {% set branch_name = origin_branch.replace('refs/heads/', '') %}
