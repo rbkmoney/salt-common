@@ -239,7 +239,7 @@ def _fulfills_version_spec(versions, oper, desired_version,
                 return True
 
         if '*' in desired_version:
-            if ver.startswith(desired_version[desired_version.rfind['*']]):
+            if ver.startswith(desired_version[:desired_version.rfind('*')]):
                 return True
 
         if salt.utils.versions.compare(

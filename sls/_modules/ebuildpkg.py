@@ -1244,8 +1244,4 @@ def check_extra_requirements(pkgname, pkgver):
             if x[0] != '-' or x[1:] in cur_use]) > 0:
         return False
 
-    if keyword:
-        if not __salt__['portage_config.has_flag']('accept_keywords', atom, '~ARCH'):
-            return False
-
     return True
