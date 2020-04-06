@@ -58,7 +58,7 @@ log = logging.getLogger(__name__)
 __virtualname__ = 'pkg'
 
 r_gt_lt_eq_verstr = re.compile(r'^([<>])?(=)?([^<>=]*)$')
-r_split_ver = re.compile(r'^~?([^:\[]+):?[^\[]*\[?.*$')
+r_split_ver = re.compile(r'^~?([^:\[]+)[\:\[]?.*$')
 r_split_repo = re.compile(r'^.+::([^\[]+).*$')
 r_strip_ver = re.compile(r'^~?[<>]?=?([^<>=:\[]+).*$')
 r_find_upgradeable = re.compile(r'(?m)^\[.+\] '
@@ -1169,8 +1169,8 @@ def version_cmp(pkg1, pkg2, **kwargs):
     if kwargs:
         salt.utils.args.invalid_kwargs(kwargs)
 
-    ver1 = re.match(r_split_ver, pkg1)
-    ver2 = re.match(r_split_ver, pkg2)
+    ver1 = r_split_ver.match(pkg1)
+    ver2 = r_split_ver.match(pkg2)
 
     if ver1 and ver2:
         return portage.versions.vercmp(ver1.group(1), ver2.group(1))

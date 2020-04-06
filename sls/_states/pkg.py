@@ -174,9 +174,12 @@ def _parse_version_string(version_conditions_string):
     version_conditions_string = version_conditions_string.strip()
     if not version_conditions_string:
         return result
-    for version_condition in version_conditions_string.split(','):
-        operator_and_version = _get_comparison_spec(version_condition)
-        result.append(operator_and_version)
+    if __grains__.get('os') == 'Gentoo':
+        return [_get_comparison_spec(version_conditions_string)]
+    else:
+        for version_condition in version_conditions_string.split(','):
+            operator_and_version = _get_comparison_spec(version_condition)
+            result.append(operator_and_version)
     return result
 
 
@@ -233,6 +236,10 @@ def _fulfills_version_spec(versions, oper, desired_version,
     for ver in versions:
         if oper == '==':
             if fnmatch.fnmatch(ver, desired_version):
+                return True
+
+        if '*' in desired_version:
+            if ver.startswith(desired_version[desired_version.rfind['*']]):
                 return True
 
         if salt.utils.versions.compare(
@@ -869,6 +876,7 @@ def _verify_install(desired, new_pkgs, ignore_epoch=False, new_caps=None):
                 cver = new_pkgs.get(new_caps.get(pkgname)[0])
 
         if not cver:
+            log.warning('Desired package {0} is not installed'.format(pkgname))
             failed.append(pkgname)
             continue
         elif pkgver == 'latest':
@@ -880,9 +888,13 @@ def _verify_install(desired, new_pkgs, ignore_epoch=False, new_caps=None):
         elif pkgver.endswith("*") and cver[0].startswith(pkgver[:-1]):
             ok.append(pkgname)
             continue
-        if _fulfills_version_string(cver, pkgver, ignore_epoch=ignore_epoch):
+        oper, verstr = _get_comparison_spec(pkgver)
+        if _fulfills_version_spec(
+                cver, oper, verstr, ignore_epoch=ignore_epoch):
             ok.append(pkgname)
         else:
+            log.warning('Package {0}-{1} does not fullfill {2}{1}'.\
+                        format(pkgname, cver, oper, verstr))
             failed.append(pkgname)
     return ok, failed
 
