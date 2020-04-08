@@ -54,7 +54,7 @@ filenames = []
 
 for var in ('accept_keywords', 'mask', 'unmask', 'use', 'env', 'license', 'properties'):
     d = '/etc/portage/package.{}/'.format(var)
-    File.directory(d, create=True, mode='0755', user='root', group='portage')
+    File.directory(d, create=True, mode='0755', user='root', group='portage', clean=True, exclude_pat='*SALT')
 
     result = []
     for cp, package_vars in packages.items():
