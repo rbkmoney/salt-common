@@ -656,7 +656,15 @@ def install(name=None,
         raise CommandExecutionError(exc)
 
     # Handle version kwarg for a single package target
-    if pkgs is None and sources is None:
+    if pkgs is not None and (slot or fromrepo):
+        suffix = ''
+        if slot is not None:
+            suffix += ':{0}'.format(slot)
+        if fromrepo is not None:
+            suffix += '::{0}'.format(fromrepo)
+        for key in pkgs.keys():
+            pkgs[key] += suffix
+    elif sources is None:
         version_num = kwargs.get('version')
         if not version_num:
             version_num = ''
