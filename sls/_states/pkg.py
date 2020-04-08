@@ -2457,11 +2457,16 @@ def latest(
                 log.error(msg)
                 problems.append(msg)
             elif watch_flags \
-                    and __grains__.get('os') == 'Gentoo' \
-                    and __salt__['portage_config.is_changed_uses'](pkg):
-                # Package is up-to-date, but Gentoo USE flags are changing so
-                # we need to add it to the targets
-                targets[pkg] = cur[pkg]
+                 and __grains__.get('os') == 'Gentoo':
+                fname = pkg
+                slot = kwargs.get('slot', None)
+                if slot is not None:
+                    fname += ':{0}'.format(slot)
+                if __salt__['portage_config.is_changed_uses'](fname):
+                    log.debug(
+                        'Package is up-to-date, but USE flags are changed so we need to reinstall it'
+                    )
+                    targets[pkg] = cur[pkg]
         else:
             # Package either a) is not installed, or b) is installed and has an
             # upgrade available
