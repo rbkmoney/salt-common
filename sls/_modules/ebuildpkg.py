@@ -662,9 +662,17 @@ def install(name=None,
             suffix += ':{0}'.format(slot)
         if fromrepo is not None:
             suffix += '::{0}'.format(fromrepo)
-        for key in pkgs.keys():
-            pkgs[key] += suffix
-    elif sources is None:
+        if type(pkgs) == list:
+            if type(pkgs[0]) == str:
+                pkg_params = dict.fromkeys(pkgs, suffix)
+            if type(pkgs[0]) == dict:
+                pkg_params = {}
+                for i in range(len(pkgs)):
+                    p = data[i].popitem()
+                    pkg_params[p[0]] = p[1] + suffix
+        else:
+            pass
+    elif pkgs is None and sources is None:
         version_num = kwargs.get('version')
         if not version_num:
             version_num = ''
