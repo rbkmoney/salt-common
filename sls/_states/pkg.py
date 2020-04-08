@@ -172,14 +172,13 @@ def _parse_version_string(version_conditions_string):
     '''
     result = []
     version_conditions_string = version_conditions_string.strip()
+    if '[' in version_conditions_string:
+        version_conditions_string = version_conditions_string[:version_conditions_string.rfind('[')]
     if not version_conditions_string:
         return result
-    if __grains__.get('os') == 'Gentoo':
-        return [_get_comparison_spec(version_conditions_string)]
-    else:
-        for version_condition in version_conditions_string.split(','):
-            operator_and_version = _get_comparison_spec(version_condition)
-            result.append(operator_and_version)
+    for version_condition in version_conditions_string.split(','):
+        operator_and_version = _get_comparison_spec(version_condition)
+        result.append(operator_and_version)
     return result
 
 
