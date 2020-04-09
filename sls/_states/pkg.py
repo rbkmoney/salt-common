@@ -2462,10 +2462,11 @@ def latest(
                 slot = kwargs.get('slot', None)
                 if slot is not None:
                     fname += ':{0}'.format(slot)
+                if fromrepo is not None:
+                    fname += '::{0}'.format(fromrepo)
                 if __salt__['portage_config.is_changed_uses'](fname):
                     log.debug(
-                        'Package is up-to-date, but USE flags are changed so we need to reinstall it'
-                    )
+                        'Package {0} is up-to-date, but uses were changed, so we need to reinstall it', fname)
                     targets[pkg] = cur[pkg]
         else:
             # Package either a) is not installed, or b) is installed and has an
