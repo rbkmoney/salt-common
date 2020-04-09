@@ -743,7 +743,10 @@ def install(name=None,
                         changes[param] = {'version': version(param),
                                           'old': {'use': all_uses[0]},
                                           'new': {'use': all_uses[1]}}
-                    else: continue
+                    else:
+                        if '[' in target:
+                            log.warning(
+                                'Package {0} does not have an update or flag changes, but requested to be installed, so there is probably a nonexistent flag in requested use, use equery to confirm that', target)
 
                 targets.append(target)
     else:
