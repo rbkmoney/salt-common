@@ -275,13 +275,22 @@ def latest_version(*names, **kwargs):
     if refresh:
         refresh_db()
 
+    slot = kwargs.pop('slot', None)
+    fromrepo = kwargs.pop('fromrepo', None)
     ret = {}
     # Initialize the dict with empty strings
     for name in names:
+        fname = name
+        if slot is not None:
+            fname += ':{0}'.format(slot)
+        if fromrepo is not None:
+            fname += '::{0}'.format(fromrepo)
         ret[name] = ''
-        installed = _cpv_to_version(_vartree().dep_bestmatch(name))
-        avail = _cpv_to_version(_porttree().dep_bestmatch(name))
-        if avail and (not installed or salt.utils.versions.compare(ver1=installed, oper='<', ver2=avail, cmp_func=version_cmp)):
+        installed = _cpv_to_version(_vartree().dep_bestmatch(fname))
+        avail = _cpv_to_version(_porttree().dep_bestmatch(fname))
+
+        if avail and (not installed or salt.utils.versions.compare(
+                ver1=installed, oper='<', ver2=avail, cmp_func=version_cmp)):
             ret[name] = avail
 
     # Return a string if only one package name passed
@@ -662,10 +671,10 @@ def install(name=None,
             suffix += ':{0}'.format(slot)
         if fromrepo is not None:
             suffix += '::{0}'.format(fromrepo)
-        if type(pkgs) == list:
-            if type(pkgs[0]) == str:
+        if isinstance(pkgs, list):
+            if isinstance(pkgs[0], str):
                 pkg_params = dict.fromkeys(pkgs, suffix)
-            if type(pkgs[0]) == dict:
+            if isinstance(pkgs[0], dict):
                 pkg_params = {}
                 for i in range(len(pkgs)):
                     p = data[i].popitem()
@@ -711,8 +720,6 @@ def install(name=None,
             if version_num is None:
                 targets.append(param)
             else:
-                keyword = None
-
                 match = re.match(r_gt_lt_eq_verstr, version_num)
                 if match:
                     gt_lt, eq, verstr = match.groups()
@@ -727,20 +734,17 @@ def install(name=None,
                 else:
                     target = '{0}'.format(param)
 
-                if '[' in target:
-                    target = target[:target.rfind('[')]
+                # Prevent latest_version from calling refresh_db. Either we
+                # just called it or we were asked not to.
+                if not latest_version(param, slot=slot, fromrepo=fromrepo, refresh=False):
+                    all_uses = __salt__['portage_config.get_cleared_flags'](param)
 
-                if not changes:
-                    inst_v = version(param)
+                    if _flags_changed(*all_uses):
+                        changes[param] = {'version': version(param),
+                                          'old': {'use': all_uses[0]},
+                                          'new': {'use': all_uses[1]}}
+                    else: continue
 
-                    # Prevent latest_version from calling refresh_db. Either we
-                    # just called it or we were asked not to.
-                    if latest_version(param, refresh=False) == inst_v:
-                        all_uses = __salt__['portage_config.get_cleared_flags'](param)
-                        if _flags_changed(*all_uses):
-                            changes[param] = {'version': inst_v,
-                                              'old': {'use': all_uses[0]},
-                                              'new': {'use': all_uses[1]}}
                 targets.append(target)
     else:
         targets = pkg_params
