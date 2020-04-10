@@ -746,7 +746,7 @@ def install(name=None,
                     else:
                         if '[' in target:
                             log.warning(
-                                'Package {0} does not have an update or flag changes, but requested to be installed, so there is probably a nonexistent flag in requested use, use equery to confirm that', target)
+                                'Package %s does not have an update or flag changes, but requested to be installed, so there is probably a nonexistent flag in requested use, use equery to confirm that', target)
 
                 targets.append(target)
     else:
