@@ -181,9 +181,10 @@ def _fulfills_version_spec(versions, oper, desired_version,
     '''
     cmp_func = __salt__.get('pkg.version_cmp')
     # stripping "with_origin" dict wrapper
-    if salt.utils.is_freebsd():
+    if salt.utils.platform.is_freebsd():
         if isinstance(versions, dict) and 'version' in versions:
             versions = versions['version']
+    desired_version = desired_version[:desired_version.rfind('[')]
     for ver in versions:
         if oper == '==':
             if fnmatch.fnmatch(ver, desired_version):
@@ -2326,17 +2327,29 @@ def latest(
 
     targets = {}
     problems = []
-    for pkg, version in pkgs.items():
-        if cur[pkg]:
-            if _fulfills_version_spec([cur[pkg]], '!=', avail[pkg]):
-                 targets[pkg] = avail[pkg]
-            else:
-                if version:
-                    target, flag_changes = __salt__['pkg.process_target'](pkg, version)
-                if not cur[pkg] or (__grains__.get('os') == 'Gentoo'
-                                    and __salt__['portage_config.is_changed_uses'](pkg)):
-                    targets[pkg] = avail[pkg]
-        elif avail[pkg]:
+    for pkg in desired_pkgs:
+        if not avail.get(pkg):
+            # Package either a) is up-to-date, or b) does not exist
+            if not cur.get(pkg):
+                # Package does not exist
+                msg = 'No information found for \'{0}\'.'.format(pkg)
+                log.error(msg)
+                problems.append(msg)
+            elif watch_flags \
+                 and __grains__.get('os') == 'Gentoo':
+                fname = pkg
+                slot = kwargs.get('slot', None)
+                if slot is not None:
+                    fname += ':{0}'.format(slot)
+                if fromrepo is not None:
+                    fname += '::{0}'.format(fromrepo)
+                if __salt__['portage_config.is_changed_uses'](fname):
+                    log.debug(
+                        'Package %s is up-to-date, but uses were changed, so we need to reinstall it', fname)
+                    targets[pkg] = cur[pkg]
+        else:
+            # Package either a) is not installed, or b) is installed and has an
+            # upgrade available
             targets[pkg] = avail[pkg]
         else:
             msg = 'No information found for {0!r}.'.format(pkg)

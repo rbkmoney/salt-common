@@ -1,5 +1,4 @@
 include:
-  - gentoo.makeconf
   - python.python36
 
 python3:
