@@ -9,8 +9,6 @@ uwsgi:
     - enable: True
     - watch:
       - pkg: www-servers/uwsgi
-      - pkg: python2
-      - pkg: python3
       - file: /etc/conf.d/uwsgi
       - file: /etc/uwsgi.d/
 

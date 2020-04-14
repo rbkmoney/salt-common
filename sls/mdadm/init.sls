@@ -1,20 +1,18 @@
-mdadm:
-  pkg.installed:
-    - pkgs:
-      - sys-fs/mdadm:
+include:
+  - .pkg
 
 /etc/mdadm.conf:
   file.managed:
-    - source: salt://mdadm/mdadm.conf.tpl
+    - source: salt://monitoring/files/mdadm.conf.tpl
     - template: jinja
     - mode: 644
     - user: root
     - group: root
           
-mdadm_monitor:
+mdadm:
   service.running:
     - name: mdadm
     - enable: True
     - watch:
-      - pkg: mdadm
+      - pkg: sys-fs/mdadm
       - file: /etc/mdadm.conf

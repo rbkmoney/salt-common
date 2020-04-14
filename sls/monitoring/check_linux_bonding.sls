@@ -8,8 +8,3 @@ net-analyzer/nagios-check_linux_bonding:
       - {{ pkg.gen_atom('net-analyzer/nagios-check_linux_bonding') }}
     - require:
       - file: gentoo.portage.packages
-
-cron-check_linux_bonding:
-  cron.absent:
-    - user: root
-    - identifier: check_linux_bonding

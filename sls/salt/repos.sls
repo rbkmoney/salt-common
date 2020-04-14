@@ -28,17 +28,14 @@ include:
 
 {% set main_reponame = salt['pillar.get']('salt:repos:main:name', 'local') %}
 {% set main_remote_uri = salt['pillar.get']('salt:repos:main:remote') %}
-{% set common_reponame = salt['pillar.get']('salt:repos:common:name', 'common') %}
-{% set common_remote_uri = salt['pillar.get']('salt:repos:common:remote',
-  "git+ssh://git@git.bakka.su/salt-common.git") %}
 {% set extra_repos = salt['pillar.get']('salt:repos:extra', {} ) %}
-{% set extra_reponames = extra_repos.keys() %}
+{% set extra_reponames = extra_repos|list %}
 
-{% set sync_reponames = salt['pillar.get']('tmp-salt-git-reponames',[]) %}
-{% set sync_branches = salt['pillar.get']('tmp-salt-git-branches', []) %}
+{% set sync_reponames = salt['pillar.get']('salt:repos:sync-reponames', []) %}
+{% set sync_branches = salt['pillar.get']('salt:repos:sync-branches', []) %}
 
 # if a pillar was not passed in, then get the list of branches from main remote.
-{% if not sync_reponames or sync_branches == [] %}
+{% if not sync_reponames or not sync_branches %}
 {% set sync_reponames = [main_reponame] + extra_reponames %}
 {% for origin_branch in salt['git.ls_remote'](remote=main_remote_uri, opts='--heads', user='root') %}
 {% set branch_name = origin_branch.replace('refs/heads/', '') %}
@@ -121,26 +118,6 @@ salt-repo-{{ reponame }}-{{ branch }}:
 {% endfor %}
 {% endif %}
 {% endfor %}
-
-/var/salt/{{ common_reponame }}:
-  file.directory:
-    - user: root
-    - group: root
-    - file_mode: 644
-    - dir_mode: 755
-  git.latest:
-    - name: {{ common_remote_uri }}
-    - target: /var/salt/{{ common_reponame }}
-    - rev: master
-    - force_clone: True
-    - force_checkout: True
-    - force_fetch: True
-    - force_reset: True
-    - identity: /var/salt/ssh/salt
-    - require:
-      - file: /var/salt/ssh/salt
-    - require_in:
-      - file: /etc/salt/master.d/roots.conf
 
 salt-roots-restart:
   service.running:
