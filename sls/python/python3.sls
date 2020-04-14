@@ -1,4 +1,5 @@
 include:
+  - gentoo.makeconf
   - python.python36
 
 eselect-python3:
