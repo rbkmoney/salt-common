@@ -4,6 +4,14 @@ google-authenticator-libpam:
     - pkgs:
       - {{ pkg.gen_atom('sys-auth/google-authenticator') }}
 
+/etc/ssh/sshd_config.d/10-otp.conf:
+  file.managed:
+    - source: salt://{{ slspath }}/files/10-sshd_config_totp.conf
+    - user: root
+    - group: root
+    - mode: '0600'
+    - makedirs: True
+
 /var/lib/pam_ssh/users.otp:
   file.managed:
     - source: salt://{{ slspath }}/files/users.otp.tpl
