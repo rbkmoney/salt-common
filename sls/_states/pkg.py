@@ -232,13 +232,16 @@ def _fulfills_version_spec(versions, oper, desired_version,
     if salt.utils.platform.is_freebsd():
         if isinstance(versions, dict) and 'version' in versions:
             versions = versions['version']
+    if '[' in desired_version:
+        desired_version = desired_version[:desired_version.rfind('[')]
+
     for ver in versions:
         if oper == '==':
             if fnmatch.fnmatch(ver, desired_version):
                 return True
 
-        if '*' in desired_version:
-            if ver.startswith(desired_version[:desired_version.rfind('*')]):
+        if ('*' in desired_version
+            and ver.startswith(desired_version[:desired_version.rfind('*')])):
                 return True
 
         if salt.utils.versions.compare(
@@ -884,7 +887,7 @@ def _verify_install(desired, new_pkgs, ignore_epoch=False, new_caps=None):
         elif not __salt__['pkg_resource.version_clean'](pkgver):
             ok.append(pkgname)
             continue
-        elif pkgver.endswith("*") and cver[0].startswith(pkgver[:-1]):
+        elif pkgver.endswith('*') and cver[0].startswith(pkgver[:-1]):
             ok.append(pkgname)
             continue
         oper, verstr = _get_comparison_spec(pkgver)
@@ -892,7 +895,7 @@ def _verify_install(desired, new_pkgs, ignore_epoch=False, new_caps=None):
                 cver, oper, verstr, ignore_epoch=ignore_epoch):
             ok.append(pkgname)
         else:
-            log.warning('Package {0}-{1} does not fullfill {2}{1}'.\
+            log.warning('Package {0}-{1} does not fullfill {2}{3}'.\
                         format(pkgname, cver, oper, verstr))
             failed.append(pkgname)
     return ok, failed
@@ -2466,7 +2469,7 @@ def latest(
                     fname += '::{0}'.format(fromrepo)
                 if __salt__['portage_config.is_changed_uses'](fname):
                     log.debug(
-                        'Package {0} is up-to-date, but uses were changed, so we need to reinstall it', fname)
+                      'Package %s is up-to-date, but uses were changed, so we need to reinstall it', fname)
                     targets[pkg] = cur[pkg]
         else:
             # Package either a) is not installed, or b) is installed and has an
