@@ -232,6 +232,7 @@ def _fulfills_version_spec(versions, oper, desired_version,
     if salt.utils.platform.is_freebsd():
         if isinstance(versions, dict) and 'version' in versions:
             versions = versions['version']
+    desired_version = desired_version[:desired_version.rfind('[')]
     for ver in versions:
         if oper == '==':
             if fnmatch.fnmatch(ver, desired_version):
@@ -2466,8 +2467,12 @@ def latest(
                     fname += '::{0}'.format(fromrepo)
                 if __salt__['portage_config.is_changed_uses'](fname):
                     log.debug(
-                        'Package {0} is up-to-date, but uses were changed, so we need to reinstall it', fname)
+                        'Package %s is up-to-date, but uses were changed, so we need to reinstall it', fname)
                     targets[pkg] = cur[pkg]
+        else:
+            # Package either a) is not installed, or b) is installed and has an
+            # upgrade available
+            targets[pkg] = avail[pkg]
         else:
             # Package either a) is not installed, or b) is installed and has an
             # upgrade available

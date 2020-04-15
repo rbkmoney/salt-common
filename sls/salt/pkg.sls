@@ -5,11 +5,6 @@ include:
   - salt.minion-config
 
 # TODO: move cython to another state
-cython:
-  pkg.latest:
-    - refresh: False
-    - name: dev-python/cython
-
 app-admin/salt:
   pkg.installed:
     - refresh: False
@@ -17,6 +12,7 @@ app-admin/salt:
       - {{ pkg.gen_atom('app-admin/salt') }}
       - {{ pkg.gen_atom('dev-python/dnspython') }}
       - {{ pkg.gen_atom('dev-python/sleekxmpp') }}
+      - {{ pkg.gen_atom('dev-python/cython') }}
     - reload_modules: true
     - require:
       - file: gentoo.portage.packages
