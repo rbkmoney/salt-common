@@ -3,7 +3,7 @@ include:
 
 python35:
   pkg.latest:
-    - name: dev-lang/python:3.5
+    - name: dev-lang/python
     - slot: '3.5'
     - watch:
       - augeas: manage-make-conf

@@ -10,10 +10,11 @@ def process_target(package, version_num):
     if version_num is None:
         return package
     else:
-        # PCRE modified a bit compared to one from ebuild.py since here we don't support list of USE package_vars in verstr 
-        match = re.match('^(~|-|\*)?([<>]?=?)?([^<>=\[\]]*)$', version_num)
+        # PCRE modified a bit compared to one from ebuild.py, since here we don't support
+        # list of use flags or keywords in verstr 
+        match = re.match('^([<>]?=?)?([^<>=\[\]]*)$', version_num)
         if match:
-            keyword, prefix, verstr = match.groups()
+            prefix, verstr = match.groups()
             # If no prefix characters were supplied and verstr contains a version, use '='
             if len(verstr) > 0 and verstr[0] != ':':
                 prefix = prefix or '='
@@ -25,6 +26,26 @@ def process_target(package, version_num):
                 'Unable to parse version {0} of {1}'.\
                 format(repr(version_num), package))
 
+def generate_result(packages, flag, _recurse=False):
+    result = []
+    for cp, package_vars in packages.items():
+        if not _recurse:
+            if var not in package_vars:
+                continue
+            value = package_vars[var]
+            atom = process_target(cp, packages.get(cp, {}).get('version'))
+        if value is True:
+            result.append((atom, ''))
+        elif value is False:
+            pass
+        elif type(value) == list:
+            result.append((atom, ' '.join(value)))
+        elif type(value) == dict:
+            result.extend(generate_result(value, flag))
+        else:
+            result.append((atom, value))
+    return result
+
 include('gentoo.portage')
 
 packages = pillar('gentoo:portage:packages', {})
@@ -33,7 +54,7 @@ filenames = []
 
 for var in ('accept_keywords', 'mask', 'unmask', 'use', 'env', 'license', 'properties'):
     d = '/etc/portage/package.{}/'.format(var)
-    File.directory(d, create=True, mode='0755', user='root', group='portage')
+    File.directory(d, create=True, mode='0755', user='root', group='portage', clean=True, exclude_pat='*SALT')
 
     result = []
     for cp, package_vars in packages.items():
@@ -44,14 +65,19 @@ for var in ('accept_keywords', 'mask', 'unmask', 'use', 'env', 'license', 'prope
             result.append((cp, ''))
         elif value is False:
             pass
-        elif hasattr(value, '__iter__'):
+        elif type(value) == list:
             result.append((cp, ' '.join(value)))
+        # elif type(value) == dict:
+        #     for k, v in value.items():
+        #         result.append((k, v))
         else:
             result.append((cp, value))
-    result_str = ''.join([ "{} {}\n".format(process_target(cp, packages.get(cp, {}).get('version')), value) for cp, value in sorted(result) ])
+    result_str = '\n'.join(["{} {}".format(
+        process_target(cp, packages.get(cp, {}).get('version')),
+        value) for cp, value in sorted(result)])
     filename = d + 'SALT'
     filenames.append({'file': filename})
-    File.managed(filename, contents=result_str, mode='0640',
+    File.managed(filename, contents=result_str+'\n', mode='0640',
                  user='root', group='portage', require=[File(d)])
 
 for var in ('accept_keywords', 'mask', 'unmask', 'use', 'use.mask', 'use.force', 'provided'):
@@ -68,7 +94,7 @@ for var in ('accept_keywords', 'mask', 'unmask', 'use', 'use.mask', 'use.force',
             result.append((cp, ''))
         elif value is False:
             pass
-        elif hasattr(value, '__iter__'):
+        elif type(value) == list:
             result.append((cp, ' '.join(value)))
         else:
             result.append((cp, value))

@@ -5,7 +5,7 @@ def capkv(c, key, value):
 
 def capsor(c, key, value):
   capkv(c, key,
-        value if isinstance(value, basestring)
+        value if isinstance(value, str)
         else value)
 
 for guest in __salt__['pillar.get']('xen:guests', []):
