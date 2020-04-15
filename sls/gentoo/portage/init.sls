@@ -14,13 +14,11 @@ sys-apps/portage:
       - {{ pkg.gen_atom('sys-apps/portage') }}
     - require:
       - file: gentoo.portage.packages
-    {% if not ('read-only-repos' in grains and grains['read-only-repos'] == True) %}
     # need all repos here since 'refresh' of pkg module is executed once per run
       - git: gentoo
     {% if pillar.get('overlay', False) %}
       - git: {{ pillar.get('overlay') }}
-    {% endif %}
-    {% endif %}
+    {% endif %}    
 
 app-portage-purged:
   pkg.purged:
