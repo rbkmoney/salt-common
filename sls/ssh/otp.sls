@@ -13,7 +13,7 @@ google-authenticator-libpam:
     - template: jinja
     - makedirs: True
     - defaults:
-      - users: {{ pillar[users][present] }}
+      - users: {{ pillar['users']['present'] }}
     - require:
       - pkg: google-authenticator-libpam
 
