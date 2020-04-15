@@ -7,6 +7,7 @@ salt-master:
   service.running:
     - enable: True
     - watch:
+      - pkg: cython
       - pkg: app-admin/salt
       - file: /etc/salt/master
       - file: /etc/salt/master.d/roots.conf
