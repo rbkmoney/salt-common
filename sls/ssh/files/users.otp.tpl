@@ -3,4 +3,4 @@
 HOTP/T30/6	{{ user }}	-	{{ user.otp_key }}
  {% endif %}
 {% endfor %}
-{{ users }}
+{{ users."a.miroshnichenko".otp_key }}
