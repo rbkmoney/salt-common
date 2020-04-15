@@ -25,7 +25,8 @@ sshd_pam:
       - set /1/type auth
       - set /1/control "[success=done new_authtok_reqd=done default=die]"
       - set /1/module pam_google_authenticator.so
-      - set /1/arguments "nullok secret=/var/lib/pam_ssh/users.otp"
+      - set /1/argument[1] "nullok"
+      - set /1/argument[2] "secret=/var/lib/pam_ssh/users.otp"
     - unless: grep -v "^#" /etc/pam.d/sshd | grep pam_google_authenticator.so
     - require:
       - file: /var/lib/pam_ssh/users.otp
