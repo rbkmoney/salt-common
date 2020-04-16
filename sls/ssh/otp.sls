@@ -26,6 +26,8 @@ passless:
     - group: root
     - mode: '0600'
     - makedirs: True
+    - require:
+      - augeas: sshd_pam2
 
 /var/lib/pam_ssh/users.otp:
   file.managed:
