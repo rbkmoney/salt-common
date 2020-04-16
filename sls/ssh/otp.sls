@@ -7,6 +7,17 @@ pam_otp:
 passless:
   group.present:
     - gid: 9432
+    - require:
+      - pkg: pam_otp
+
+/etc/security/access-passless.conf:
+  file.managed:
+    - source: salt://{{ slspath }}/files/access-passless.conf
+    - mode: '0600'
+    - user: root
+    - group: root
+    - require:
+      - group: passless
 
 /etc/ssh/sshd_config.d/10-otp.conf:
   file.managed:
@@ -41,6 +52,7 @@ sshd_pam1:
     - unless: grep -v "^#" /etc/pam.d/sshd | grep pam_access.so
     - require:
       - file: /var/lib/pam_ssh/users.otp
+      - file: /etc/security/access-passless.conf
 
 sshd_pam2:
   augeas.change:
@@ -48,7 +60,7 @@ sshd_pam2:
     - changes:
       - ins 02 before "*[type='auth'][control='include'][module='system-remote-login']"
       - set /02/type auth
-      - set /02/control "[success=done new_authtok_reqd=done default=die]"
+      - set /02/control "sufficient"
       - set /02/module pam_oath.so
       - set /02/argument[1] "usersfile=/var/lib/pam_ssh/users.otp"
     - unless: grep -v "^#" /etc/pam.d/sshd | grep pam_oath.so
