@@ -1,8 +1,12 @@
 {% import 'pkg/common' as pkg %}
-google-authenticator-libpam:
+pam_otp:
   pkg.latest:
     - pkgs:
-      - {{ pkg.gen_atom('sys-auth/google-authenticator') }}
+      - {{ pkg.gen_atom('sys-auth/oath-toolkit') }}
+
+passless:
+  group.present:
+    - gid: 9432
 
 /etc/ssh/sshd_config.d/10-otp.conf:
   file.managed:
@@ -23,18 +27,30 @@ google-authenticator-libpam:
     - defaults:
         users: {{ pillar['users']['present'] }}
     - require:
-      - pkg: google-authenticator-libpam
+      - pkg: pam_otp
 
-sshd_pam:
+sshd_pam1:
   augeas.change:
     - context: /files/etc/pam.d/sshd
     - changes:
       - ins 01 before "*[type='auth'][control='include'][module='system-remote-login']"
       - set /01/type auth
-      - set /01/control "[success=done new_authtok_reqd=done default=die]"
-      - set /01/module pam_google_authenticator.so
-      - set /01/argument[1] nullok
-      - set /01/argument[2] "secret=/var/lib/pam_ssh/users.otp"
-    - unless: grep -v "^#" /etc/pam.d/sshd | grep pam_google_authenticator.so
+      - set /01/control "[success=1 default=ignore]"
+      - set /01/module pam_access.so
+      - set /01/argument[1] "accessfile=/etc/security/access-passless.conf"
+    - unless: grep -v "^#" /etc/pam.d/sshd | grep pam_access.so
     - require:
       - file: /var/lib/pam_ssh/users.otp
+
+sshd_pam2:
+  augeas.change:
+    - context: /files/etc/pam.d/sshd
+    - changes:
+      - ins 02 before "*[type='auth'][control='include'][module='system-remote-login']"
+      - set /02/type auth
+      - set /02/control "[success=done new_authtok_reqd=done default=die]"
+      - set /02/module pam_oath.so
+      - set /02/argument[1] "usersfile=/var/lib/pam_ssh/users.otp"
+    - unless: grep -v "^#" /etc/pam.d/sshd | grep pam_oath.so
+    - require:
+      - augeas: sshd_pam1
