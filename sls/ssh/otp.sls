@@ -46,7 +46,7 @@ sshd_pam1:
     - changes:
       - ins 01 before "*[type='auth'][control='include'][module='system-remote-login']"
       - set /01/type auth
-      - set /01/control "[success=1 default=ignore]"
+      - set /01/control "[success=done default=ignore]"
       - set /01/module pam_access.so
       - set /01/argument[1] "accessfile=/etc/security/access-passless.conf"
     - unless: grep -v "^#" /etc/pam.d/sshd | grep pam_access.so
