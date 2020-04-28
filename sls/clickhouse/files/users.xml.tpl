@@ -7,7 +7,7 @@
   	{% set profiles = config.get('profiles', {}) %}
     {% for profile in profiles %}
     <{{ profile }}>
-      {% for param, value in profiles[profile].iteritems() %}
+      {% for param, value in profiles[profile].items() %}
       <{{ param }}>{{ value }}</{{ param }}>
       {% endfor %}
     </{{ profile }}>
@@ -19,10 +19,10 @@
     {% set users = config.get('users', {}) %}
     {% for user in users %}
     <{{ user }}>
-    {% for param, value in users[user].iteritems() %}
+    {% for param, value in users[user].items() %}
     {% if value is mapping %}
       <{{ param }}>
-      {% for p, v in value.iteritems() %}
+      {% for p, v in value.items() %}
       {% if v is iterable %}
         {% for i in v %}
         <{{ p }}>{{ i }}</{{ p }}>
@@ -45,10 +45,10 @@
     {% set quotas = config.get('quotas', {}) %}
     {% for quota in quotas %}
     <{{ quota }}>
-    {% for param, value in quotas[quota].iteritems() %}
+    {% for param, value in quotas[quota].items() %}
     {% if value is mapping %}
       <{{ param }}>
-      {% for p, v in value.iteritems() %}
+      {% for p, v in value.items() %}
         <{{ p }}>{{ v }}</{{ p }}>
       {% endfor %}
       </{{ param }}>
