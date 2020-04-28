@@ -45,6 +45,5 @@ clickhouse-server:
     - enable: True
     - watch:
       - file: /etc/clickhouse-server/config.xml
-      - file: /etc/clickhouse-server/users.xml
       - file: /var/log/clickhouse-server/
-        
+
