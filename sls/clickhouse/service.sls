@@ -46,3 +46,4 @@ clickhouse-server:
     - watch:
       - file: /etc/clickhouse-server/config.xml
       - file: /var/log/clickhouse-server/
+
