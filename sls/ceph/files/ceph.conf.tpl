@@ -150,6 +150,8 @@ osd op threads = {{ ceph_osd.get('op-threads', 4) }}
 osd op complaint time = {{ ceph_osd.get('op-complaint-time', 30) }}
 
 # osdmap cache size
+# Set it higher if you encounter slow ops and cpu hungry OSDs hanging up
+# https://tracker.ceph.com/issues/44184#note-17
 osd map cache size = {{ ceph_osd.get('map-cache-size', 5000) }}
 
 # Enables direct i/o to the journal.
