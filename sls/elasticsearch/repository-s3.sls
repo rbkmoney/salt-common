@@ -11,13 +11,22 @@ app-misc/repository-s3-elasticsearch-plugin:
       - file: gentoo.portage.packages
       - git: rbkmoney
 
+/etc/elasticsearch/s3_access
+  file.managed:
+    - contents_pillar: elastic:config:repository-s3:access_key
+
+/etc/elasticsearch/s3_secret
+  file.managed:
+    - contents_pillar: elastic:config:repository-s3:secret_key
+
 update-elasticsearch-keystore:
   cmd.run:
     - env:
       - ES_PATH_CONF: /etc/elasticsearch
-    - name: echo {{ s3_config['access_key'] }}| bin/elasticsearch-keystore add --stdin --force s3.client.default.access_key && echo {{ s3_config['secret_key'] }} | bin/elasticsearch-keystore add --stdin --force s3.client.default.secret_key"
+    - name: cat /etc/elasticsearch/s3_access | /usr/share/elasticsearch/bin/elasticsearch-keystore add --stdin --force s3.client.default.access_key && cat /etc/elasticsearch/s3_secret | /usr/share/elasticsearch/bin/elasticsearch-keystore add --stdin --force s3.client.default.secret_key"
     - require:
       - pkg: app-misc/elasticsearch
       - file: /etc/elasticsearch/ 
     - onchanges:
-      - file: create-elasticsearch-keystore
+      - file: /etc/elasticsearch/s3_access
+      - file: /etc/elasticsearch/s3_secret
