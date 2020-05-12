@@ -6,9 +6,6 @@ include:
   {% if tls_enabled %}
   - elasticsearch.opendistro-security
   {% endif %}
-  {% if tls_enabled %}
-  - elasticsearch.opendistro-security
-  {% endif %}
   {% if s3_config|length >0 %}
   - elasticsearch.repository-s3
   {% endif %}
