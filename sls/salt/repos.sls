@@ -17,7 +17,8 @@ include:
     - require:
       - file: /var/salt/
 
-/var/salt/ssh/salt:
+{% set identity_file = '/var/salt/ssh/salt' %}
+{{ identity_file }}:
   file.managed:
     - replace: False
     - user: root
@@ -37,7 +38,8 @@ include:
 # if a pillar was not passed in, then get the list of branches from main remote.
 {% if not sync_reponames or not sync_branches %}
 {% set sync_reponames = [main_reponame] + extra_reponames %}
-{% for origin_branch in salt['git.ls_remote'](remote=main_remote_uri, opts='--heads', user='root') %}
+{% for origin_branch in salt.git.ls_remote(remote=main_remote_uri, opts='--heads',
+   identity=identity_file) %}
 {% set branch_name = origin_branch.replace('refs/heads/', '') %}
 {% if not '/' in branch_name %}{% do sync_branches.append(branch_name) %}{% endif %}
 {% endfor %}
@@ -66,7 +68,8 @@ include:
 {% set remote_uri = extra_repos[reponame].get('remote', None) %}
 {% if remote_uri %}
 {% set remote_branches = [] %}
-{% for origin_branch in salt['git.ls_remote'](remote=remote_uri, opts='--heads', user='root') %}
+{% for origin_branch in salt.git.ls_remote(remote=remote_uri, opts='--heads',
+   identity=identity_file) %}
 {% set branch = origin_branch.replace('refs/heads/', '') %}
 {% do remote_branches.append(branch) %}
 {% endfor %}
@@ -89,7 +92,7 @@ salt-repo-{{ reponame }}-_mirror:
     - force_clone: True
     - force_fetch: True
     - force_reset: True
-    - identity: /var/salt/ssh/salt
+    - identity: "{{ identity_file }}"
     - require:
       - file: /var/salt/ssh/salt
       - file: /var/salt/{{ reponame }}
