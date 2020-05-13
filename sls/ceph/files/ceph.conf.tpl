@@ -133,10 +133,6 @@ osd max backfills = {{ ceph_osd.get('max-backfills', 1) }}
 # The maximum number of simultaneous scrub operations for a Ceph OSD Daemon.
 osd max scrubs = {{ ceph_osd.get('max-scrubs', 1) }}
 
-osd mkfs type = xfs
-osd mkfs options xfs = {{ ceph_osd.get('mkfs-options', '-f') }}
-osd mount options xfs  = {{ ceph_osd.get('mount-options', 'rw,noatime,logbsize=256k') }}
-
 # Check log files for corruption. Can be computationally expensive.
 osd check for log corruption = {{ 'true' if ceph_osd.get('check-for-log-corruption', False) else 'false' }}
 
@@ -152,6 +148,11 @@ osd op threads = {{ ceph_osd.get('op-threads', 4) }}
 
 # An operation becomes complaint worthy after the specified number of seconds have elapsed
 osd op complaint time = {{ ceph_osd.get('op-complaint-time', 30) }}
+
+# osdmap cache size
+# Set it higher if you encounter slow ops and cpu hungry OSDs hanging up
+# https://tracker.ceph.com/issues/44184#note-17
+osd map cache size = {{ ceph_osd.get('map-cache-size', 5000) }}
 
 # Enables direct i/o to the journal.
 journal dio = {{ 'true' if ceph_osd.get('journal-dio', True) else 'false' }}

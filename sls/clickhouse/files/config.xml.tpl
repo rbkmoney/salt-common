@@ -107,7 +107,7 @@
   <insert_quorum>2</insert_quorum>
   <remote_servers>
     <rbk>
-      {% for shard,params in clickhouse_shards.iteritems() %}
+      {% for shard,params in clickhouse_shards.items() %}
       <shard>
         <weight>{{ params['weight'] }}</weight>
         <internal_replication>true</internal_replication>
@@ -142,7 +142,7 @@
   {% set zookeeper_nodes = salt['pillar.get']('zookeeper:nodes', {}) %}
   {% set zookeeper_port = salt['pillar.get']('clickhouse:server:zookeeper_port', 2181) %}
   <zookeeper>
-      {% for zookeeper_host, zookeeper_index in zookeeper_nodes.iteritems() %}
+      {% for zookeeper_host, zookeeper_index in zookeeper_nodes.items() %}
       <node index="{{ zookeeper_index }}">
           <host>{{ zookeeper_host }}</host>
           <port>{{ zookeeper_port }}</port>
@@ -155,7 +155,7 @@
          See https://clickhouse.yandex/docs/en/table_engines/replication/#creating-replicated-tables
       -->
   <macros>
-  {% for shard, params in clickhouse_shards.iteritems() %}
+  {% for shard, params in clickhouse_shards.items() %}
     {% if hostname == params['node'] %}
     <shard>s{{ shard }}</shard>
     <replica>r1</replica>
