@@ -163,8 +163,8 @@ server:
     # refuse_non_local (like deny_non_local but polite error reply).
     # access-control: 0.0.0.0/0 refuse
     {% set fqdn = grains['fqdn'] %}
-    {% if salt['pillar.get']('docker:network-simple:'+fqdn, False) %}
-    access-control: {{ pillar['docker:network-simple:'+fqdn+':fixed-cidr-v6'] }}
+    {% if salt['pillar.get']('docker:network-simple:'+grains['fqdn'], False) %}
+    access-control: {{ pillar['docker:network-simple:'+grains['fqdn']+':fixed-cidr-v6'] }}
     access-control: ::1 allow
      {% for ip in grains['fqdn_ip6'] %}
     access-control: {{ ip }} allow
