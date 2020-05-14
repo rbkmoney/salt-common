@@ -23,7 +23,7 @@ update-elasticsearch-keystore:
   cmd.run:
     - env:
       - ES_PATH_CONF: /etc/elasticsearch
-    - name: cat /etc/elasticsearch/s3_access | /usr/share/elasticsearch/bin/elasticsearch-keystore add --stdin --force s3.client.default.access_key && cat /etc/elasticsearch/s3_secret | /usr/share/elasticsearch/bin/elasticsearch-keystore add --stdin --force s3.client.default.secret_key"
+    - name: "cat /etc/elasticsearch/s3_access | /usr/share/elasticsearch/bin/elasticsearch-keystore add --stdin --force s3.client.default.access_key && cat /etc/elasticsearch/s3_secret | /usr/share/elasticsearch/bin/elasticsearch-keystore add --stdin --force s3.client.default.secret_key"
     - require:
       - pkg: app-misc/elasticsearch
       - file: /etc/elasticsearch/ 
