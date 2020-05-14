@@ -164,7 +164,7 @@ server:
     # access-control: 0.0.0.0/0 refuse
     {% set fqdn = grains['fqdn'] %}
     {% if salt['pillar.get']('docker:network-simple:'+fqdn, False) %}
-    access-control: {{ pillar['docker:network-simple:'+fqdn+'fixed-cidr-v6'] }}
+    access-control: {{ pillar['docker:network-simple:'+fqdn+':fixed-cidr-v6'] }}
     access-control: ::1 allow
      {% for ip in grains['fqdn_ip6'] %}
     access-control: {{ ip }} allow
