@@ -162,12 +162,22 @@ server:
     # deny_non_local (drop queries unless can be answered from local-data)
     # refuse_non_local (like deny_non_local but polite error reply).
     # access-control: 0.0.0.0/0 refuse
-    {% if salt['pillar.get']('unbound:access-control', False) %}
-    {% for ac in salt['pillar.get']('unbound:access-control') %}
-    access-control: {{ ac['netblock'] }} {{ ac['rule'] }}
-    {% endfor %}
-    {% else %}
+    {% set fqdn = grains['fqdn'] %}
+    {% if salt['pillar.get']('docker:network-simple:'+fqdn, False) %}
+    access-control: {{ pillar['docker:network-simple:'+fqdn+'fixed-cidr-v6'] }}
     access-control: ::1 allow
+     {% for ip in grains['fqdn_ip6'] %}
+    access-control: {{ ip }} allow
+     {% endfor %}
+    access-control: ::1 allow
+    {% else %}
+     {% if salt['pillar.get']('unbound:access-control', False) %}
+      {% for ac in salt['pillar.get']('unbound:access-control') %}
+    access-control: {{ ac['netblock'] }} {{ ac['rule'] }}
+      {% endfor %}
+     {% else %}
+    access-control: ::1 allow
+     {% endif %}
     {% endif %}
 
     # if given, a chroot(2) is done to the given directory.
