@@ -162,7 +162,6 @@ server:
     # deny_non_local (drop queries unless can be answered from local-data)
     # refuse_non_local (like deny_non_local but polite error reply).
     # access-control: 0.0.0.0/0 refuse
-    {% set fqdn = grains['fqdn'] %}
     {% if salt['pillar.get']('docker:network-simple:'+grains['fqdn'], False) %}
     access-control: {{ salt['pillar.get']('docker:network-simple:'+grains['fqdn']+':fixed-cidr-v6') }}
     access-control: ::1 allow
