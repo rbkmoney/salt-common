@@ -42,7 +42,8 @@ enable_gzip = false
 {% set db = conf['db'] %}
 # Use either URL or the previous fields to configure the database
 # Example: mysql://user:secret@host:port/database
-url = {{ db['url'] }}
+url = {{ db.engine }}://{{ db.user }}:{{ db.password }}@{{ db.host }}:{{ db.port }}/{{ db.name }}
+
 
 # Max idle conn setting default is 2
 max_idle_conn = {{ db.get('max-idle-conn', 2) }}
@@ -63,7 +64,7 @@ provider = {{ session['provider'] }}
 # redis: config like redis server e.g. `addr=127.0.0.1:6379,pool_size=100,db=grafana`
 # mysql: go-sql-driver/mysql dsn config string, e.g. `user:password@tcp(127.0.0.1:3306)/database_name`
 # postgres: user=a password=b host=localhost port=5432 dbname=c sslmode=disable
-provider_config = {{ session['url'] }}
+provider_config = {{ db.engine }}://{{ db.user }}:{{ db.password }}@tcp({{ db.host }}:{{ db.port }})/{{ db.name }}
 
 # Session cookie name
 cookie_name = {{ session.get('cookie-name', 'grafana_sess') }}

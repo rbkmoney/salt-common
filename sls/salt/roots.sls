@@ -33,9 +33,6 @@ for branch in branches:
         content['file_roots'][env_name].append(path.join(d_salt, repo_name, data['default-branch'], 'sls'))
         content['pillar_roots'][env_name].append(path.join(d_salt, repo_name, data['default-branch'], 'pillar'))
 
-  content['file_roots'][env_name].append(path.join(d_salt, 'private', 'files'))
-  content['pillar_roots'][env_name].append(path.join(d_salt, 'private', 'pillar'))
-
 state('/etc/salt/master.d/roots.conf').file.managed(
   mode='644', user='root',
   contents=yaml.dump(content))
