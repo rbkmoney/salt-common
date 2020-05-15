@@ -16,9 +16,9 @@ sys-apps/portage:
       - file: gentoo.portage.packages
     {% if not ('read-only-repos' in grains and grains['read-only-repos'] == True) %}
     # need all repos here since 'refresh' of pkg module is executed once per run
-      - git: gentoo
+      - file: /etc/portage/repos.conf/gentoo.conf
     {% if pillar.get('overlay', False) %}
-      - git: {{ pillar.get('overlay') }}
+      - file: /etc/portage/repos.conf/{{ pillar.get('overlay') }}.conf
     {% endif %}
     {% endif %}
 
