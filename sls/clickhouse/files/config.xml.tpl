@@ -181,7 +181,7 @@
         asynchronous_metrics - send data from table system.asynchronous_metrics
     -->
   <graphite>
-    <host>{{ salt['pillar.get']('clickhouse:server:graphite:host', 'carbon1.bst1.rbkmoney.net') }}</host>
+    <host>{{ salt['pillar.get']('clickhouse:server:graphite:host') }}</host>
     <port>{{ salt['pillar.get']('clickhouse:server:graphit:port', 2003) }}</port>
     <timeout>{{ salt['pillar.get']('clickhouse:server:graphite:timeout', 0.1) }}</timeout>
     <interval>{{ salt['pillar.get']('clickhouse:server:graphite:interval', 1) }}</interval>
