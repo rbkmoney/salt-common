@@ -11,11 +11,11 @@ app-misc/repository-s3-elasticsearch-plugin:
       - file: gentoo.portage.packages
       - git: rbkmoney
 
-/etc/elasticsearch/s3_access
+/etc/elasticsearch/s3_access:
   file.managed:
     - contents_pillar: elastic:config:repository-s3:access_key
 
-/etc/elasticsearch/s3_secret
+/etc/elasticsearch/s3_secret:
   file.managed:
     - contents_pillar: elastic:config:repository-s3:secret_key
 
