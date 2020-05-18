@@ -9,7 +9,7 @@ app-misc/repository-s3-elasticsearch-plugin:
       - {{ pkg.gen_atom('app-misc/repository-s3-elasticsearch-plugin') }}
     - require:
       - file: gentoo.portage.packages
-      - git: rbkmoney
+      - ini: /etc/portage/repos.conf/rbkmoney.conf
 
 /etc/elasticsearch/s3_access:
   file.managed:
