@@ -9,4 +9,4 @@ app-misc/opendistro-elasticsearch-plugin:
       - {{ pkg.gen_atom('app-misc/opendistro-elasticsearch-plugin') }}
     - require:
       - file: gentoo.portage.packages
-      - git: rbkmoney
+      - ini: /etc/portage/repos.conf/rbkmoney.conf
