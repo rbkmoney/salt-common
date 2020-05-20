@@ -1,7 +1,11 @@
+{% import 'pkg/common' as pkg %}
 include:
+  - gentoo.portage.packages
   - java.common
 
-openjdk-bin11:
+dev-java/openjdk-bin:
   pkg.installed:
     - pkgs:
-      - dev-java/openjdk-bin: "~:11[headless-awt,gentoo-vm,-cups,-webstart,-alsa]"
+      - {{ pkg.gen_atom('dev-java/openjdk-bin') }}
+    - require:
+      - file: gentoo.portage.packages
