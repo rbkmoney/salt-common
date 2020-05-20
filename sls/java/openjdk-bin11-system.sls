@@ -6,4 +6,4 @@ set-java-system-vm:
     - target: openjdk-bin-11
     - action_parameter: system
     - require:
-      - pkg: openjdk-bin11
+      - pkg: dev-java/openjdk-bin
