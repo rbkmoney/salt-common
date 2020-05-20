@@ -3,6 +3,7 @@ include:
 
 set-java-system-vm:
   eselect.set:
+    - name: java-vm
     - target: openjdk-bin-11
     - action_parameter: system
     - require:
