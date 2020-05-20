@@ -49,7 +49,7 @@ elasticsearch:
   service.running:
     - enable: True
     - watch:
-      - pkg: openjdk-bin11
+      - pkg: dev-java/openjdk-bin
       - pkg: app-misc/elasticsearch
       - file: /etc/elasticsearch/elasticsearch.yml
       - file: /etc/elasticsearch/jvm.options
