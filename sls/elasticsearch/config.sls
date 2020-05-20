@@ -115,7 +115,7 @@ if tls:
     }
   }
 
-s3 = pillar('elastic:config:repository-s3', {})
+s3 = pillar('elastic:repository-s3', {})
 if len(s3) > 0:
   s3_prefix = 's3.client.default.'
   for param,value in s3['client'].items():
