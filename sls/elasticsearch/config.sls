@@ -79,7 +79,7 @@ config = {
     'expected_master_nodes': len(master_nodes),
     'expected_data_nodes': len(nodes['data']),
     'recover_after_time': '5m',
-    'recover_after_master_nodes': len(master_nodes)/2,
+    'recover_after_master_nodes': len(master_nodes)//2,
   },
 }
 
