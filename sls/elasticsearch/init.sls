@@ -1,5 +1,5 @@
 {% set tls_enabled = salt.pillar.get('elastic:tls:enabled', False) %}
-{% set s3_config = salt.pillar.get('elastic:config:repository-s3', {}) %}
+{% set s3_config = salt.pillar.get('elastic:repository-s3', {}) %}
 include:
   - elasticsearch.pkg
   - elasticsearch.config
