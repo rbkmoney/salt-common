@@ -13,11 +13,11 @@ app-misc/repository-s3-elasticsearch-plugin:
 
 /etc/elasticsearch/s3_access:
   file.managed:
-    - contents_pillar: elastic:config:repository-s3:access_key
+    - contents_pillar: elastic:repository-s3:access_key
 
 /etc/elasticsearch/s3_secret:
   file.managed:
-    - contents_pillar: elastic:config:repository-s3:secret_key
+    - contents_pillar: elastic:repository-s3:secret_key
 
 update-elasticsearch-keystore:
   cmd.run:
