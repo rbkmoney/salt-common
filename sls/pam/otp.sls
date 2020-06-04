@@ -19,16 +19,6 @@ passless:
     - require:
       - group: passless
 
-/etc/ssh/sshd_config.d/10-otp.conf:
-  file.managed:
-    - source: salt://{{ slspath }}/files/10-sshd_config_totp.conf
-    - user: root
-    - group: root
-    - mode: '0600'
-    - makedirs: True
-    - require:
-      - augeas: sshd_pam2
-
 /var/lib/pam_ssh/users.otp:
   file.managed:
     - source: salt://{{ slspath }}/files/users.otp.tpl
