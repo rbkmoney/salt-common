@@ -19,3 +19,11 @@
     - mode: 755
     - user: root
     - group: root
+
+/etc/conf.d/radosgw:
+  file.managed:
+    - contents: |
+        rc_ulimit="-n 5120"
+    - mode: 755
+    - user: root
+    - group: root

@@ -79,7 +79,7 @@ config = {
     'expected_master_nodes': len(master_nodes),
     'expected_data_nodes': len(nodes['data']),
     'recover_after_time': '5m',
-    'recover_after_master_nodes': len(master_nodes)/2,
+    'recover_after_master_nodes': len(master_nodes)//2,
   },
 }
 
@@ -114,6 +114,12 @@ if tls:
       },
     }
   }
+
+s3 = pillar('elastic:repository-s3', {})
+if len(s3) > 0:
+  s3_prefix = 's3.client.default.'
+  for param,value in s3['client'].items():
+    config[s3_prefix + param] = value
 
 dictupdate.update(config, pillar('elastic:config'))
 

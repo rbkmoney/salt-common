@@ -1,9 +1,13 @@
 {% set tls_enabled = salt.pillar.get('elastic:tls:enabled', False) %}
+{% set s3_config = salt.pillar.get('elastic:repository-s3', {}) %}
 include:
   - elasticsearch.pkg
   - elasticsearch.config
   {% if tls_enabled %}
   - elasticsearch.opendistro-security
+  {% endif %}
+  {% if s3_config|length >0 %}
+  - elasticsearch.repository-s3
   {% endif %}
 
 
@@ -45,7 +49,7 @@ elasticsearch:
   service.running:
     - enable: True
     - watch:
-      - pkg: openjdk-bin11
+      - pkg: dev-java/openjdk-bin
       - pkg: app-misc/elasticsearch
       - file: /etc/elasticsearch/elasticsearch.yml
       - file: /etc/elasticsearch/jvm.options

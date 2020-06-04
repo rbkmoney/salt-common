@@ -58,3 +58,10 @@ sshd_pam2:
     - unless: grep -v "^#" /etc/pam.d/sshd | grep pam_oath.so
     - require:
       - augeas: sshd_pam1
+
+{% if grains.selinux is defined and grains.selinux.enabled == True %}
+restorecon -Frv /var/lib/pam_ssh:
+  cmd.run:
+    - onchanges:
+      - file: /var/lib/pam_ssh/users.otp
+{% endif %}
