@@ -3,7 +3,6 @@ include:
   - lib.sctp
   - ssh.pkg
   - ssh.config
-  - ssh.otp
 
 sshd:
   service.running:
@@ -13,4 +12,4 @@ sshd:
       - pkg: ldns
       - pkg: lksctp-tools
       - file: /etc/ssh/sshd_config
-      - file: /etc/ssh/sshd_config.d/10-otp.conf
+      - file: /etc/ssh/sshd_config.d/group-sftponly.conf
