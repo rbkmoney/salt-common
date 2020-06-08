@@ -96,4 +96,4 @@ AuthorizedKeysFile .ssh/authorized_keys
 # Allow client to pass locale environment variables #367017
 {{ op_pillar('AcceptEnv', 'LANG LC_*') }}
 {{ op_pillar('PermitUserEnvironment', 'no') }}
-{{ op_pillar('Ciphers', 'aes256-gcm@openssh.com,aes256-cbc') }}
+{{ op_pillar('Ciphers', 'aes256-gcm@openssh.com,chacha20-poly1305@openssh.com,aes256-ctr') }}
