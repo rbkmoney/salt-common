@@ -63,7 +63,7 @@ AuthorizedKeysFile .ssh/authorized_keys
 # and ChallengeResponseAuthentication to 'no'.
 {{ op_pillar('UsePAM', 'no') }}
 
-{{ op_pillar('AuthenticationMethods', 'publickey,keyboard-interactive') }}
+{{ op_pillar('AuthenticationMethods', 'any') }}
 
 {{ op_pillar('AllowAgentForwarding', 'yes') }}
 {{ op_pillar('AllowTcpForwarding', 'yes') }}
