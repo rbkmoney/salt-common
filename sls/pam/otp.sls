@@ -4,12 +4,6 @@ pam_otp:
     - pkgs:
       - {{ pkg.gen_atom('sys-auth/oath-toolkit') }}
 
-passless:
-  group.present:
-    - gid: 9432
-    - require:
-      - pkg: pam_otp
-
 /etc/security/access-passless.conf:
   file.managed:
     - source: salt://{{ slspath }}/files/access-passless.conf
