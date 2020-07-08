@@ -5,5 +5,3 @@
     - mode: 640
     - user: clickhouse
     - group: clickhouse
-    - require:
-      - file: /etc/clickhouse-server/
