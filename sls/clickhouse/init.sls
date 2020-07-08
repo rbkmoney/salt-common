@@ -1,6 +1,7 @@
 include:
   - .pkg
   - .service
+  - .users
 
 extend:
   clickhouse-server:
