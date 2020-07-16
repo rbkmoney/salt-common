@@ -9,5 +9,6 @@ net-misc/curl:
       - {{ pkg.gen_atom('net-misc/curl') }}
     - require:
       - file: gentoo.portage.packages
+{% if salt['grains.get']('elibc') != 'musl' %}
       - pkg: sys-libs/glibc
-
+{% endif %}

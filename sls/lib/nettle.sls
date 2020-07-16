@@ -10,4 +10,6 @@ dev-libs/nettle:
       - {{ pkg.gen_atom('dev-libs/nettle') }}
     - require:
       - file: gentoo.portage.packages
+{% if salt['grains.get']('elibc') != 'musl' %}
       - pkg: sys-libs/glibc      
+{% endif %}
