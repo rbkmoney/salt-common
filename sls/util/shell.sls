@@ -3,8 +3,10 @@ include:
 
 util-shell:
   pkg.latest:
+{% if salt['grains.get']('elibc') != 'musl' %}
     - require:
       - pkg: sys-libs/glibc
+{% endif %}
     - pkgs:
       - app-shells/bash
       - app-shells/bash-completion

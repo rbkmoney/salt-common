@@ -14,7 +14,9 @@ util-net-purged:
 util-net:
   pkg.latest:
     - require:
+{% if salt['grains.get']('elibc') != 'musl' %}
       - pkg: sys-libs/glibc
+{% endif %}
       - pkg: util-net-purged
       - file: gentoo.portage.packages
     - pkgs:

@@ -6,7 +6,9 @@ include:
 util-core:
   pkg.latest:
     - require:
+{% if salt['grains.get']('elibc') != 'musl' %}
       - pkg: sys-libs/glibc
+{% endif %}
       - file: gentoo.portage.packages
     - pkgs:
       - app-text/tree

@@ -11,9 +11,8 @@ util-disk-purged:
 
 util-disk:
   pkg.latest:
-    - require:
-      - pkg: sys-libs/glibc
       {% if salt['grains.get']('diskless', False) %}
+    - require:
       - pkg: util-disk-purged
       {% endif %}
     - pkgs:

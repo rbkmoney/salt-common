@@ -8,9 +8,11 @@ unbound:
     - watch:
       - pkg: net-dns/unbound
       - pkg: net-dns/dnssec-root
-      - pkg: sys-libs/glibc
       - file: /etc/unbound/unbound.conf
       - file: /etc/dnssec/
+{% if salt['grains.get']('elibc') != 'musl' %}
+      - pkg: sys-libs/glibc
+{% endif %}
 
 /etc/dnssec/:
   file.directory:

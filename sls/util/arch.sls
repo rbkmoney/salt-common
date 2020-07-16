@@ -3,8 +3,10 @@ include:
 
 util-arch:
   pkg.latest:
+{% if salt['grains.get']('elibc') != 'musl' %}
     - require:
       - pkg: sys-libs/glibc
+{% endif %}
     - pkgs:
       - app-arch/tar
       - app-arch/unzip
