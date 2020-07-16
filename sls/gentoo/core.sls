@@ -1,7 +1,7 @@
 include:
   - lib.glibc
 
-{% salt['grains.get']('elibc') != 'musl' %}
+{% if salt['grains.get']('elibc') != 'musl' %}
 locale:
   eselect.set:
     - target: {{ salt.pillar.get('locale:LANG','en_IE.utf8') }}
