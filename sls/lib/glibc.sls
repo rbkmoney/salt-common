@@ -1,3 +1,4 @@
+{% if salt['grains.get']('elibc')|default('glibc') != 'musl' %}
 {% import 'pkg/common' as pkg %}
 include:
   - gentoo.portage.packages
@@ -26,3 +27,4 @@ locale-gen:
   cmd.wait:
     - watch:
       - file: /etc/locale.gen
+{% endif %}

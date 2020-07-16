@@ -1,6 +1,7 @@
 include:
   - lib.glibc
 
+{% salt['grains.get']('elibc') != 'musl' %}
 locale:
   eselect.set:
     - target: {{ salt.pillar.get('locale:LANG','en_IE.utf8') }}
@@ -14,3 +15,5 @@ locale:
     - changes:
       - set LC_TIME "{{ salt.pillar.get('locale:LC_TIME','en_IE.UTF-8') }}"
       - set LC_ALL "{{ salt.pillar.get('locale:LC_ALL','en_IE.UTF-8') }}"
+
+{% endif %}
