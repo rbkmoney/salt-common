@@ -1,3 +1,4 @@
+{% if salt['grains.get']('init') != 'systemd' %}
 include:
   - cron
   - openrc
@@ -8,3 +9,4 @@ openrc_rc_cron_job:
     - name: "/sbin/openrc"
     - minute: '*/5'
     - user: root
+{% endif %}
