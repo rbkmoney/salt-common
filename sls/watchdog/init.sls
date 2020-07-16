@@ -10,13 +10,6 @@ include:
     - group: root
     - mode: 644
 
-/etc/conf.d/watchdog:
-  file.managed:
-    - source: salt://watchdog/watchdog.confd
-    - user: root
-    - group: root
-    - mode: 644
-      
 {% if machine_type == "raspberry pi" %}
 /etc/modprobe.d/watchdog.conf:
   file.managed:
@@ -41,5 +34,13 @@ watchdog:
     - watch:
       - pkg: watchdog
       - file: /etc/watchdog.conf
+{% if salt['grains.get']('init') != 'systemd' %}
       - file: /etc/conf.d/watchdog
 
+/etc/conf.d/watchdog:
+  file.managed:
+    - source: salt://watchdog/watchdog.confd
+    - user: root
+    - group: root
+    - mode: 644
+{% endif %}
