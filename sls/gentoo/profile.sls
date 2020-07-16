@@ -1,3 +1,16 @@
+{% if salt['grains.get']('init') == 'systemd' and salt['grains.get']('elibc') == 'musl' %}
+/etc/portage/make.profile/parent:
+  file.managed:
+    - user: root
+    - group: root
+    - mode: 644
+    - makedirs: True
+    - require:
+      - cmd: stage4-extract
+    - contents: |
+        gentoo:default/linux/amd64/17.0/musl/hardened/selinux
+        gentoo:targets/systemd
+{% else %}
 {% set arch_conf = salt['pillar.get']('arch_conf', False) %}
 eselect-profile:
   eselect.set:
@@ -11,3 +24,4 @@ eselect-profile:
     {% elif grains['osarch'] == 'armv6l' %}
     - target: hardened/linux/arm/armv6j
     {% endif %}
+{% endif %}

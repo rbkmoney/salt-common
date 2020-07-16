@@ -14,8 +14,9 @@ lm_sensors:
     - enable: True
     - watch:
       - pkg: sys-apps/lm_sensors
-      - file: /etc/init.d/lm_sensors
+{% if salt['grains.get']('init') != 'systemd' %}
       - file: /etc/conf.d/lm_sensors
+      - file: /etc/init.d/lm_sensors
 
 /etc/init.d/lm_sensors:
   file.managed:
@@ -30,3 +31,5 @@ lm_sensors:
     - mode: 644
     - user: root
     - group: root
+{% endif %}
+
