@@ -5,8 +5,6 @@
     - group: root
     - mode: 644
     - makedirs: True
-    - require:
-      - cmd: stage4-extract
     - contents: |
         gentoo:default/linux/amd64/17.0/musl/hardened/selinux
         gentoo:targets/systemd
