@@ -12,8 +12,8 @@ if num_jobs > 8:
 
 changes = [
   'set PORTDIR \'"/usr/portage"\'',
-  'set DISTDIR \'"/var/tmp/distfiles"\'',
-  'set PKGDIR \'"/var/tmp/packages"\'',
+  'set DISTDIR \'"/var/cache/distfiles"\'',
+  'set PKGDIR \'"/var/cache/binpkgs"\'',
   'set PORT_LOGDIR \'"/var/log/portage"\'',
   'set GENTOO_MIRRORS \'"https://' + mirror_host + '/gentoo-distfiles"\'',
   'rm AUTOCLEAN',
