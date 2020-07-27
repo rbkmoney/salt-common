@@ -3,9 +3,9 @@
 {% set packages = salt['pillar.get']('gentoo:portage:packages', {}) %}
 {% set packages_xen = packages.get('app-emulation/xen', {}) %}
 {% set packages_xen_tools = packages.get('app-emulation/xen-tools', {}) %}
-{% set xen_version = packages_xen.get('version', '~=4.10.3-r1') %}
-{% set xen_tools_version = packages_xen_tools.get('version', '~=4.10.3-r2') %}
-{% set xen_version_short = xen_version.rsplit('-', 1)[0].lstrip('-~*<>=') %}
+{% set xen_version = packages_xen.get('version', '4.13*') %}
+{% set xen_tools_version = packages_xen_tools.get('version', '4.13*') %}
+{% set xen_version_short = xen_version.rsplit('-', 1)[0].strip('-~*<>=') %}
 {% set efi = salt['grains.get']('efi', False) %}
 # This should be set when we shall not install xen from here;
 # For example when the xen binary is fetched from a tftp server.

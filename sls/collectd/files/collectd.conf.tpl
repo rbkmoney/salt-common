@@ -623,7 +623,7 @@ LoadPlugin zookeeper
     AuthFile "{{ listen.get('auth-file', '/etc/collectd/collectd.passwd') }}"
   </Listen>
   {% endfor %}
-  MaxPacketSize {{ p_network.get('max-packet-size', 4096) }}
+  MaxPacketSize {{ p_network.get('max-packet-size', 1452) }}
   # proxy setup (client and server as above):
   Forward {{ 'true' if p_network.get('forward', False) else 'false' }}
   # statistics about the network plugin itself
