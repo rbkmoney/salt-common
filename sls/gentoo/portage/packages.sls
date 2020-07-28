@@ -29,10 +29,13 @@ def process_target(package, version_num):
 def generate_result(packages, flag, _recurse=False):
     result = []
     for cp, package_vars in packages.items():
-        if not _recurse:
-            if var not in package_vars:
+        if _recurse:
+            atom = cp
+            value = package_vars
+        else:
+            if flag not in package_vars:
                 continue
-            value = package_vars[var]
+            value = package_vars[flag]
             atom = process_target(cp, packages.get(cp, {}).get('version'))
         if value is True:
             result.append((atom, ''))
@@ -40,8 +43,8 @@ def generate_result(packages, flag, _recurse=False):
             pass
         elif type(value) == list:
             result.append((atom, ' '.join(value)))
-        elif type(value) == dict:
-            result.extend(generate_result(value, flag))
+        elif isinstance(value, dict):
+            result.extend(generate_result(value, flag, True))
         else:
             result.append((atom, value))
     return result
@@ -56,25 +59,8 @@ for var in ('accept_keywords', 'mask', 'unmask', 'use', 'env', 'license', 'prope
     d = '/etc/portage/package.{}/'.format(var)
     File.directory(d, create=True, mode='0755', user='root', group='portage', clean=True, exclude_pat='*SALT')
 
-    result = []
-    for cp, package_vars in packages.items():
-        if var not in package_vars:
-            continue
-        value = package_vars[var]
-        if value is True:
-            result.append((cp, ''))
-        elif value is False:
-            pass
-        elif type(value) == list:
-            result.append((cp, ' '.join(value)))
-        # elif type(value) == dict:
-        #     for k, v in value.items():
-        #         result.append((k, v))
-        else:
-            result.append((cp, value))
-    result_str = '\n'.join(["{} {}".format(
-        process_target(cp, packages.get(cp, {}).get('version')),
-        value) for cp, value in sorted(result)])
+    result = generate_result(packages, var)
+    result_str = '\n'.join(["{} {}".format(atom, value) for atom, value in sorted(result)])
     filename = d + 'SALT'
     filenames.append({'file': filename})
     File.managed(filename, contents=result_str+'\n', mode='0640',
@@ -85,20 +71,8 @@ for var in ('accept_keywords', 'mask', 'unmask', 'use', 'use.mask', 'use.force',
     File.directory(d, create=True, mode='0755', user='root', group='portage',
                    require=[File('/etc/portage/profile/')])
 
-    result = []
-    for cp, profile_vars in profile.items():
-        if var not in profile_vars:
-            continue
-        value = profile_vars[var]
-        if value is True:
-            result.append((cp, ''))
-        elif value is False:
-            pass
-        elif type(value) == list:
-            result.append((cp, ' '.join(value)))
-        else:
-            result.append((cp, value))
-    result_str = ''.join([ "{} {}\n".format(process_target(cp, profile.get(cp, {}).get('version')), value) for cp, value in sorted(result) ])
+    result = generate_result(profile, var)
+    result_str = '\n'.join(["{} {}".format(atom, value) for atom, value in sorted(result)])
     filename = '/etc/portage/profile/package.{}/SALT'.format(var)
     filenames.append({'file': filename})
     File.managed(filename, contents=result_str, mode='0640',
