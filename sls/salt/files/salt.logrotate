@@ -1,24 +1,15 @@
 /var/log/salt/minion {
     missingok
     delaycompress
-    sharedscripts
-    postrotate
-        /etc/init.d/salt-minion --ifstarted restart > /dev/null || true
-    endscript
+    copytruncate
 }
 /var/log/salt/master {
     missingok
     delaycompress
-    sharedscripts
-    postrotate
-        /etc/init.d/salt-master --ifstarted restart > /dev/null || true
-    endscript
+    copytruncate
 }
 /var/log/salt/syndic {
     missingok
     delaycompress
-    sharedscripts
-    postrotate
-        /etc/init.d/salt-syndic --ifstarted restart > /dev/null || true
-    endscript
+    copytruncate
 }
