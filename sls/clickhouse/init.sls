@@ -4,7 +4,7 @@ include:
   - .service
   - .users
   {% if external_dictionaries != [] %}
-  - clickhouse.external_dictionaries
+  - clickhouse.ext_dicts
   {% endif %}
   
 extend:
