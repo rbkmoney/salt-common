@@ -2523,16 +2523,7 @@ def latest(
                     'result': None,
                     'comment': '\n'.join(comments)}
 
-        if salt.utils.platform.is_windows():
-            # pkg.install execution module on windows ensures the software
-            # package is installed when no version is specified, it does not
-            # upgrade the software to the latest. This is per the design.
-            # Build updated list of pkgs *with verion number*, exclude
-            # non-targeted ones
-            targeted_pkgs = [{x: targets[x]} for x in targets]
-        else:
-            # Build updated list of pkgs to exclude non-targeted ones
-            targeted_pkgs = list(targets)
+        targeted_pkgs = [{x: targets[x]} for x in targets]
 
         # No need to refresh, if a refresh was necessary it would have been
         # performed above when pkg.latest_version was run.
@@ -2552,12 +2543,13 @@ def latest(
 
         if changes:
             # Find failed and successful updates
-            failed = [x for x in targets
-                      if not changes.get(x) or
-                      changes[x].get('new') != targets[x] and
-                      targets[x] != 'latest']
+            failed = [pn for pn,v in targets.items()
+                      if not changes.get(pn) or
+                      not (v == 'latest'
+                           or changes[pn].get('version') == v
+                           or changes[pn].get('new') == v
+                           or changes[pn].get('new').get('version') == v)]
             successful = [x for x in targets if x not in failed]
-
             comments = []
             if failed:
                 msg = 'The following packages failed to update: ' \
