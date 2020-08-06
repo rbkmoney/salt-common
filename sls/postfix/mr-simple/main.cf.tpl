@@ -287,3 +287,4 @@ milter_default_action = accept
 milter_protocol = 2
 smtpd_milters     = unix:/var/run/opendkim/opendkim.sock
 non_smtpd_milters = unix:/var/run/opendkim/opendkim.sock
+message_size_limit = 51200000
