@@ -11,7 +11,7 @@ app-admin/salt:
     - pkgs:
       - {{ pkg.gen_atom('app-admin/salt') }}
       - {{ pkg.gen_atom('dev-python/dnspython') }}
-      - {{ pkg.gen_atom('dev-python/sleekxmpp') }}
+      - {{ pkg.gen_atom('dev-python/slixmpp') }}
       - {{ pkg.gen_atom('dev-python/cython') }}
     - reload_modules: true
     - require:

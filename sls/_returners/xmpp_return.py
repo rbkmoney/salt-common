@@ -2,7 +2,7 @@
 '''
 Return salt data via xmpp
 
-:depends: sleekxmpp >= 1.3.1
+:depends: slixmpp >= 1.4.0
 
 The following fields can be set in the minion conf file::
 
@@ -79,7 +79,7 @@ from salt.utils.versions import LooseVersion as _LooseVersion
 
 HAS_LIBS = False
 try:
-    from sleekxmpp import ClientXMPP as _ClientXMPP  # pylint: disable=import-error
+    from slixmpp import ClientXMPP as _ClientXMPP  # pylint: disable=import-error
     HAS_LIBS = True
 except ImportError:
     class _ClientXMPP(object):
@@ -118,17 +118,16 @@ def _get_options(ret=None):
 
 def __virtual__():
     '''
-    Only load this module if right version of sleekxmpp is installed on this minion.
+    Only load this module if right version of slixmpp is installed on this minion.
     '''
-    min_version = '1.3.1'
+    min_version = '1.4.0'
     if HAS_LIBS:
-        import sleekxmpp  # pylint: disable=3rd-party-module-not-gated
-        # Certain XMPP functionaility we're using doesn't work with versions under 1.3.1
-        sleekxmpp_version = _LooseVersion(sleekxmpp.__version__)
+        import slixmpp  # pylint: disable=3rd-party-module-not-gated
+        slixmpp_version = _LooseVersion(slixmpp.__version__)
         valid_version = _LooseVersion(min_version)
-        if sleekxmpp_version >= valid_version:
+        if slixmpp_version >= valid_version:
             return __virtualname__
-    return False, 'Could not import xmpp returner; sleekxmpp python client is not ' \
+    return False, 'Could not import xmpp returner; slixmpp python client is not ' \
                   'installed or is older than version \'{0}\'.'.format(min_version)
 
 
