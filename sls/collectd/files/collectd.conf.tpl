@@ -8,7 +8,7 @@
 {% set p_write_riemann = collectd.get('write_riemann', False) %}
 {% set p_ceph = collectd.get('ceph', False) %}
 {% set p_mysql = collectd.get('mysql', False) %}
-{% set p_processes = collectd.get('processes', False) %}
+{% set p_processes = collectd.get('processes', {}) %}
 FQDNLookup {{ collectd_conf.get('FQDNLookup', 'true') }}
 BaseDir     "/var/lib/collectd"
 PIDFile     "/run/collectd/collectd.pid"
@@ -712,8 +712,19 @@ LoadPlugin zookeeper
 
 {% if p_processes %}
 <Plugin processes>
-  {% for process in p_processes %}
-  ProcessMatch "{{ process }}" "{{ process }}"
+  {% for name,data in p_processes.get('Process', {}).items() %}
+  <Process "{{ name }}">
+    CollectContextSwitch {{ 'true' if data.get('CollectContextSwitch', False) else 'false' }}
+    CollectFileDescriptor {{ 'true' if data.get('CollectFileDescriptor', False) else 'false' }}
+    CollectMemoryMaps {{ 'true' if data.get('CollectMemoryMaps', False) else 'false' }}
+  </Process>
+  {% endfor %}
+  {% for name,data in p_processes.get('ProcessMatch', {}).items() %}
+  <ProcessMatch "{{ name }}" "{{ data['regexp'] }}">
+    CollectContextSwitch {{ 'true' if data.get('CollectContextSwitch', False) else 'false' }}
+    CollectFileDescriptor {{ 'true' if data.get('CollectFileDescriptor', False) else 'false' }}
+    CollectMemoryMaps {{ 'true' if data.get('CollectMemoryMaps', False) else 'false' }}
+  </ProcessMatch>
   {% endfor %}
 </Plugin>
 {% endif %}
