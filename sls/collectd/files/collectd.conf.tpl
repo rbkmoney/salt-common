@@ -147,7 +147,7 @@ LoadPlugin nginx
   Globals true
 </LoadPlugin>
 {% endif %}
-{% if p_processes %}
+{% if p_processes is False %}
 LoadPlugin processes
 {% endif %}
 #LoadPlugin protocols
