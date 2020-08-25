@@ -8,7 +8,7 @@ consul {
     max_backoff = "{{ conf_consul.get('retry-max-backoff', '5m') }}"
   }
   {% if conf['consul-acl-token'] %}
-    token = "{{ conf['consul-acl-token' }}]"
+    token = "{{ conf['consul-acl-token'] }}"
   {% endif %}
 
 }
