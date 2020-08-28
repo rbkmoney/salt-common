@@ -7,6 +7,10 @@ consul {
     backoff = "{{ conf_consul.get('retry-backoff', '10s') }}"
     max_backoff = "{{ conf_consul.get('retry-max-backoff', '5m') }}"
   }
+  {% if conf['consul-acl-token'] %}
+  token = "{{ conf['consul-acl-token'] }}"
+  {% endif %}
+
 }
 max_stale = "{{ conf.get('max-stale', '2m') }}"
 wait {
