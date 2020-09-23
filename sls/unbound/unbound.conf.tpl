@@ -136,6 +136,9 @@ server:
     # cache. Items are not cached for longer. In seconds.
     cache-max-ttl: {{ salt['pillar.get']('unbound:cache-max-ttl', 86400) }}
 
+    #
+    cache-max-negative-ttl: {{ salt['pillar.get']('unbound:cache-max-negative-ttl', 10) }}
+
     # the time to live (TTL) value for cached roundtrip times, lameness and
     # EDNS version information for hosts. In seconds.
     infra-host-ttl: {{ salt['pillar.get']('unbound:infra-host-ttl', 900) }}
