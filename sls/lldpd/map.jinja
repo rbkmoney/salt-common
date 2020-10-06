@@ -1,0 +1,11 @@
+{% set confmap = salt['grains.filter_by']({
+    'Gentoo': {
+        'pkg': 'net-misc/lldpd',
+	'pkgSelinuxPolicy': 'sec-policy/selinux-lldpd',
+    },
+    'Redhat': {
+        'pkg': 'lldpd',
+	'pkgSelinuxPolicy': 'selinux-policy-targeted',
+    },
+}, grain='os_family', default='Gentoo') %}
+
