@@ -677,7 +677,7 @@ def install(name=None,
             if isinstance(pkgs[0], dict):
                 pkg_params = {}
                 for i in range(len(pkgs)):
-                    p = data[i].popitem()
+                    p = pkgs[i].popitem()
                     pkg_params[p[0]] = p[1] + suffix
         else:
             pass
