@@ -1,3 +1,5 @@
+{%- set cert_chain_key = salt.pillar.get('gentoo-mirror:cert-chain-key', 'gentoo-mirror') %}
+{%- set privkey_key = salt.pillar.get('gentoo-mirror:privkey-key', cert_chain_key) %}
 include:
   - nginx
 
@@ -13,7 +15,7 @@ include:
     - source: salt://ssl/certificate-chain.tpl
     - template: jinja
     - defaults:
-        cert_chain_key: 'gentoo-mirror'
+        cert_chain_key: "{{ cert_chain_key }}"
     - mode: 644
     - user: root
     - group: nginx
@@ -25,7 +27,7 @@ include:
     - source: salt://ssl/privkey.tpl
     - template: jinja
     - defaults:
-        privkey_key: 'gentoo-mirror'
+        privkey_key: "{{ privkey_key }}"
     - mode: 600
     - user: root
     - group: root
