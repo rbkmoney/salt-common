@@ -39,6 +39,8 @@ for guest in __salt__['pillar.get']('xen:guests', []):
   capsor(content, 'vif', guest['vif'])
   if 'disk' in guest:
     capsor(content, 'disk', guest['disk'])
+  if 'pci' in guest:
+    capsor(content, 'pci', guest['pci'])
   if 'vfb' in guest:
     capsor(content, 'vfb', guest['vfb'])
   if 'vtpm' in guest:
