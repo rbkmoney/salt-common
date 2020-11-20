@@ -5,9 +5,9 @@ eselect-profile:
     {% if arch_conf and arch_conf.get('profile', False) %}
     - target: '{{ arch_conf["profile"] }}'
     {% elif grains['osarch'] == 'x86' %}
-    - target: default/linux/x86/17.0/hardened
+    - target: default/linux/x86/17.1/hardened
     {% elif grains['osarch'] == 'x86_64' %}
-    - target: default/linux/amd64/17.0/no-multilib/hardened
+    - target: default/linux/amd64/17.1/no-multilib/hardened
     {% elif grains['osarch'] == 'armv6l' %}
     - target: hardened/linux/arm/armv6j
     {% endif %}

@@ -8,6 +8,8 @@ def capsor(c, key, value):
         value if isinstance(value, str)
         else value)
 
+defaults = __salt__['pillar.get']('xen:defaults', {})
+
 for guest in __salt__['pillar.get']('xen:guests', []):
   content = []
   content.append('# This file is managed by Salt')
@@ -39,6 +41,8 @@ for guest in __salt__['pillar.get']('xen:guests', []):
   capsor(content, 'vif', guest['vif'])
   if 'disk' in guest:
     capsor(content, 'disk', guest['disk'])
+  if 'pci' in guest:
+    capsor(content, 'pci', guest['pci'])
   if 'vfb' in guest:
     capsor(content, 'vfb', guest['vfb'])
   if 'vtpm' in guest:
@@ -59,17 +63,25 @@ for guest in __salt__['pillar.get']('xen:guests', []):
 
   if 'bootloader' in guest:
     capkv(content, 'bootloader', guest['bootloader'])
+  elif 'bootloader' in defaults:
+    capkv(content, 'bootloader', defaults['bootloader'])
   if 'kernel' in guest:
     capkv(content, 'kernel', guest['kernel'])
-  elif 'bootloader' not in guest:
+  elif 'kernel' in defaults:
+    capkv(content, 'kernel', defaults['kernel'])
+  elif 'bootloader' not in guest or 'bootloader' not in defaults:
     raise Exception('Neither kernel nor the bootloader are set')
   if 'ramdisk' in guest:
     capkv(content, 'ramdisk', guest['ramdisk'])
+  elif 'ramdisk' in defaults:
+    capkv(content, 'ramdisk', defaults['ramdisk'])
   if 'cmdline' in guest:
     capkv(content, 'cmdline', guest['cmdline'])
+  elif 'cmdline' in defaults:
+    capkv(content, 'cmdline', defaults['cmdline'])
   else:
-    capkv(content, 'root', guest['root'] if 'root' in guest else '/dev/xvda')
-    capkv(content, 'extra', guest['extra'] if 'extra' in guest else 'raid=noautodetect quiet panic=30')
+    capkv(content, 'root', guest.get('root', defaults.get('root', '/dev/xvda')))
+    capkv(content, 'extra', guest.get('extra', defaults.get('extra', 'raid=noautodetect quiet panic=30')))
   for k,v in guest.get('extra-config', []):
     capkv(content, k, v)
 
