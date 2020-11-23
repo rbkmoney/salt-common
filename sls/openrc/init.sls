@@ -1,4 +1,4 @@
-{% if salt['grains.get']('init') != 'systemd' %}
+{% if grains['init'] == 'openrc' %}
 include:
   - openrc.pkg
   - openrc.conf
