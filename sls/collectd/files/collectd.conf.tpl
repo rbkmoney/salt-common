@@ -374,6 +374,7 @@ LoadPlugin zookeeper
 </Plugin>
 <Plugin disk>
   Disk "/^[hs]d[a-z]$/"
+  Disk "/^nvme[0-9]+n[0-9]+$/"
   Disk "/^xvd[a-z]$/"
   Disk "/^md[0-9]+$/"
   IgnoreSelected false
