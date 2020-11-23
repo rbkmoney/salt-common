@@ -10,9 +10,9 @@ unbound:
       - pkg: net-dns/dnssec-root
       - file: /etc/unbound/unbound.conf
       - file: /etc/dnssec/
-{% if salt['grains.get']('elibc') != 'musl' %}
+      {% if grains['elibc'] == 'glibc' %}
       - pkg: sys-libs/glibc
-{% endif %}
+      {% endif %}
 
 /etc/dnssec/:
   file.directory:
@@ -33,7 +33,7 @@ unbound:
 
 /etc/unbound/unbound.conf:
   file.managed:
-    - source: salt://unbound/unbound.conf.tpl
+    - source: salt://unbound/files/unbound.conf.tpl
     - template: jinja
     - mode: '0640'
     - user: root

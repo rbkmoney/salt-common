@@ -1,18 +1,18 @@
+{% import 'pkg/common' as pkg %}
 include:
-  - lib.glibc
+  - lib.libc
 
 util-shell:
   pkg.latest:
-{% if salt['grains.get']('elibc') != 'musl' %}
     - require:
-      - pkg: sys-libs/glibc
-{% endif %}
+      - file: gentoo.portage.packages
+      {{ libc_pkg_dep() }}
     - pkgs:
-      - app-shells/bash
-      - app-shells/bash-completion
-      - sys-apps/miscfiles
-      - app-shells/zsh
-      - app-doc/zsh-lovers
-      - app-misc/screen
-      - app-admin/killproc
-      - sys-devel/bc
+      - {{ pkg.gen_atom('app-shells/bash') }}
+      - {{ pkg.gen_atom('app-shells/bash-completion') }}
+      - {{ pkg.gen_atom('sys-apps/miscfiles') }}
+      - {{ pkg.gen_atom('app-shells/zsh') }}
+      - {{ pkg.gen_atom('app-doc/zsh-lovers') }}
+      - {{ pkg.gen_atom('app-misc/screen') }}
+      - {{ pkg.gen_atom('app-admin/killproc') }}
+      - {{ pkg.gen_atom('sys-devel/bc') }}

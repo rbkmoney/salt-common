@@ -1,8 +1,14 @@
+{% import 'pkg/common' as pkg %}
 include:
-  - lib.glibc
+  - lib.libc
 
 net-mail/mailutils:
-  pkg.latest{% if salt['grains.get']('elibc') != 'musl' %}:
+  pkg.latest:
     - require:
-      - pkg: sys-libs/glibc
-{% endif %}
+      - file: gentoo.portage.packages
+      {{ libc_pkg_dep() }}
+    - pkgs:
+      - {{ pkg.gen_atom('net-mail/mailutils') }}
+
+
+
