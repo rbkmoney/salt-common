@@ -2,8 +2,8 @@
 # -*- mode: python -*-
 include("augeas.lenses")
 mirror_host = __salt__['pillar.get']('gentoo:mirror-host', 'gentoo-mirror.bakka.su')
-make_conf = __salt__['pillar.get']('make_conf', False)
-arch_conf = __salt__['pillar.get']('arch_conf', False)
+make_conf = __salt__['pillar.get']('make_conf', {})
+arch_conf = __salt__['pillar.get']('arch_conf', {})
 
 num_jobs = __grains__['num_cpus']
 max_la = "%.2f" % (__grains__['num_cpus'] / 1.5)
@@ -11,34 +11,27 @@ if num_jobs > 8:
   num_jobs = 8
 
 changes = [
-  'set PORTDIR \'"/usr/portage"\'',
-  'set DISTDIR \'"/var/cache/distfiles"\'',
-  'set PKGDIR \'"/var/cache/binpkgs"\'',
-  'set PORT_LOGDIR \'"/var/log/portage"\'',
-  'set GENTOO_MIRRORS \'"https://' + mirror_host + '/gentoo-distfiles"\'',
   'rm AUTOCLEAN',
 ]
 def chap(key, value):
+  '''Changes append'''
   changes.append('set ' + key + ' \'"' + value + '"\'')
 
 default_features = ["xattr sandbox userfetch parallel-fetch parallel-install clean-logs",
                     "compress-build-logs unmerge-logs splitdebug compressdebug fail-clean",
                     "unmerge-orphans getbinpkg -news"]
-emerge_default_opts = '--quiet-build --verbose --keep-going --changed-deps --with-bdeps=y --verbose-conflicts --newrepo'
-default_makeopts = ('-j'+str(num_jobs)+' --load-average '+str(max_la))
 
-if make_conf:
-  chap('MAKEOPTS', make_conf.get('makeopts', default_makeopts))
-  chap('FEATURES', ' '.join(make_conf.get('features', default_features)))
-  chap('EMERGE_DEFAULT_OPTS', make_conf.get('emerge_default_opts', emerge_default_opts))
-  if make_conf.get('other', {'USE_SALT': ''}):
-    for k, v in make_conf['other'].items():
-      chap(k, v)
-else:
-  chap('MAKEOPTS', default_makeopts)
-  chap('FEATURES', ' '.join(default_features))
-  chap('EMERGE_DEFAULT_OPTS', emerge_default_opts)
-  chap('USE_SALT', '')
+chap('PORTDIR', make_conf.get('portdir', '/usr/portage'))
+chap('DISTDIR', make_conf.get('distdir', '/var/cache/distfiles'))
+chap('PKGDIR', make_conf.get('pkgdir', '/var/cache/binpkgs'))
+chap('GENTOO_MIRRORS', make_conf.get('gentoo_mirrors', 'https://' + mirror_host + '/gentoo-distfiles'))
+
+chap('EMERGE_DEFAULT_OPTS', make_conf.get('emerge_default_opts', '--quiet-build --verbose --keep-going'))
+chap('MAKEOPTS', make_conf.get('makeopts', ('-j'+str(num_jobs)+' --load-average '+str(max_la))))
+chap('FEATURES', ' '.join(make_conf.get('features', default_features)))
+if make_conf.get('other', {'USE_SALT': ''}):
+  for k, v in make_conf['other'].items():
+    chap(k, v)
 
 if arch_conf:
   chap('CHOST', arch_conf['CHOST'])
@@ -57,8 +50,8 @@ if arch_conf:
          '3dnowext', 'sse4a'))))
   if arch_conf.get('mirror_arch', False):
     binhost = arch_conf.get('binhost-host', mirror_host)
-    chap('PORTAGE_BINHOST',
-         'https://' + binhost + '/gentoo-packages/' + arch_conf['mirror_arch'] + '/packages')
+    chap('PORTAGE_BINHOST', arch_conf.get('portage_binhost',
+         'https://' + binhost + '/gentoo-packages/' + arch_conf['mirror_arch'] + '/packages'))
 
 state('manage-make-conf').augeas.change(
   context='/files/etc/portage/make.conf',
