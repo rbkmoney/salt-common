@@ -1,6 +1,8 @@
 {% set machine_type = salt['grains.get']('machine_type', 'nil') %}
+{% if grains['init'] == 'openrc' %}
 include:
   - openrc.modules
+{% endif %}
 
 /etc/watchdog.conf:
   file.managed:
@@ -34,7 +36,7 @@ watchdog:
     - watch:
       - pkg: watchdog
       - file: /etc/watchdog.conf
-{% if salt['grains.get']('init') != 'systemd' %}
+{% if grains['init'] == 'openrc' %}
       - file: /etc/conf.d/watchdog
 
 /etc/conf.d/watchdog:
