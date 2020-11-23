@@ -1,12 +1,19 @@
+{% import 'pkg/common' as pkg %}
 include:
-  - .glibc
+  - gentoo.portage.packages
   - .nettle
+  {% if grains['elibc'] == 'glibc' %}
+  - .glibc
+  {% endif %}
 
 net-libs/gnutls:
   pkg.latest:
-    - version: ">=3.6.5[dane]"
+    - oneshot: True
     - require:
-{% if salt['grains.get']('elibc') != 'musl' %}
-      - pkg: sys-libs/glibc
-{% endif %}
+      - file: gentoo.portage.packages
       - pkg: dev-libs/nettle
+      {% if grains['elibc'] == 'glibc' %}
+      - pkg: sys-libs/glibc
+      {% endif %}
+    - pkgs:
+      - {{ pkg.gen_atom('net-libs/gnutls') }}

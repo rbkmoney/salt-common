@@ -5,4 +5,3 @@ include:
   - gentoo.profile
   - gentoo.makeconf
   - .selinux
-  - .core

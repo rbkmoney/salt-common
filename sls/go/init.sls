@@ -1,5 +1,10 @@
+{% import 'pkg/common' as pkg %}
 include:
-  - lib.glibc
+  - gentoo.portage.packages
 
 dev-lang/go:
-  pkg.latest
+  pkg.latest:
+    - require:
+      - file: gentoo.portage.packages        
+    - pkgs:
+      - {{ pkg.gen_atom('dev-lang/go') }}

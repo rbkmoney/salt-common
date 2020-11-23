@@ -1,3 +1,4 @@
+{# mode: jinja2 #}
 {# ### getf stands for "get flags" ### #}
 {%- macro _getf(params, flag, join=False) -%}
   {%- set flag_val = params.get(flag) -%}
