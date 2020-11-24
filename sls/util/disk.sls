@@ -1,4 +1,5 @@
 {% import 'pkg/common' as pkg %}
+{% import 'lib/libc.sls' as libc %}
 include:
   - lib.libc
 
@@ -17,7 +18,7 @@ util-disk:
       {% if salt['grains.get']('diskless', False) %}
       - pkg: util-disk-purged
       {% endif %}
-      {{ libc_pkg_dep() }}
+      {{ libc.pkg_dep() }}
     - pkgs:
       - {{ pkg.gen_atom('sys-fs/ncdu') }}
       {% if not salt['grains.get']('diskless', False) %}

@@ -2,7 +2,7 @@
 include:
   - gentoo.portage.packages
 
-{%- macro libc_pkg_dep() -%}
+{%- macro pkg_dep() -%}
 {%- if grains['elibc'] == 'glibc' -%}
 - pkg: sys-libs/glibc
 {% endif %}

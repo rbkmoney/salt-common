@@ -29,9 +29,8 @@ chap('GENTOO_MIRRORS', make_conf.get('gentoo_mirrors', 'https://' + mirror_host 
 chap('EMERGE_DEFAULT_OPTS', make_conf.get('emerge_default_opts', '--quiet-build --verbose --keep-going'))
 chap('MAKEOPTS', make_conf.get('makeopts', ('-j'+str(num_jobs)+' --load-average '+str(max_la))))
 chap('FEATURES', ' '.join(make_conf.get('features', default_features)))
-if make_conf.get('other', {'USE_SALT': ''}):
-  for k, v in make_conf['other'].items():
-    chap(k, v)
+for k, v in make_conf.get('other', {'USE_SALT': ''}).items():
+  chap(k, v)
 
 if arch_conf:
   chap('CHOST', arch_conf['CHOST'])
