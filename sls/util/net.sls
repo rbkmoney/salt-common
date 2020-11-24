@@ -1,4 +1,5 @@
 {% import 'pkg/common' as pkg %}
+{% import 'lib/libc.sls' as libc %}
 include:
   - lib.libc
 
@@ -15,7 +16,7 @@ util-net:
     - require:
       - file: gentoo.portage.packages
       - pkg: util-net-purged
-      {{ libc_pkg_dep() }}
+      {{ libc.pkg_dep() }}
     - pkgs:
       - {{ pkg.gen_atom('net-analyzer/mtr') }}
       - {{ pkg.gen_atom('net-analyzer/tcpdump') }}

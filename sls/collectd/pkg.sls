@@ -1,4 +1,5 @@
 {% import 'pkg/common' as pkg %}
+{% import 'lib/libc.sls' as libc %}
 include:
   - gentoo.makeconf
   - lib.libc
@@ -22,4 +23,4 @@ app-metrics/collectd:
       - augeas: manage-collectd-plugins
     - require:
       - file: gentoo.portage.packages
-      {{ libc_pkg_dep() }}
+      {{ libc.pkg_dep() }}

@@ -1,4 +1,5 @@
 {% import 'pkg/common' as pkg %}
+{% import 'lib/libc.sls' as libc %}
 include:
   - lib.libc
 
@@ -6,7 +7,7 @@ util-shell:
   pkg.latest:
     - require:
       - file: gentoo.portage.packages
-      {{ libc_pkg_dep() }}
+      {{ libc.pkg_dep() }}
     - pkgs:
       - {{ pkg.gen_atom('app-shells/bash') }}
       - {{ pkg.gen_atom('app-shells/bash-completion') }}
