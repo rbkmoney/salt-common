@@ -1,6 +1,6 @@
 include:
   - .timezone-data
-  - .glibc
+  - .libc
   - .glib
   - .ldns
   - .sctp

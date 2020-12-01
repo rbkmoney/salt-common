@@ -1,6 +1,8 @@
 {% set machine_type = salt['grains.get']('machine_type', 'nil') %}
+{% if grains['init'] == 'openrc' %}
 include:
   - openrc.modules
+{% endif %}
 
 /etc/watchdog.conf:
   file.managed:
@@ -10,13 +12,6 @@ include:
     - group: root
     - mode: 644
 
-/etc/conf.d/watchdog:
-  file.managed:
-    - source: salt://watchdog/watchdog.confd
-    - user: root
-    - group: root
-    - mode: 644
-      
 {% if machine_type == "raspberry pi" %}
 /etc/modprobe.d/watchdog.conf:
   file.managed:
@@ -41,5 +36,13 @@ watchdog:
     - watch:
       - pkg: watchdog
       - file: /etc/watchdog.conf
+{% if grains['init'] == 'openrc' %}
       - file: /etc/conf.d/watchdog
 
+/etc/conf.d/watchdog:
+  file.managed:
+    - source: salt://watchdog/watchdog.confd
+    - user: root
+    - group: root
+    - mode: 644
+{% endif %}

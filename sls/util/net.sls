@@ -1,7 +1,7 @@
 {% import 'pkg/common' as pkg %}
+{% import 'lib/libc.sls' as libc %}
 include:
-  - lib.glibc
-  - gentoo.portage.packages
+  - lib.libc
 
 util-net-purged:
   pkg.purged:
@@ -14,22 +14,22 @@ util-net-purged:
 util-net:
   pkg.latest:
     - require:
-      - pkg: sys-libs/glibc
-      - pkg: util-net-purged
       - file: gentoo.portage.packages
+      - pkg: util-net-purged
+      {{ libc.pkg_dep() }}
     - pkgs:
-      - net-analyzer/mtr
-      - net-analyzer/tcpdump
-      - net-analyzer/traceroute
-      - net-analyzer/iftop
-      - net-ftp/ftp
-      - net-analyzer/openbsd-netcat
-      - net-misc/iputils
-      - net-misc/rsync
-      - net-misc/netkit-telnetd
-      - net-misc/wget
-      - net-misc/whois
-      - sys-apps/iproute2
-      - sys-apps/net-tools
+      - {{ pkg.gen_atom('net-analyzer/mtr') }}
+      - {{ pkg.gen_atom('net-analyzer/tcpdump') }}
+      - {{ pkg.gen_atom('net-analyzer/traceroute') }}
+      - {{ pkg.gen_atom('net-analyzer/iftop') }}
+      - {{ pkg.gen_atom('net-ftp/ftp') }}
+      - {{ pkg.gen_atom('net-analyzer/openbsd-netcat') }}
+      - {{ pkg.gen_atom('net-misc/iputils') }}
+      - {{ pkg.gen_atom('net-misc/rsync') }}
+      - {{ pkg.gen_atom('net-misc/netkit-telnetd') }}
+      - {{ pkg.gen_atom('net-misc/wget') }}
+      - {{ pkg.gen_atom('net-misc/whois') }}
+      - {{ pkg.gen_atom('sys-apps/iproute2') }}
+      - {{ pkg.gen_atom('sys-apps/net-tools') }}
       - {{ pkg.gen_atom('net-misc/ipv6calc') }}
-      - net-misc/sipcalc
+      - {{ pkg.gen_atom('net-misc/sipcalc') }}

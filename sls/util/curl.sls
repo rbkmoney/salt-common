@@ -1,7 +1,7 @@
 {% import 'pkg/common' as pkg %}
+{% import 'lib/libc.sls' as libc %}
 include:
-  - gentoo.portage.packages
-  - lib.glibc
+  - lib.libc
 
 net-misc/curl:
   pkg.latest:
@@ -9,5 +9,4 @@ net-misc/curl:
       - {{ pkg.gen_atom('net-misc/curl') }}
     - require:
       - file: gentoo.portage.packages
-      - pkg: sys-libs/glibc
-
+      {{ libc.pkg_dep() }}

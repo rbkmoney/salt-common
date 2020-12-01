@@ -1,12 +1,12 @@
 {% import 'pkg/common' as pkg %}
+{% import 'lib/libc.sls' as libc %}
 include:
-  - gentoo.portage.packages
-  - lib.glibc
+  - lib.libc
 
 net-dns/unbound:
   pkg.installed:
     - require:
       - file: gentoo.portage.packages
-      - pkg: sys-libs/glibc
+      {{ libc.pkg_dep() }}
     - pkgs:
       - {{ pkg.gen_atom('net-dns/unbound') }}

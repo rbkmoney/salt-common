@@ -1,17 +1,20 @@
+{% import 'pkg/common' as pkg %}
+{% import 'lib/libc.sls' as libc %}
 include:
-  - lib.glibc
+  - lib.libc
 
 util-arch:
   pkg.latest:
     - require:
-      - pkg: sys-libs/glibc
+      - file: gentoo.portage.packages
+      {{ libc.pkg_dep() }}
     - pkgs:
-      - app-arch/tar
-      - app-arch/unzip
-      - app-arch/cpio
-      - app-arch/libarchive
-      - app-arch/gzip
-      - app-arch/bzip2
-      - app-arch/xz-utils
-      - app-arch/lz4
-      - app-arch/zstd
+      - {{ pkg.gen_atom('app-arch/tar') }}
+      - {{ pkg.gen_atom('app-arch/unzip') }}
+      - {{ pkg.gen_atom('app-arch/cpio') }}
+      - {{ pkg.gen_atom('app-arch/libarchive') }}
+      - {{ pkg.gen_atom('app-arch/gzip') }}
+      - {{ pkg.gen_atom('app-arch/bzip2') }}
+      - {{ pkg.gen_atom('app-arch/xz-utils') }}
+      - {{ pkg.gen_atom('app-arch/lz4') }}
+      - {{ pkg.gen_atom('app-arch/zstd') }}
