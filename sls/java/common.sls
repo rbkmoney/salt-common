@@ -1,4 +1,7 @@
 {% import 'pkg/common' as pkg %}
+include:
+  - gentoo.portage.packages
+
 sys-apps/baselayout-java:
   pkg.latest:
     - pkgs:
