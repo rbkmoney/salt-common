@@ -13,7 +13,6 @@ util-shell:
       - {{ pkg.gen_atom('app-shells/bash-completion') }}
       - {{ pkg.gen_atom('sys-apps/miscfiles') }}
       - {{ pkg.gen_atom('app-shells/zsh') }}
-      - {{ pkg.gen_atom('app-doc/zsh-lovers') }}
       - {{ pkg.gen_atom('app-misc/screen') }}
       - {{ pkg.gen_atom('app-admin/killproc') }}
       - {{ pkg.gen_atom('sys-devel/bc') }}
