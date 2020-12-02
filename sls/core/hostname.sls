@@ -1,3 +1,4 @@
+{% set hostname = grains['fqdn'] %}
 {% if grains['init'] == 'openrc' %}
 /etc/conf.d/hostname:
   file.managed:
@@ -7,7 +8,7 @@
     - contents: |
         # Managed by Salt
         # Set to the hostname of this machine
-        hostname="{{ grains['fqdn'] }}"
+        hostname="{{ hostname }}"
 
 hostname:
   service.running:
@@ -23,7 +24,7 @@ hostname:
     - user: root
     - group: root
     - mode: 644
-    - contents: {{ grains['fqdn'] }}
+    - contents: {{ hostname }}
 {% endif %}
 
 set-fqdn:
