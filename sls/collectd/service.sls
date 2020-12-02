@@ -6,18 +6,19 @@ collectd:
   service.running:
     - enable: True
     - watch:
-      - file: /etc/conf.d/collectd
       - file: /etc/collectd/collectd.conf
       - file: /etc/collectd/types.db
       - file: /etc/collectd/conf.d/
-      - file: /etc/init.d/collectd
 
+{% if grains['init'] == 'openrc' %}
 /etc/init.d/collectd:
   file.managed:
     - source: salt://collectd/files/collectd.init
     - mode: 755
     - user: root
     - group: root
+    - watch_in:
+      - service: collectd
 
 /etc/conf.d/collectd:
   file.managed:
@@ -25,6 +26,25 @@ collectd:
     - mode: 644
     - user: root
     - group: root
+    - watch_in:
+      - service: collectd
+
+/etc/systemd/system/collectd.service: file.absent
+{% elif grains['init'] == 'systemd' %}
+/etc/systemd/system/collectd.service:
+  file.managed:
+    - source: salt://collectd/files/collectd.service
+    - mode: 755
+    - user: root
+    - group: root
+    - watch_in:
+      - service: collectd
+
+/etc/init.d/collectd: file.absent
+/etc/conf.d/collectd: file.absent
+{% endif %}
+
+/etc/collectd.conf: file.absent
 
 /etc/collectd:
   file.directory:
@@ -76,6 +96,13 @@ collectd:
     - mode: 755
     - user: root
     - group: collectd
+
+/etc/collectd/conf.d/placeholder.conf:
+  file.managed:
+    - mode: 755
+    - user: root
+    - group: root
+    - contents: ""
 
 /etc/collectd/conf.d/10-jmx.conf:
   {% if extra_plugin_config.get('jmx', False) %}
