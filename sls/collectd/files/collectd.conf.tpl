@@ -70,7 +70,9 @@ LoadPlugin apcups
 LoadPlugin ceph
 {% endif %}
 LoadPlugin contextswitch
+{% if "conntrack" in extra_plugin_config %}
 LoadPlugin conntrack
+{% endif %}
 LoadPlugin cpu
 {% if not virtual_machine and machine_type not in ('raspberrypi') %}
 LoadPlugin cpufreq
@@ -86,7 +88,7 @@ LoadPlugin df
 LoadPlugin disk
 LoadPlugin entropy
 LoadPlugin ethstat
-LoadPlugin exec
+#LoadPlugin exec
 #LoadPlugin filecount
 #LoadPlugin fscache
 #LoadPlugin gmond
@@ -217,6 +219,7 @@ LoadPlugin zookeeper
   {% endfor %}
 </Plugin>
 {% endif %}
+
 {% if False %}
 #<Plugin "amqp">
 #  <Publish "name">
@@ -231,16 +234,8 @@ LoadPlugin zookeeper
 #    StoreRates false
 #  </Publish>
 #</Plugin>
-
-#<Plugin apache>
-#  <Instance "local">
-#    URL "http://localhost/status?auto"
-#    User "www-user"
-#    Password "secret"
-#    CACert "/etc/ssl/ca.crt"
-#  </Instance>
-#</Plugin>
 {% endif %}
+
 {% if 'apcups' in extra_plugin_config %}
 <Plugin apcups>
   Host "localhost"
@@ -254,31 +249,6 @@ LoadPlugin zookeeper
 #	User "www-user"
 #	Password "secret"
 #	CACert "/etc/ssl/ca.crt"
-#</Plugin>
-
-# <Plugin "bind">
-#   URL "http://localhost:8053/"
-#   ParseTime       true
-#   OpCodes         false
-#   QTypes          false
-
-#   ServerStats     true
-#   ZoneMaintStats  true
-#   # ResolverStats   false
-#   MemoryStats     false
-
-#   <View "_default">
-#   #  QTypes        true
-#      ResolverStats true
-#   #  CacheRRSets   true
-
-#   #  Zone "127.in-addr.arpa/IN"
-#   </View>
-# </Plugin>
-
-#<Plugin csv>
-#	DataDir "/var/lib/collectd/csv"
-#	StoreRates false
 #</Plugin>
 
 #<Plugin curl>
@@ -386,14 +356,12 @@ LoadPlugin zookeeper
 	MappedOnly false
 </Plugin>
 
-<Plugin exec>
 {% if False %}
+<Plugin exec>
 # #	Exec "user:group" "/path/to/exec"
 # #	NotificationExec "user:group" "/path/to/exec"
 #	Exec "collectd" "/usr/local/bin/ksm_stats.sh"
-{% endif %}
 </Plugin>
-{% if False %}
 #<Plugin filecount>
 #	<Directory "/path/to/dir">
 #		Instance "foodir"
@@ -403,21 +371,6 @@ LoadPlugin zookeeper
 #		Recursive true
 #		IncludeHidden false
 #	</Directory>
-#</Plugin>
-{% endif %}
-{% if False %}
-#<Plugin "gmond">
-#  MCReceiveFrom "239.2.11.71" "8649"
-#  <Metric "swap_total">
-#    Type "swap"
-#    TypeInstance "total"
-#    DataSource "value"
-#  </Metric>
-#  <Metric "swap_free">
-#    Type "swap"
-#    TypeInstance "free"
-#    DataSource "value"
-#  </Metric>
 #</Plugin>
 {% endif %}
 {% if "hddtemp" in extra_plugin_config %}
@@ -503,8 +456,8 @@ LoadPlugin zookeeper
 </Plugin>
 {% if "memcached" in extra_plugin_config %}
 <Plugin memcached>
-	Host "::1"
-	Port "11211"
+  Host "::1"
+  Port "11211"
 </Plugin>
 {% endif %}
 {% if False %}

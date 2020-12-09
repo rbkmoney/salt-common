@@ -1,6 +1,6 @@
-# Copyright 1999-2011 Gentoo Foundation
+# Managed by Salt
+# -*- mode: jinja2 -*-
 # Distributed under the terms of the GNU General Public License v2
-# $Header: /var/cvsroot/gentoo-x86/app-admin/collectd/files/collectd.confd,v 1.2 2011/04/24 17:10:05 dilfridge Exp $
 
 # Nice value used to launch collectd, to change priority of the process. As
 # you usually will want to run it in background, a default of 5 is used.
@@ -19,4 +19,4 @@ COLLECTD_PIDFILE='/run/collectd.pid'
 # collectd user appropriate privileges if you use one of the plugins that 
 # require it, as e.g. ping or iptables plugins)
 #
-COLLECTD_USER='root'
+COLLECTD_USER='{{ salt.pillar.get('collectd:service:user', 'root') }}'

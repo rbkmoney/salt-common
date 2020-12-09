@@ -1,5 +1,7 @@
+# Managed by Salt
+# -*- mode: jinja2 -*-
 [Service]
-User=collectd
+User={{ salt.pillar.get('collectd:service:user', 'collectd') }}
 ExecStart=/usr/sbin/collectd -C /etc/collectd/collectd.conf
 
 # A few plugins won't work without some privileges, which you'll have to
@@ -17,7 +19,7 @@ ExecStart=/usr/sbin/collectd -C /etc/collectd/collectd.conf
 #   smart           CAP_SYS_RAWIO
 #   turbostat       CAP_SYS_RAWIO
 #
-CapabilityBoundingSet=CAP_SYS_RAWIO, CAP_NET_RAW, CAP_NET_ADMIN
+CapabilityBoundingSet={{ salt.pillar.get('collectd:service:caps', [])|join(" ") }}
 
 # Restart the collectd daemon when it fails.
 Restart=on-failure

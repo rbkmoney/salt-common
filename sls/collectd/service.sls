@@ -22,7 +22,8 @@ collectd:
 
 /etc/conf.d/collectd:
   file.managed:
-    - source: salt://collectd/files/collectd.confd
+    - source: salt://collectd/files/collectd.confd.tpl
+    - template: jinja
     - mode: 644
     - user: root
     - group: root
@@ -33,8 +34,9 @@ collectd:
 {% elif grains['init'] == 'systemd' %}
 /etc/systemd/system/collectd.service:
   file.managed:
-    - source: salt://collectd/files/collectd.service
-    - mode: 755
+    - source: salt://collectd/files/collectd.service.tpl
+    - template: jinja
+    - mode: 644
     - user: root
     - group: root
     - watch_in:
