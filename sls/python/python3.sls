@@ -1,10 +1,10 @@
 include:
-  - python.python37
+  - python.python38
 
 eselect-python3:
   eselect.set:
     - name: python
     - action_parameter: '--python3'
-    - target: 'python3.7'
+    - target: 'python3.8'
     - require:
-      - pkg: python37
+      - pkg: python38
