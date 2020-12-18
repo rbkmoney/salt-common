@@ -1,0 +1,25 @@
+[Unit]
+Description=Kubernetes Kubelet Server
+Documentation=https://kubernetes.io/docs/concepts/overview/components/#kubelet https://kubernetes.io/docs/reference/generated/kubelet/
+After=crio.service
+Requires=crio.service
+StartLimitBurst=60
+
+[Service]
+WorkingDirectory=/var/lib/kubelet
+Environment="KUBELET_KUBECONFIG_ARGS=--kubeconfig=/etc/kubernetes/kubelet.conf {% if "k8s-master" not in grains.get('role', []) %}--bootstrap-kubeconfig=/etc/kubernetes/bootstrap-kubelet.conf{% endif %}"
+Environment="KUBELET_CONFIG_ARGS=--config=/var/lib/kubelet/config.yaml"
+EnvironmentFile=-/var/lib/kubelet/kubeadm-flags.env
+ExecStart=/usr/bin/kubelet \
+        $KUBELET_KUBECONFIG_ARGS \
+        $KUBELET_CONFIG_ARGS \
+        $KUBELET_KUBEADM_ARGS \
+        $KUBELET_EXTRA_ARGS
+Restart=always
+RestartSec=5
+CPUAccounting=true
+MemoryAccounting=true
+KillMode=process
+
+[Install]
+WantedBy=multi-user.target
