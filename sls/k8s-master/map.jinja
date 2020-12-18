@@ -1,0 +1,10 @@
+{% set confmap = salt['grains.filter_by']({
+    'Gentoo': {
+        'KubePkgs': ['sys-cluster/kubernetes','app-admin/helm','app-emulation/cri-tools','app-emulation/cri-o','app-emulation/crun'],
+	'criService': 'crio',
+    },
+    'Debian': {
+        'KubePkgs': ['apt-transport-https','kubectl','kubeadm','docker-ce','kubernetes-cni','curl','helm'],
+	'criService': 'docker',
+    },
+}, grain='os_family', default='Gentoo') %}

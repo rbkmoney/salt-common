@@ -1,0 +1,27 @@
+apiVersion: kubeadm.k8s.io/v1beta2
+kind: InitConfiguration
+nodeRegistration:
+  criSocket: unix:///var/run/crio/crio.sock
+  name: {{ grains['host'] }}
+  taints:
+  - effect: NoSchedule
+    key: node-role.kubernetes.io/master
+---
+apiServer:
+  timeoutForControlPlane: 4m0s
+apiVersion: kubeadm.k8s.io/v1beta2
+certificatesDir: /etc/kubernetes/pki
+clusterName: kubernetes
+controlPlaneEndpoint: '[{{ grains['fqdn_ip6']|join|string }}]:6443'
+kind: ClusterConfiguration
+featureGates:
+  IPv6DualStack: true
+networking:
+  dnsDomain: cluster.local
+  podSubnet: {{ pillar['kubernetes']['pod-network-cidr'] }}
+  serviceSubnet: 10.96.0.0/12
+scheduler: {}
+---
+apiVersion: kubelet.config.k8s.io/v1beta1
+kind: KubeletConfiguration
+cgroupDriver: systemd
