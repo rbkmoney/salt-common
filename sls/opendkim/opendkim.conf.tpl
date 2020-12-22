@@ -3,8 +3,8 @@
 
 UserID                  milter
 Umask                   113
-PidFile                 /run/opendkim/opendkim.pid
-Socket                  unix:/run/opendkim/opendkim.sock
+PidFile                 /run/opendkim.pid
+Socket                  unix:/run/opendkim.sock
 Statistics              /var/lib/opendkim/stats.dat
 
 Canonicalization        {{ conf.get('canonicalization', 'relaxed/simple') }}
