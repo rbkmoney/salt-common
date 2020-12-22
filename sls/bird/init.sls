@@ -24,6 +24,17 @@ bird6:
     - user: root
     - group: root
 
+{% if grains['init'] == 'systemd' %}
+/etc/systemd/system/bird.service:
+  file.managed:
+    - source: salt://bird/files/bird.service
+    - mode: 644
+    - user: root
+    - group: root
+    - watch_in:
+      - service: bird
+{% endif %}
+
 bird:
   service.running:
     - enable: True
