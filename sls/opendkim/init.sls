@@ -1,7 +1,6 @@
+{% set conf = salt['pillar.get']('opendkim:conf') %}
 include:
   - opendkim.pkg
-
-{% set conf = salt['pillar.get']('opendkim:conf') %}
 
 opendkim:
   service.running:
