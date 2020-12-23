@@ -1,6 +1,25 @@
 include:
   - .pkg
 
+/etc/bird.conf:
+  file.managed:
+    - source: salt://bird/files/{{ grains.id }}/bird.conf
+    - template: jinja
+    - user: root
+    - group: root
+    - mode: 640
+    - check_cmd: bird -p -c
+
+{% if grains.init == 'openrc' %}
+/etc/init.d/bird:
+  file.managed:
+    - source: salt://bird/files/bird.initd
+    - mode: 750
+    - user: root
+    - group: root
+    - watch_in:
+      - service: bird
+
 /etc/init.d/bird6:
   file.absent:
     - require:
@@ -9,22 +28,7 @@ include:
 bird6:
   service.dead
 
-/etc/init.d/bird:
-  file.managed:
-    - source: salt://bird/files/bird.initd
-    - mode: 750
-    - user: root
-    - group: root
-
-/etc/bird.conf:
-  file.managed:
-    - source: salt://bird/files/bird.conf
-    - replace: False
-    - mode: 640
-    - user: root
-    - group: root
-
-{% if grains['init'] == 'systemd' %}
+{% elif grains.init == 'systemd' %}
 /etc/systemd/system/bird.service:
   file.managed:
     - source: salt://bird/files/bird.service
@@ -41,7 +45,6 @@ bird:
     - require:
       - file: /etc/bird.conf
     - watch:
-      - file: /etc/init.d/bird
       - pkg: pkg_bird
 
 bird-reload:

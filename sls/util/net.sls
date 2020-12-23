@@ -10,6 +10,7 @@ util-net-purged:
       - www-client/elinks
       - www-client/links
       - net-analyzer/netcat6
+      - net-ftp/ftp
 
 util-net:
   pkg.latest:
@@ -22,7 +23,7 @@ util-net:
       - {{ pkg.gen_atom('net-analyzer/tcpdump') }}
       - {{ pkg.gen_atom('net-analyzer/traceroute') }}
       - {{ pkg.gen_atom('net-analyzer/iftop') }}
-      - {{ pkg.gen_atom('net-ftp/ftp') }}
+      - {{ pkg.gen_atom('net-ftp/lftp') }}
       - {{ pkg.gen_atom('net-analyzer/openbsd-netcat') }}
       - {{ pkg.gen_atom('net-misc/iputils') }}
       - {{ pkg.gen_atom('net-misc/rsync') }}
