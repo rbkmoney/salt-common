@@ -11,7 +11,12 @@ cilium_deploy:
     - name: |
             helm --kubeconfig /etc/kubernetes/admin.conf install \
             cilium cilium/cilium --version {{ pillar['kubernetes']['cilium']['version'] }} \
-            --namespace kube-system --set global.kubeProxyReplacement=strict \
-            --set global.k8sServiceHost={{ grains['fqdn_ip6']|join|string }} --set global.k8sServicePort=6443 \
-            --set operator.enabled=false --set config.ipam=kubernetes --set global.tunnel=vxlan
+            --namespace kube-system
+            --set kubeProxyReplacement=strict \
+            --set k8sServiceHost={{ grains['fqdn_ip6']|join|string }} \
+            --set k8sServicePort=6443 \
+            --set operator.enabled=false \
+            --set ipam.mode=kubernetes \
+            --set tunnel=vxlan
+
 {% endif %}
