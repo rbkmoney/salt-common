@@ -1,5 +1,13 @@
+{% import 'pkg/common' as pkg %}
+include:
+  - gentoo.portage.packages
+
 app-admin/restart-services:
-  pkg.latest
+  pkg.latest:
+    - pkgs:
+      - {{ pkg.gen_atom('app-admin/restart-services') }}
+    - require:
+      - file: gentoo.portage.packages
 
 /etc/restart-services.conf:
   file.managed:
