@@ -21,15 +21,12 @@ default_features = ["xattr sandbox userfetch parallel-fetch parallel-install cle
                     "compress-build-logs unmerge-logs splitdebug compressdebug fail-clean",
                     "unmerge-orphans getbinpkg -news"]
 
-PORTDIR=make_conf.get('portdir', '/usr/portage')
-chap('PORTDIR', PORTDIR)
-state(PORTDIR).file.directory(create=True, , mode=755, user='root', group='root')
 DISTDIR=make_conf.get('distdir', '/var/cache/distfiles')
 chap('DISTDIR', DISTDIR)
-state(DISTDIR).file.directory(create=True, , mode=755, user='root', group='root')
+state(DISTDIR).file.directory(create=True, mode=755, user='root', group='root')
 PKGDIR=make_conf.get('pkgdir', '/var/cache/binpkgs')
 chap('PKGDIR', PKGDIR)
-state(PKGDIR).file.directory(create=True, , mode=755, user='root', group='root')
+state(PKGDIR).file.directory(create=True, mode=755, user='root', group='root')
 
 chap('GENTOO_MIRRORS', make_conf.get('gentoo_mirrors', 'https://' + mirror_host + '/gentoo-distfiles'))
 
