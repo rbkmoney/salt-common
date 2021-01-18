@@ -3,7 +3,7 @@
 
 driftfile /var/lib/chrony/drift
 keyfile /etc/chrony/chrony.keys
-pidfile /run/chronyd.pid
+pidfile /run/chrony/chronyd.pid
 
 dumpdir /var/lib/chrony
 dumponexit
