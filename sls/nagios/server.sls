@@ -25,7 +25,8 @@ include:
     
 /etc/nagios/resource.cfg:
   file.managed:
-    - source: salt://nagios/files/resource.cfg
+    - source: salt://nagios/files/resource.cfg.tpl
+    - template: jinja
     - mode: 600
     - user: nagios
     - group: nagios
