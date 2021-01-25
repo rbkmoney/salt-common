@@ -20,15 +20,15 @@ include:
 
 /etc/chrony/chrony.keys: file.absent
 
-{% if grains.init == 'openrc' %}
+{% if grains.init == 'systemd' %}
+/etc/conf.d/chronyd: file.absent
+{% else %}
 /etc/conf.d/chronyd:
   file.managed:
     - source: salt://chrony/files/chronyd.confd
     - mode: 644
     - watch_in:
       - service: chronyd
-{% else %}
-/etc/conf.d/chronyd: file.absent
 {% endif %}
 
 

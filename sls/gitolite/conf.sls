@@ -17,7 +17,7 @@
     - source: salt://gitolite/files/gitolite.rc
     - user: git
     - group: git
-    - file_mode: 640
+    - mode: 640
     - require:
       - file: /var/lib/gitolite/
 
