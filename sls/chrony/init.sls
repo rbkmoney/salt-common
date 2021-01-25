@@ -1,3 +1,6 @@
+include:
+  - .pkg
+
 /etc/chrony/:
   file.directory:
     - create: True
