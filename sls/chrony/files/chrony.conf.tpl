@@ -2,9 +2,11 @@
 # Managed by Salt
 
 driftfile /var/lib/chrony/drift
-keyfile /etc/chrony/chrony.keys
+{% if grains.init == 'systemd' %}
 pidfile /run/chrony/chronyd.pid
-
+{% else %}
+pidfile /run/chronyd.pid
+{% endif %}
 dumpdir /var/lib/chrony
 dumponexit
 
