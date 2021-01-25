@@ -1,6 +1,6 @@
 include:
   - nginx
-  - gentoo-mirrors.ssl-nginx
+  - nginx.tls.gentoo-mirror
 
 /etc/nginx/includes/gentoo-mirror-proxy-params.conf:
   file.managed:

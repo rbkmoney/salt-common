@@ -1,6 +1,6 @@
 include:
   - nginx
-  - gentoo-mirrors.ssl-nginx
+  - nginx.tls.gentoo-mirror
   - rsyncd
   - cron
 
@@ -14,7 +14,7 @@ include:
 
 /etc/nginx/vhosts.d/gentoo-mirror.conf:
   file.managed:
-    - source: salt://gentoo-mirrors/gentoo_mirror.nginx.conf.tpl
+    - source: salt://gentoo-mirrors/files/gentoo_mirror.nginx.conf.tpl
     - template: jinja
     - defaults:
         ssl: True
@@ -40,7 +40,7 @@ include:
 
 /opt/gentoo-rsync/rsync-base.sh:
   file.managed:
-    - source: salt://gentoo-mirrors/rsync-base.sh
+    - source: salt://gentoo-mirrors/files/rsync-base.sh
     - mode: 755
     - user: root
     - group: root
@@ -62,7 +62,7 @@ include:
 
 /etc/rsync/rsync-gentoo-distfiles.conf:
   file.managed:
-    - source: salt://gentoo-mirrors/rsync-conf.tpl
+    - source: salt://gentoo-mirrors/files/rsync-conf.tpl
     - template: jinja
     - defaults:
         rsync_src: "rsync://{{ mirror_host }}/gentoo-distfiles"
@@ -104,7 +104,7 @@ rsync-gentoo-distfiles:
 
 /etc/rsync/rsync-gentoo-portage.conf:
   file.managed:
-    - source: salt://gentoo-mirrors/rsync-conf.tpl
+    - source: salt://gentoo-mirrors/files/rsync-conf.tpl
     - template: jinja
     - defaults:
         rsync_src: "rsync://{{ mirror_host }}/gentoo-portage"
@@ -160,7 +160,7 @@ rsync-gentoo-portage:
         
 /etc/rsync/rsync-gentoo-{{ inst['arch'] }}-{{ inst['cpu_arch'] }}-packages.conf:
   file.managed:
-    - source: salt://gentoo-mirrors/rsync-conf.tpl
+    - source: salt://gentoo-mirrors/files/rsync-conf.tpl
     - template: jinja
     - defaults:
         rsync_src: "{{ inst.get('rsync_src', 'rsync://'+mirror_host+'/gentoo-packages/'+inst['arch']+'/'+inst['cpu_arch']) }}"
