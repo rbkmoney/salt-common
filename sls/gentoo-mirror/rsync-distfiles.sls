@@ -3,6 +3,7 @@ include:
   - nginx.tls.gentoo-mirror
   - rsyncd
   - cron
+  - logrotate
 
 {% set mirror_host = salt['pillar.get']('gentoo-mirror:mirror-host', 'gentoo.bakka.su') %}
 {% set dst_host = salt['pillar.get']('gentoo-mirror:dst-host',
@@ -14,7 +15,7 @@ include:
 
 /etc/nginx/vhosts.d/gentoo-mirror.conf:
   file.managed:
-    - source: salt://gentoo-mirrors/files/gentoo_mirror.nginx.conf.tpl
+    - source: salt://{{ slspath }}/files/gentoo_mirror.nginx.conf.tpl
     - template: jinja
     - defaults:
         ssl: True
@@ -31,28 +32,44 @@ include:
     - watch_in:
       - service: nginx-reload
 
-/opt/gentoo-rsync/:
+/opt/gentoo-mirror/:
   file.directory:
     - create: True
     - mode: 755
     - user: root
     - group: root
 
-/opt/gentoo-rsync/rsync-base.sh:
+/opt/gentoo-mirror/rsync-base.sh:
   file.managed:
-    - source: salt://gentoo-mirrors/files/rsync-base.sh
+    - source: salt://{{ slspath }}/files/rsync-base.sh
     - mode: 755
     - user: root
     - group: root
     - require:
-      - file: /opt/gentoo-rsync/
+      - file: /opt/gentoo-mirror/
 
-/etc/rsync/:
+/etc/gentoo-mirror/:
   file.directory:
     - create: True
     - mode: 755
     - user: root
     - group: root
+
+/var/log/gentoo-mirror/:
+  file.directory:
+    - create: True
+    - mode: 755
+    - user: root
+    - group: root
+
+/etc/logrotate.d/gentoo-mirror:
+  file.managed:
+    - source: salt://{{ slspath }}/files/gentoo-mirror.logrotate
+    - mode: 644
+    - user: root
+    - group: root
+    - require:
+      - file: /etc/logrotate.d/
 
 {% if 'gentoo-distfiles' in mirror_types %}
 "{{ default_root }}/gentoo-distfiles":
@@ -60,31 +77,31 @@ include:
     - create: True
     - makedirs: True
 
-/etc/rsync/rsync-gentoo-distfiles.conf:
+/etc/gentoo-mirror/rsync-gentoo-distfiles.conf:
   file.managed:
-    - source: salt://gentoo-mirrors/files/rsync-conf.tpl
+    - source: salt://{{ slspath }}/files/rsync-conf.tpl
     - template: jinja
     - defaults:
         rsync_src: "rsync://{{ mirror_host }}/gentoo-distfiles"
         rsync_dst: "{{ default_root }}/gentoo-distfiles"
     # - context:
 
-/opt/gentoo-rsync/rsync-gentoo-distfiles.sh:
+/opt/gentoo-mirror/rsync-gentoo-distfiles.sh:
   file.symlink:
-    - target: /opt/gentoo-rsync/rsync-base.sh
+    - target: /opt/gentoo-mirror/rsync-base.sh
     - require:
-      - file: /opt/gentoo-rsync/rsync-base.sh
+      - file: /opt/gentoo-mirror/rsync-base.sh
 
 rsync-gentoo-distfiles:
   cron.present:
     - identifier: rsync-gentoo-distfiles
-    - name: /opt/gentoo-rsync/rsync-gentoo-distfiles.sh
+    - name: /opt/gentoo-mirror/rsync-gentoo-distfiles.sh
     - user: root
     - minute: 0
     - hour: '*/4'
     - require:
-      - file: /etc/rsync/rsync-gentoo-distfiles.conf
-      - file: /opt/gentoo-rsync/rsync-gentoo-distfiles.sh
+      - file: /etc/gentoo-mirror/rsync-gentoo-distfiles.conf
+      - file: /opt/gentoo-mirror/rsync-gentoo-distfiles.sh
 
 /etc/rsyncd.d/gentoo-distfiles.conf:
   ini.options_present:
@@ -102,9 +119,9 @@ rsync-gentoo-distfiles:
     - create: True
     - makedirs: True
 
-/etc/rsync/rsync-gentoo-portage.conf:
+/etc/gentoo-mirror/rsync-gentoo-portage.conf:
   file.managed:
-    - source: salt://gentoo-mirrors/files/rsync-conf.tpl
+    - source: salt://{{ slspath }}/files/rsync-conf.tpl
     - template: jinja
     - defaults:
         rsync_src: "rsync://{{ mirror_host }}/gentoo-portage"
@@ -112,22 +129,22 @@ rsync-gentoo-distfiles:
         rsync_opts: "+ --checksums"
     # - context:
 
-/opt/gentoo-rsync/rsync-gentoo-portage.sh:
+/opt/gentoo-mirror/rsync-gentoo-portage.sh:
   file.symlink:
-    - target: /opt/gentoo-rsync/rsync-base.sh
+    - target: /opt/gentoo-mirror/rsync-base.sh
     - require:
-      - file: /opt/gentoo-rsync/rsync-base.sh
+      - file: /opt/gentoo-mirror/rsync-base.sh
 
 rsync-gentoo-portage:
   cron.present:
     - identifier: rsync-gentoo-portage
-    - name: /opt/gentoo-rsync/rsync-gentoo-portage.sh
+    - name: /opt/gentoo-mirror/rsync-gentoo-portage.sh
     - user: root
     - minute: 0
     - hour: '*/4'
     - require:
-      - file: /etc/rsync/rsync-gentoo-portage.conf
-      - file: /opt/gentoo-rsync/rsync-gentoo-portage.sh
+      - file: /etc/gentoo-mirror/rsync-gentoo-portage.conf
+      - file: /opt/gentoo-mirror/rsync-gentoo-portage.sh
 
 /etc/rsyncd.d/gentoo-portage.conf:
   ini.options_present:
@@ -147,20 +164,20 @@ rsync-gentoo-portage:
     - makedirs: True
 
 {% for inst in salt['pillar.get']('gentoo-mirror:gentoo-package-repos', []) %}
-/opt/gentoo-rsync/rsync-gentoo-{{ inst['arch'] }}-{{ inst['cpu_arch'] }}-packages.sh:
+/opt/gentoo-mirror/rsync-gentoo-{{ inst['arch'] }}-{{ inst['cpu_arch'] }}-packages.sh:
   file.symlink:
-    - target: /opt/gentoo-rsync/rsync-base.sh
+    - target: /opt/gentoo-mirror/rsync-base.sh
     - require:
-      - file: /opt/gentoo-rsync/rsync-base.sh
+      - file: /opt/gentoo-mirror/rsync-base.sh
 
 "{{ default_root }}/{{ inst.get('rsync_dst', 'gentoo-packages/'+inst['arch']+'/'+inst['cpu_arch']) }}":
   file.directory:
     - create: True
     - makedirs: True
         
-/etc/rsync/rsync-gentoo-{{ inst['arch'] }}-{{ inst['cpu_arch'] }}-packages.conf:
+/etc/gentoo-mirror/rsync-gentoo-{{ inst['arch'] }}-{{ inst['cpu_arch'] }}-packages.conf:
   file.managed:
-    - source: salt://gentoo-mirrors/files/rsync-conf.tpl
+    - source: salt://{{ slspath }}/files/rsync-conf.tpl
     - template: jinja
     - defaults:
         rsync_src: "{{ inst.get('rsync_src', 'rsync://'+mirror_host+'/gentoo-packages/'+inst['arch']+'/'+inst['cpu_arch']) }}"
@@ -169,14 +186,14 @@ rsync-gentoo-portage:
 rsync-gentoo-{{ inst['arch'] }}-{{ inst['cpu_arch'] }}-packages:
   cron.present:
     - identifier: rsync-gentoo-{{ inst['arch'] }}-{{ inst['cpu_arch'] }}-packages
-    - name: /opt/gentoo-rsync/rsync-gentoo-{{ inst['arch'] }}-{{ inst['cpu_arch'] }}-packages.sh
+    - name: /opt/gentoo-mirror/rsync-gentoo-{{ inst['arch'] }}-{{ inst['cpu_arch'] }}-packages.sh
     - user: root
     - dayweek: "{{ inst.get('day','*') }}"
     - hour: "{{ inst.get('hour','*/4') }}"
     - minute: "{{ inst.get('minute','0') }}"
     - require:
-      - file: /etc/rsync/rsync-gentoo-{{ inst['arch'] }}-{{ inst['cpu_arch'] }}-packages.conf
-      - file: /opt/gentoo-rsync/rsync-gentoo-{{ inst['arch'] }}-{{ inst['cpu_arch'] }}-packages.sh
+      - file: /etc/gentoo-mirror/rsync-gentoo-{{ inst['arch'] }}-{{ inst['cpu_arch'] }}-packages.conf
+      - file: /opt/gentoo-mirror/rsync-gentoo-{{ inst['arch'] }}-{{ inst['cpu_arch'] }}-packages.sh
 
 /etc/rsyncd.d/gentoo-{{ inst['arch'] }}-{{ inst['cpu_arch'] }}-packages.conf:
   ini.options_present:
