@@ -19,7 +19,7 @@ featureGates:
 networking:
   dnsDomain: cluster.local
   podSubnet: {{ pillar['kubernetes']['pod-network-cidr'] }}
-  serviceSubnet: 10.96.0.0/12
+  serviceSubnet: {{ pillar['kubernetes']['service-network-cidr'] }}
 scheduler: {}
 ---
 apiVersion: kubelet.config.k8s.io/v1beta1
