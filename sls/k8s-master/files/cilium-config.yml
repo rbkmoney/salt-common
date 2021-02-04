@@ -1,0 +1,29 @@
+autoDirectNodeRoutes: true
+enableIPv6Masquerade: false
+ipam:
+  mode: cluster-pool
+  operator:
+    clusterPoolIPv6MaskSize: 80
+    clusterPoolIPv6PodCIDR: {{ pillar['kubernetes']['pod-network-cidr'] }}
+ipv4:
+  enabled: false
+ipv6:
+  enabled: true
+k8sServiceHost: {{ grains['fqdn_ip6'] | first() }}
+k8sServicePort: 6443
+kubeProxyReplacement: strict
+nativeRoutingCIDR: {{ pillar['kubernetes']['pod-network-cidr'] }}
+tunnel: disabled
+
+hubble:
+  ui:
+    enabled: true
+  relay:
+    enabled: true
+  listenAddress: ":4244"
+
+# crio needs to be restarted https://docs.cilium.io/en/v1.9/concepts/kubernetes/configuration/#crio
+containerRuntime:
+  integration: "crio"
+extraArgs:
+  tofqdns-dns-reject-response-code: "nameError"
