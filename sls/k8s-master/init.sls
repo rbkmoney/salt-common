@@ -112,5 +112,6 @@ kube_join_key:
       - creates: /etc/kubernetes/kubelet.conf
       - require:
         - file: /etc/kubernetes/manifests/.keep_sys-cluster_kubernetes-0
+        - file: /etc/kubernetes/manifests/.keep_sys-cluster_kubelet-0
 {% endfor %}
 {% endif %}
