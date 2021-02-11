@@ -1,5 +1,5 @@
+{# -*- mode: jinja2 -*- #}
 # Managed by Salt
-# -*- mode: jinja2 -*-
 # Distributed under the terms of the GNU General Public License v2
 
 # Nice value used to launch collectd, to change priority of the process. As
