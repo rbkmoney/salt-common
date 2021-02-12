@@ -1,6 +1,9 @@
 {% if "k8s-master" in grains.get('role', []) %}
-"helm repo add cilium https://helm.cilium.io":
-  cmd.run:
+cilium_repository_is_managed:
+  helm.repo_managed:
+    - present:
+      - name: cilium
+        url: https://helm.cilium.io
     - require:
       - cmd: kubeadm_init
 
@@ -10,12 +13,15 @@
     - template: jinja
 
 cilium_deploy:
-  cmd.run:
+  helm.release_present:
+    - name: cilium
+    - chart: cilium/cilium
+    - namespace: kube-system
+    - version: {{ pillar['kubernetes']['cilium']['version'] }}
+    - values: /tmp/cilium.yaml
+    - kvflags:
+        kubeconfig: /etc/kubernetes/admin.conf
     - require:
-      - cmd: "helm repo add cilium https://helm.cilium.io"
+      - helm: cilium_repository_is_managed
       - file: "/tmp/cilium.yaml"
-    - name: |
-            helm --kubeconfig /etc/kubernetes/admin.conf install \
-            cilium cilium/cilium --version {{ pillar['kubernetes']['cilium']['version'] }} \
-            --namespace kube-system -f /tmp/cilium.yaml
 {% endif %}
