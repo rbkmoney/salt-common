@@ -9,3 +9,5 @@ kernel.panic:
 kernel.sched_migration_cost_ns:
   sysctl.present:
     - value: 5000000
+    - onlyif:
+      - test -f /proc/sys/kernel/sched_migration_cost_ns
