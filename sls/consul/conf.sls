@@ -1,11 +1,15 @@
 include:
-  - consul.pkg
+  - .pkg
 
+{% if grains['init'] == 'openrc' %}
 /etc/conf.d/consul:
   file.managed:
-    - source: salt://consul/files/consul.confd.tpl
+    - source: salt://{{ slspath }}/files/consul.confd.tpl
     - template: jinja
     - mode: 644
+{% elif grains['init'] == 'systemd' %}
+/etc/conf.d/consul: file.absent
+{% endif %}
 
 /etc/consul.d/:
   file.directory:
