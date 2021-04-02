@@ -2,7 +2,7 @@ include:
   - .pkg
   - .conf
 
-{% set data_dir = salt.pillar.get('consul:main-config:data-dir') %}
+{% set data_dir = salt.pillar.get('consul:main-config:data_dir') %}
 {{ data_dir }}/:
   file.directory:
     - create: True
