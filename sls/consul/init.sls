@@ -31,5 +31,3 @@ consul-reload:
     - reload: True
     - watch:
       - file: /etc/consul.d/reloadable-config.json
-    - require:
-      - service: consul
