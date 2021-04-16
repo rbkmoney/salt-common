@@ -12,14 +12,14 @@ apiServer:
 apiVersion: kubeadm.k8s.io/v1beta2
 certificatesDir: /etc/kubernetes/pki
 clusterName: kubernetes
-controlPlaneEndpoint: '[{{ grains['fqdn_ip6']|join|string }}]:6443'
+controlPlaneEndpoint: '[{{ grains['fqdn_ip6'] | first() }}]:6443'
 kind: ClusterConfiguration
 featureGates:
   IPv6DualStack: true
 networking:
   dnsDomain: cluster.local
   podSubnet: {{ pillar['kubernetes']['pod-network-cidr'] }}
-  serviceSubnet: 10.96.0.0/12
+  serviceSubnet: {{ pillar['kubernetes']['service-network-cidr'] }}
 scheduler: {}
 ---
 apiVersion: kubelet.config.k8s.io/v1beta1

@@ -8,7 +8,7 @@
  	   '|haveged|irqbalance|lldpd|smartd|snmpd|mdadm|lvm-monitoring' +
  	   '|named|unbound|nsd|ntpd|chronyd|clamd' +
  	   '|postfix|qmail|opendkim|pypolicyd-spf|nullmailer|opendnssec' +
- 	   '|sshd|zabbix-agentd|collectd|monit|filebeat' +
+ 	   '|sshd|zabbix-agentd|collectd|monit|filebeat|auditbeat' +
 	   '|salt-(minion|syndic)|cf-.*)',
  'always-nodeps': '(udev|ulogd|rpc.*|rsyslog|syslog-ng|metalog|lvmetad' +
  		  '|xencommons)',
@@ -17,7 +17,7 @@
 	     '|mysql|postgresql-.*|mongodb|riak|dnet_.*|ceph-.*|radosgw.*' +
 	     '|elasticsearch|kibana|carbon-*|grafana|jenkins|consul|samba|nagios' +
 	     '|openvpn.*|racoon|bird|bird6|quagga|suricata.*' +
-	     '|pacemaker|salt-master|watchdog)',
+	     '|pacemaker|salt-master|watchdog|kafka)',
  'critical-nodeps': '()',
  'always-reload-only': '(libvirtd)',
  'ignore': '(ntp-client|xendomains|xenstored)',

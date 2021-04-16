@@ -2,12 +2,12 @@
 {% import 'lib/libc.sls' as libc %}
 include:
   - lib.libc
-  - .selinux
 
-net-misc/lldpd:
+net-misc/chrony:
   pkg.latest:
     - require:
       - file: gentoo.portage.packages
       {{ libc.pkg_dep() }}
     - pkgs:
-      - {{ pkg.gen_atom('net-misc/lldpd') }}
+      - {{ pkg.gen_atom('net-misc/chrony') }}
+

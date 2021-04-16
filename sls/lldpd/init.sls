@@ -3,7 +3,7 @@ include:
 
 /etc/conf.d/lldpd:
   file.managed:
-    - source: salt://lldpd/lldpd.confd
+    - source: salt://{{ slspath }}/files/lldpd.confd
     - mode: 640
     - user: root
 
@@ -15,7 +15,7 @@ include:
 
 /etc/lldpd.d/salt.conf:
   file.managed:
-    - source: salt://lldpd/lldpd.d/salt.conf
+    - source: salt://{{ slspath }}/files/lldpd.d/salt.conf
     - mode: 640
     - user: root
 
