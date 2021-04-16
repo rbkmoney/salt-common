@@ -10,6 +10,12 @@
     - require:
       - pkg: k8s_deps
 
+/etc/containers/registries.conf:
+  file.managed:
+    - source: salt://{{ slspath }}/files/crio-registries.conf
+    - require:
+      - pkg: k8s_deps
+
 /etc/crictl.yaml:
   file.managed:
     - source: salt://{{ slspath }}/files/crictl.yaml

@@ -1,0 +1,6 @@
+# Managed by Salt
+
+/var/log/rsync-gentoo-.log {
+        missingok
+	delaycompress
+}

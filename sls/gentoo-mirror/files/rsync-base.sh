@@ -1,14 +1,14 @@
 #!/bin/bash
 
 RSYNC="/usr/bin/rsync"
-LOGDIR="/var/log"
+LOGDIR="/var/log/gentoo-mirror"
 bname="$(basename ${0})"
 base="${bname%.*}"
 LOGFILE="${LOGDIR}/${base}.log"
 if [ "${base}" == "rsync-base" ]; then
     exit 0
 fi
-source "/etc/rsync/${base}.conf"
+source "/etc/gentoo-mirror/${base}.conf"
 
 if flock -xn "${DST}" sleep 1; then
     echo "${base} is not locked" >> "${LOGFILE}" 2>&1

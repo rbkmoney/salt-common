@@ -6,9 +6,7 @@
 # - user (default: consul)
 
 # extra arguments for the consul agent
-data_dir="{{ salt['pillar.get']('consul:data-dir', '/var/lib/consul') }}"
-command_args="{{ salt['pillar.get']('consul:command-args', '-config-dir=/etc/consul.d') }}
-	-data-dir ${data_dir}"
+command_args="{{ salt.pillar.get('consul:command-args', '-config-dir=/etc/consul.d') }}"
 
 # upstream strongly recommends > 1
 GOMAXPROCS={{ salt['pillar.get']('consul:gomaxproc', 2) }}
