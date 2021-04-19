@@ -5,7 +5,7 @@ include:
   - .config
   - .service
 
-/etc/conf.d/filebeat
+/etc/conf.d/filebeat:
   file.append:
     - text: "export GODEBUG=x509ignoreCN=0"
     - require: 
