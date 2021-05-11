@@ -10,6 +10,7 @@ class NoAliasDumper(yaml.SafeDumper):
 conf_path = '/etc/elasticsearch/'
 log_path = '/var/log/elasticsearch/'
 data_path = '/var/lib/elasticsearch/'
+es_java_opts = '-Des.transport.cname_in_publish_address=true'
 
 packages_es = pillar('gentoo:portage:packages:app-misc/elasticsearch', {})
 es_version = packages_es.get('version', '=7.0.0')
@@ -149,7 +150,7 @@ File.managed(
   template='jinja', source="salt://elasticsearch/files/elasticsearch.confd.tpl",
   defaults={
     'conf_dir': conf_path, 'log_dir': log_path, 'data_dir': data_dir,
-    'es_java_opts': '', 'l_nofile': l_nofile, 'l_memlock': l_memlock,
+    'es_java_opts': es_java_opts , 'l_nofile': l_nofile, 'l_memlock': l_memlock,
     'max_map_count': max_map_count, 'max_threads': max_threads, 'es_startup_sleep_time': 10})
 
 if tls:
