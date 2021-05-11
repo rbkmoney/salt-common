@@ -106,7 +106,8 @@ if tls:
         'pemcert_filepath': 'http-cert.pem',
         'pemkey_filepath': 'http-key.pem',
         'pemtrustedcas_filepath': 'http-ca.pem',
-        'clientauth_mode': tls_http.get('clientauth_mode', 'OPTIONAL')
+        'clientauth_mode': tls_http.get('clientauth_mode', 'OPTIONAL'),
+        'enabled_protocols': ["TLSv1.2"]
       },
       'transport': {
         'enabled': tls_transport.get('enabled', tls_enabled),
