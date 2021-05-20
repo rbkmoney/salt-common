@@ -1,8 +1,16 @@
 {% import 'pkg/common' as pkg %}
+{% import 'lib/libc.sls' as libc %}
+include:
+  - lib.libc
+  - users
+
 pam_otp:
   pkg.latest:
     - pkgs:
       - {{ pkg.gen_atom('sys-auth/oath-toolkit') }}
+    - require:
+      - file: gentoo.portage.packages
+      {{ libc.pkg_dep() }}
 
 /etc/security/access-passless.conf:
   file.managed:
