@@ -5,6 +5,12 @@ include:
   - .config
   - .service
 
+/etc/conf.d/filebeat:
+  file.append:
+    - text: "export GODEBUG=x509ignoreCN=0"
+    - require: 
+      - pkg: app-admin/filebeat
+
 extend:
   filebeat:
     service.running:
@@ -14,6 +20,7 @@ extend:
         - file: /etc/filebeat/conf.d/
         - file: /etc/filebeat/filebeat.template.json
         - file: /var/lib/filebeat/module/
+        - file: /etc/conf.d/filebeat
         {% for out in output.keys() %}
         {% if out in tls %}
         {% for pemtype in ('cert', 'key', 'ca') %}
