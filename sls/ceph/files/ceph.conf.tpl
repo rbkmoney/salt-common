@@ -154,6 +154,14 @@ osd op complaint time = {{ ceph_osd.get('op-complaint-time', 30) }}
 # https://tracker.ceph.com/issues/44184#note-17
 osd map cache size = {{ ceph_osd.get('map-cache-size', 5000) }}
 
+{% for key in ('recovery-priority', 'recovery-op-priority'
+'min-pg-log-entries', 'max-pg-log-entries', 'pg-log-dups-tracked',
+'max-pgls', 'max-pg-per-osd-hard-ratio') %}
+{% if key in ceph_osd %}
+osd {{ key.replace('-', ' ') }} = {{ ceph_osd[key] }}
+{% endif %}
+{% endfor %}
+
 # Enables direct i/o to the journal.
 journal dio = {{ 'true' if ceph_osd.get('journal-dio', True) else 'false' }}
 
