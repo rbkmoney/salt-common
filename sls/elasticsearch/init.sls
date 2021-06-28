@@ -15,6 +15,7 @@ create-elasticsearch-keystore:
   cmd.run:
     - env:
       - ES_PATH_CONF: /etc/elasticsearch
+      - JAVA_HOME: /etc/java-config-2/current-system-vm
     - name: /usr/share/elasticsearch/bin/elasticsearch-keystore create -s
     - creates: /etc/elasticsearch/elasticsearch.keystore
     - require:
