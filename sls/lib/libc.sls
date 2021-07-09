@@ -1,4 +1,4 @@
-{% import 'pkg/common' as pkg %}
+{% import 'pkg/common' as pkg with context %}
 include:
   - gentoo.portage.packages
 
