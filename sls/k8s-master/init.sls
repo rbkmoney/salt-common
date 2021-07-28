@@ -33,6 +33,7 @@ include:
   - {{ slspath }}/crio
   - {{ slspath }}/kubelet
   - {{ slspath }}/helm
+  - {{ slspath }}/kube-join-token
 
 k8s_deps:
   pkg.installed:
@@ -65,30 +66,10 @@ kubeadm_init:
       - service: {{ confmap.criService }}
       - file: /tmp/config.yaml
       - file: /etc/kubernetes/manifests/.keep_sys-cluster_kubernetes-0
-
-# New style of module.run. For activation need add
-# use_superseded:
-#  - module.run
-# in /etc/salt/minion file
-
-kube_join_command:
-  module.run:
-    - mine.send:
-      - kube_join_command
-      - mine_function: cmd.shell
-      - 'kubeadm token create --print-join-command 2>/dev/null'
-    - allow_tgt: "G@role:k8s-*"
-    - allow_tgt_type: "compound"
-
-
-kube_join_key:
-  module.run:
-  - mine.send:
-    - kube_join_key
-    - 'kubeadm init phase upload-certs --upload-certs  2>&1 | tail -1'
-    - mine_function: cmd.shell
-  - allow_tgt: "G@role:k8s-*"
-  - allow_tgt_type: "compound"
+    - require_in:
+      - helm:  cilium_repository_is_managed
+      - module: kube_join_command
+      - module: kube_join_key
 {% endif %}
 
 {% if "k8s-plane" in grains.get('role', []) %}
