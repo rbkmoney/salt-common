@@ -4,8 +4,6 @@ cilium_repository_is_managed:
     - present:
       - name: cilium
         url: https://helm.cilium.io
-    - require:
-      - cmd: kubeadm_init
 
 /tmp/cilium.yaml:
   file.managed:
