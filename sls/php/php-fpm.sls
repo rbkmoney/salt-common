@@ -8,7 +8,7 @@ include:
 
 /etc/php/fpm-php{{ php_version }}/php-fpm.conf:
   file.managed:
-    - source: salt://php/files/php-fpm.conf
+    - source: salt://php/files/php-fpm.conf.tpl
     - template: jinja
     - context:
         php_version: {{ php_version }}
@@ -25,7 +25,7 @@ include:
 
 /etc/php/fpm-php{{ php_version }}/fpm.d/default.conf:
   file.managed:
-    - source: salt://php/files/fpm.d/default.conf.tpl
+    - source: salt://php/files/fpm.d/default.conf
     - mode: 644
     - user: root
     - group: root
