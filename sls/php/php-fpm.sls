@@ -38,7 +38,7 @@ php-fpm:
   service.running:
     - enable: True
     - watch:
-      - pkg: php
+      - pkg: php74
       - eselect: eselect-php-fpm
       - file: /etc/php/fpm-php{{ php_version }}/php-fpm.conf
       - file: /etc/php/fpm-php{{ php_version }}/fpm.d/
