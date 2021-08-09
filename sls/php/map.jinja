@@ -1,5 +1,6 @@
 {% set php_config = salt['grains.filter_by']({
   'Gentoo': { 'version': '7.4',
+              'short': 'php74',
               'ini': 'production'},
   })
 %}
