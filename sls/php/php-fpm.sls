@@ -3,7 +3,7 @@
 {% set php_version = php_config['version'] %}
 
 include:
-  - php
+  - php74
 
 /etc/php/fpm-php{{ php_version }}/php-fpm.conf:
   file.managed:
