@@ -25,7 +25,7 @@ include:
 
 /etc/php/fpm-php{{ php_version }}/fpm.d/default.conf:
   file.managed:
-    - source: salt://php/files/fpm.d/default.conf
+    - source: salt://php/files/fpm.d/default.conf.tpl
     - mode: 644
     - user: root
     - group: root
