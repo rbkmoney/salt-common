@@ -38,8 +38,7 @@ eselect-php-fpm:
     - action_parameter: 'fpm'
     - target: 'php{{ php_version }}'
 
-/etc/systemd/system/php-fpm.service: file.absent
-{% elif grains['init'] == 'systemd' %}
+{% if grains['init'] == 'systemd' %}
 /etc/systemd/system/php-fpm.service:
   file.managed:
     - source: salt://php/files/php-fpm.service.tpl
