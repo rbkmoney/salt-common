@@ -1,13 +1,17 @@
 # -*- mode: yaml -*-
 {% from "php/map.jinja" import php_config with context %}
 {% set php_version = php_config['version'] %}
+{% set php_short = php_config['short'] %}
 
 include:
-  - php
+  - .{{php_short}}
 
 /etc/php/fpm-php{{ php_version }}/php-fpm.conf:
   file.managed:
-    - source: salt://php/php-fpm.conf
+    - source: salt://php/files/php-fpm.conf.tpl
+    - template: jinja
+    - context:
+        php_version: {{ php_version }}
     - mode: 644
     - user: root
     - group: root
@@ -21,7 +25,7 @@ include:
 
 /etc/php/fpm-php{{ php_version }}/fpm.d/default.conf:
   file.managed:
-    - source: salt://php/fpm.d/default.conf
+    - source: salt://php/files/fpm.d/default.conf
     - mode: 644
     - user: root
     - group: root
@@ -34,11 +38,26 @@ eselect-php-fpm:
     - action_parameter: 'fpm'
     - target: 'php{{ php_version }}'
 
+{% if grains['init'] == 'systemd' %}
+/etc/systemd/system/php-fpm.service:
+  file.managed:
+    - source: salt://php/files/php-fpm.service.tpl
+    - template: jinja
+    - mode: 644
+    - user: root
+    - group: root
+    - watch_in:
+      - service: php-fpm
+
+/etc/init.d/php-fpm: file.absent
+/etc/conf.d/php-fpm: file.absent
+{% endif %}
+
 php-fpm:
   service.running:
     - enable: True
     - watch:
-      - pkg: php
+      - pkg: {{php_short}}
       - eselect: eselect-php-fpm
       - file: /etc/php/fpm-php{{ php_version }}/php-fpm.conf
       - file: /etc/php/fpm-php{{ php_version }}/fpm.d/

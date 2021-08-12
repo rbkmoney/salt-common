@@ -1,5 +1,4 @@
-
-include=/etc/php/fpm-php5.6/fpm.d/*.conf
+include=/etc/php/fpm-php{{ php_version }}/fpm.d/*.conf
 
 [global]
 ; Pid file
