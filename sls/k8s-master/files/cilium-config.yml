@@ -1,5 +1,9 @@
 autoDirectNodeRoutes: true
 enableIPv6Masquerade: false
+hostServices:
+  enabled: true
+bpf:
+  lbExternalClusterIP: true
 ipam:
   mode: cluster-pool
   operator:
@@ -25,5 +29,5 @@ hubble:
 # crio needs to be restarted https://docs.cilium.io/en/v1.9/concepts/kubernetes/configuration/#crio
 containerRuntime:
   integration: "crio"
-extraArgs:
-  tofqdns-dns-reject-response-code: "nameError"
+#extraArgs:
+#  tofqdns-dns-reject-response-code: "nameError"
