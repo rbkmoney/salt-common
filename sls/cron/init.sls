@@ -14,7 +14,7 @@ sys-process/systemd-cron:
       - file: gentoo.portage.packages
 
 cron.target:
-  service.runing:
+  service.running:
   - enable: True
   - require:
     - pkg: sys-process/systemd-cron
