@@ -18,4 +18,13 @@ cron.target:
   - enable: True
   - require:
     - pkg: sys-process/systemd-cron
+
+ {% if salt['file.access']('/usr/bin/crontab', 'x') == False %}
+/usr/bin/crontab:
+   file.symlink:
+   - target: /usr/bin/crontab-systemd
+   - require:
+     - pkg: sys-process/systemd-cron
+ {% endif %}
+
 {% endif %}

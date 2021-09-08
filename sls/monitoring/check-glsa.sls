@@ -17,7 +17,6 @@ glsa-check-generate:
   - require:
     - pkg: net-analyzer/nagios-check_glsa2
 
-{% if grains['init'] != 'systemd' %}
 glsa-check-generate-old-absent:
   cron.absent:
     - identifier: glsa-check-generate
@@ -25,4 +24,3 @@ glsa-check-generate-old-absent:
     - user: root
     - require:
       - file: glsa-check-generate
-{% endif %}
