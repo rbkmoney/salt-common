@@ -14,12 +14,12 @@ net-analyzer/nagios-check_glsa2:
 
 glsa-check-generate:
   file.managed:
-  - source: salt://{{ tpldir }/files/glsa.cron
+  - source: salt://{{ slspath }}/files/glsa.cron
   - name: /etc/cron.d/glsa-check-generate
   - require:
 	- pkg: net-analyzer/nagios-check_glsa2
 
- glsa-check-generate-old-absent:
+glsa-check-generate-old-absent:
   cron.absent:
     - identifier: glsa-check-generate
     - name: /usr/lib64/nagios/plugins/check_glsa2_cached.sh --generate
