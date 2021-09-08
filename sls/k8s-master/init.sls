@@ -1,4 +1,5 @@
 {% from tpldir+"/map.jinja" import confmap with context %}
+{% set k8sname = grains['k8sname'] %}
 
 {% if grains['os_family'] == "Debian" %}
 kube.repo:
@@ -73,9 +74,9 @@ kubeadm_init:
 {% endif %}
 
 {% if "k8s-plane" in grains.get('role', []) %}
-{% for mastername, com in salt['mine.get']('*', 'kube_join_command') | dictsort() %}
+{% for mastername, com in salt['mine.get']('*', 'kube_join_command_'+k8sname) | dictsort() %}
 {% set command = com %}
-  {% for i, key in salt['mine.get']('*', 'kube_join_key') | dictsort() %}
+  {% for i, key in salt['mine.get']('*', 'kube_join_key_'+k8sname) | dictsort() %}
 {{ command }} --control-plane --certificate-key {{ key }} {% if confmap.criService == 'crio' %}--cri-socket /var/run/crio/crio.sock{% endif %}:
     cmd.run:
       - creates: /etc/kubernetes/kubelet.conf
@@ -88,7 +89,7 @@ kubeadm_init:
 {% if "k8s-worker" in grains.get('role', []) %}
 /etc/kubernetes/manifests/.keep_sys-cluster_kubelet-0:
   file.absent
-{% for mastername, com in salt['mine.get']('*', 'kube_join_command') | dictsort() %}
+{% for mastername, com in salt['mine.get']('*', 'kube_join_command_'+k8sname) | dictsort() %}
 {% set command = com %}
 {{ command }} {% if confmap.criService == 'crio' %}--cri-socket /var/run/crio/crio.sock{% endif %}:
     cmd.run:
