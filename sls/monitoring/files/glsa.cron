@@ -1,2 +1,2 @@
 # SALT_CRON_IDENTIFIER:glsa-check-generate
-8 * * * * root /usr/lib64/nagios/plugins/check_glsa2_cached.sh --generate
+8 * * * * root /usr/lib/nagios/plugins/check_glsa2_cached.sh --generate
