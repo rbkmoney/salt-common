@@ -30,9 +30,8 @@ collectd:
     - watch_in:
       - service: collectd
 
-/etc/systemd/system/collectd.service: file.absent
 {% elif grains['init'] == 'systemd' %}
-/etc/systemd/system/collectd.service:
+/etc/systemd/system/collectd.service.d/override.conf
   file.managed:
     - source: salt://collectd/files/collectd.service.tpl
     - template: jinja
@@ -45,6 +44,8 @@ collectd:
 /etc/init.d/collectd: file.absent
 /etc/conf.d/collectd: file.absent
 {% endif %}
+
+/etc/systemd/system/collectd.service: file.absent
 
 /etc/collectd.conf: file.absent
 
