@@ -31,7 +31,7 @@ collectd:
       - service: collectd
 
 {% elif grains['init'] == 'systemd' %}
-/etc/systemd/system/collectd.service.d/override.conf
+/etc/systemd/system/collectd.service.d/override.conf:
   file.managed:
     - source: salt://collectd/files/collectd.service.tpl
     - template: jinja
