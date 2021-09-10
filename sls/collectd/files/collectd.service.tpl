@@ -3,6 +3,6 @@
 [Service]
 ExecStart=
 ExecStart=/usr/sbin/collectd -C /etc/collectd/collectd.conf
-{% if pillar[collectd][service][caps] is defined %}
+{% if salt.pillar.get('collectd:service:caps', False) != False %}
 CapabilityBoundingSet={{ salt.pillar.get('collectd:service:caps', [])|join(" ") }}
 {% endif %}
