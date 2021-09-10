@@ -38,6 +38,7 @@ collectd:
     - mode: 644
     - user: root
     - group: root
+    - makedirs: True
     - watch_in:
       - service: collectd
 
