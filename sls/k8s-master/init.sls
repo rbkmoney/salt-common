@@ -61,7 +61,7 @@ k8s_deps:
 
 kubeadm_init:
   cmd.run:
-    - name: kubeadm init --skip-phases=addon/kube-proxy --upload-certs {% if confmap.criService == 'crio' %}--cri-socket /var/run/crio/crio.sock {% endif %}--config /tmp/config.yaml
+    - name: kubeadm init --skip-phases=addon/kube-proxy --upload-certs --config /tmp/config.yaml
     - creates: /etc/kubernetes/kubelet.conf
     - require:
       - service: {{ confmap.criService }}
