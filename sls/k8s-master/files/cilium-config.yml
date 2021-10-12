@@ -1,5 +1,9 @@
+cleanBpfState: false
+cleanState: false
 autoDirectNodeRoutes: true
 enableIPv6Masquerade: false
+endpointRoutes:
+  enabled: true
 hostServices:
   enabled: true
 bpf:
