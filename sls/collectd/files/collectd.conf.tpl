@@ -9,11 +9,16 @@
 {% set p_ceph = collectd.get('ceph', False) %}
 {% set p_mysql = collectd.get('mysql', False) %}
 {% set p_processes = collectd.get('processes', {}) %}
+{% set p_interface = collectd.get('interface', {}) %}
+{% set p_disk = collectd.get('disk', {}) %}
+{% set p_df = collectd.get('df', {}) %}
+{% set p_md = collectd.get('md', {}) %}
+
 FQDNLookup {{ collectd_conf.get('FQDNLookup', 'true') }}
-BaseDir     "/var/lib/collectd"
-PIDFile     "/run/collectd/collectd.pid"
-TypesDB     "/etc/collectd/types.db"
-# PluginDir   "/usr/lib64/collectd"
+BaseDir  "/var/lib/collectd"
+PIDFile  "/run/collectd/collectd.pid"
+TypesDB  "/etc/collectd/types.db"
+# PluginDir "/usr/lib64/collectd"
 Include "/etc/collectd/conf.d/*.conf"
 
 #----------------------------------------------------------------------------#
@@ -321,39 +326,42 @@ LoadPlugin zookeeper
   {% for cluster in p_ceph['cluster'] %}
   {% for daemon in p_ceph['cluster'][cluster] %}
   <Daemon "{{ daemon }}">
-    SocketPath "/var/run/ceph/{{ cluster }}-{{ daemon }}.asok"
+    SocketPath "/run/ceph/{{ cluster }}-{{ daemon }}.asok"
   </Daemon>
   {% endfor %}
   {% endfor %}
 </Plugin>
 {% endif %}
+
 <Plugin df>
-  MountPoint "/dev"
-  MountPoint "/dev/shm"
-  # FSType "cgroup_root"
-  Device "root"
-  Device "overlay"
-  Device "cgroup_root"
-  Device "shm"
-  Device "devtmpfs"
-  Device "/^docker-.+/"
-  Device "/^mapper_docker-.+/"
-  IgnoreSelected true
-  ReportByDevice true
-  ReportInodes true
+  IgnoreSelected {{ "true" if p_df.get('IgnoreSelected', True) else "false" }}
+  ReportByDevice {{ "true" if p_df.get('ReportByDevice', True) else "false" }}
+  ReportInodes {{ "true" if p_df.get('ReportInodes', True) else "false" }}
+  {% for pattern in p_df.get('MountPoint_patterns',
+  ['/dev', '/dev/shm']) %}
+  MountPoint "{{ pattern }}"
+  {% endfor %}
+  {% for pattern in p_df.get('FSType_patterns', []) %}
+  FSType "{{ pattern }}"
+  {% endfor %}
+  {% for pattern in p_df.get('Device_patterns',
+  ['root', 'overlay', 'cgroup_root', 'shm', 'devtmpfs', '/^docker-.+/', '/^mapper_docker-.+/']) %}
+  Device "{{ pattern }}"
+  {% endfor %}
 </Plugin>
+
 <Plugin disk>
-  Disk "/^[hs]d[a-z]$/"
-  Disk "/^nvme[0-9]+n[0-9]+$/"
-  Disk "/^xvd[a-z]$/"
-  Disk "/^md[0-9]+$/"
-  IgnoreSelected false
+  IgnoreSelected {{ "true" if p_disk.get('IgnoreSelected', False) else "false" }}
+  {% for pattern in p_disk.get('Disk_patterns',
+  ['/^[hs]d[a-z]$/', '/^nvme[0-9]+n[0-9]+$/', '/^xvd[a-z]$/', '/^md[0-9]+$/']) %}
+  Disk "{{ pattern }}"
+  {% endfor %}
 </Plugin>
 
 <Plugin ethstat>
-	Map "rx_csum_offload_errors" "if_rx_errors" "checksum_offload"
-	Map "multicast" "if_multicast"
-	MappedOnly false
+  Map "rx_csum_offload_errors" "if_rx_errors" "checksum_offload"
+  Map "multicast" "if_multicast"
+  MappedOnly false
 </Plugin>
 
 {% if False %}
@@ -381,10 +389,11 @@ LoadPlugin zookeeper
 {% endif %}
 
 <Plugin interface>
-  Interface "/^vif.+/"
-  Interface "/^veth.+/"
-  Interface "/^br.+/"
-  IgnoreSelected true
+  IgnoreSelected {{ "true" if p_interface.get('IgnoreSelected', True) else "false" }}
+  {% for pattern in p_interface.get('Interface_patterns',
+  ['/^vif.+/', '/^veth.+/', '/^br.+/', '/^lxc.+/']) %}
+  Interface "{{ pattern }}"
+  {% endfor %}
 </Plugin>
 
 {% if "ipmi" in extra_plugin_config %}
@@ -399,7 +408,7 @@ LoadPlugin zookeeper
 {% endif %}
 {% if "iptables" in extra_plugin_config %}
 <Plugin iptables>
-	Chain filter check-flags
+  Chain filter check-flags
 </Plugin>
 {% endif %}
 {% if False %}
@@ -447,8 +456,10 @@ LoadPlugin zookeeper
 {% endif %}
 {% if "md" in extra_plugin_config %}
 <Plugin md>
-  Device "/dev/md0"
-  IgnoreSelected true
+  IgnoreSelected {{ "true" if p_md.get('IgnoreSelected', False) else "false" }}
+  {% for pattern in p_md.get('Device_patterns', ['/dev/md0']) %}
+  Device "{{ pattern }}"
+  {% endfor %}
 </Plugin>
 {% endif %}
 <Plugin memory>
