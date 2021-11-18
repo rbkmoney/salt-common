@@ -162,10 +162,9 @@ osd {{ key.replace('-', ' ') }} = {{ ceph_osd[key] }}
 {% endif %}
 {% endfor %}
 
-# Enables direct i/o to the journal.
-journal dio = {{ 'true' if ceph_osd.get('journal-dio', True) else 'false' }}
-
+{% if ceph_osd_filestore.get('enable', False) %}
 ## Filestore
+
 # The maximum interval in seconds for synchronizing the filestore.
 filestore max sync interval = {{ ceph_osd_filestore.get('max-sync-interval', 5) }}
 
@@ -189,7 +188,9 @@ filestore split multiple = {{ ceph_osd_filestore.get('split-multiple', 4) }}
 
 # The number of filesystem operation threads that execute in parallel.
 filestore op threads = {{ ceph_osd_filestore.get('op-threads', 4) }}
+{% endif %}
 
+{% if ceph_osd_bluestore.get('enable', True) %}
 ## Bluestore
 {% set bs_cache_autotune = ceph_osd_bluestore.get('cache-autotune', True) %}
 bluestore cache autotune = {{ 'true' if bs_cache_autotune else 'false' }}
@@ -222,6 +223,7 @@ bluestore cache meta ratio = {{ ceph_osd_bluestore.get('cache-meta-ratio', 0.1) 
 bluestore cache kv ratio = {{ ceph_osd_bluestore.get('cache-kv-ratio', 0.5) }}
 # The maximum amount of cache devoted to key/value data (rocksdb).
 bluestore cache kv max = {{ ceph_osd_bluestore.get('cache-kv-max', 536870912) }}
+{% endif %}
 
 {% for id,data in ceph_conf.get('osd-table', {}).items() %}
 [osd.{{ id }}]
