@@ -3,7 +3,7 @@ include:
   - gentoo.makeconf
   - gentoo.portage.packages
 
-python38:
+python39:
   pkg.latest:
     - name: dev-lang/python
     - slot: '3.9'
