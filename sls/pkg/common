@@ -31,3 +31,25 @@
 {{- package_name -}}
 {% endif %}
 {%- endmacro -%}
+
+{% macro gpp_include(extra=[]) %}
+include:
+  - gentoo.portage.packages
+  {% for incl in extra_include %}
+  - {{ incl }}
+  {% endfor %}
+{% endmacro %}
+
+{% macro pkg_latest(atoms, extra_deps=[]) %}
+{{ atoms[0] }}:
+  pkg.latest:
+    - pkgs:
+      {% for atom in atoms %}
+      - {{ gen_atom(atom) }}
+      {% endfor %}
+    - require:
+      - file: gentoo.portage.packages
+      {% for dep in extra_deps %}
+      - {{ dep[0] }}: {{ dep[1] }}
+      {% endfor %}
+{% endmacro %}
