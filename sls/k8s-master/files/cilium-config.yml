@@ -33,5 +33,7 @@ hubble:
 # crio needs to be restarted https://docs.cilium.io/en/v1.9/concepts/kubernetes/configuration/#crio
 containerRuntime:
   integration: "crio"
+extraConfig:
+  enable-icmp-rules: "true"
 #extraArgs:
 #  tofqdns-dns-reject-response-code: "nameError"
