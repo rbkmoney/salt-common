@@ -1,6 +1,6 @@
 {% import 'pkg/common' as pkg %}
 include:
-  - python.python3
+  - python
   - gentoo.portage.packages
   - salt.minion-config
 

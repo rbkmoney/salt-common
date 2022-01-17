@@ -181,7 +181,7 @@ rsync-gentoo-portage:
     - template: jinja
     - defaults:
         rsync_src: "{{ inst.get('rsync_src', 'rsync://'+mirror_host+'/gentoo-packages/'+inst['arch']+'/'+inst['cpu_arch']) }}"
-        rsync_dst: "{{ default_root }}/{{ inst.get('rsync_dst', 'gentoo-packages/'+inst['arch']+'/'+inst['cpu_arch']) }}"
+        rsync_dst: "{{ default_root +'/'+ inst.get('rsync_dst', 'gentoo-packages/'+inst['arch']+'/'+inst['cpu_arch']+'/packages') }}"
 
 rsync-gentoo-{{ inst['arch'] }}-{{ inst['cpu_arch'] }}-packages:
   cron.present:
