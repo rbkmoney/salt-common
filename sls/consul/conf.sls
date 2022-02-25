@@ -1,6 +1,3 @@
-include:
-  - .pkg
-
 {% if grains['init'] == 'openrc' %}
 /etc/conf.d/consul:
   file.managed:
