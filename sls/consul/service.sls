@@ -1,6 +1,8 @@
 include:
   - .conf
 
+{% set data_dir = salt.pillar.get('consul:main-config:data_dir') %}
+
 consul:
   service.running:
     - enable: True

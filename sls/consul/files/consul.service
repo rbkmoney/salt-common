@@ -1,0 +1,3 @@
+# Managed by Salt
+[Unit]
+ConditionFileNotEmpty=/etc/consul.d/main-config.json
