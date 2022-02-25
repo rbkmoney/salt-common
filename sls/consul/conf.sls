@@ -1,3 +1,5 @@
+{% set data_dir = salt.pillar.get('consul:main-config:data_dir') %}
+
 {% if grains['init'] == 'openrc' %}
 /etc/conf.d/consul:
   file.managed:
@@ -6,6 +8,11 @@
     - mode: 644
 {% elif grains['init'] == 'systemd' %}
 /etc/conf.d/consul: file.absent
+
+/etc/systemd/system/consul.service:
+  file.managed:
+    - source: salt://{{ slspath }}/files/consul.service
+    - mode: 644
 {% endif %}
 
 /etc/consul.d/:
@@ -51,5 +58,12 @@
     {% endif %}
     - formatter: json
     - mode: 644
+    - user: consul
+    - group: consul
+
+{{ data_dir }}/:
+  file.directory:
+    - create: True
+    - mode: 755
     - user: consul
     - group: consul
