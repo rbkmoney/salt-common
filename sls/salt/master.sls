@@ -1,6 +1,6 @@
 include:
-  - salt.pkg
-  - salt.repos
+  - .pkg
+  - .repos
   - .selinux
 
 salt-master:
