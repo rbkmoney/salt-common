@@ -5,5 +5,5 @@ pkg_salt-minion:
   pkg.latest:
     - name: salt-minion
     - require:
-      - file: /etc/apt/sources.list.d/salt.list
+      - pkgrepo: salt-repo
       - file: /usr/share/keyrings/salt-archive-keyring.gpg
