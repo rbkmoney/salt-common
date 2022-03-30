@@ -3,21 +3,23 @@
 #
 {% set conf = salt['pillar.get']('restart-services', {} ) %}
 {% set defaults = {
- 'always': '(acpid|apcupsd|atd|autofs|auditd|(bareos|bacula)-fd' +
+ 'always': '(acpid|apcupsd.*|atd|autofs|auditd|(bareos|bacula)-fd' +
  	   '|cronie|vixie-cron|dcron|incron|anacron|fcron|bcron' +
- 	   '|haveged|irqbalance|lldpd|smartd|snmpd|mdadm|lvm-monitoring' +
- 	   '|named|unbound|nsd|ntpd|chronyd|clamd' +
- 	   '|postfix|qmail|opendkim|pypolicyd-spf|nullmailer|opendnssec' +
+ 	   '|haveged|irqbalance|lldpd|smartd|snmpd|mdadm|lvm-monitoring|dmeventd' +
+	   '|dhcpd.*|named|unbound|nsd|ntpd|chronyd|timer_entropyd' +
+	   '|rsyncd|rtorrentd|tor|haproxy.*' +
+ 	   '|postfix|qmail|opendkim|nullmailer|opendnssec|clamd' +
  	   '|sshd|zabbix-agentd|collectd|monit|filebeat|auditbeat' +
 	   '|salt-(minion|syndic)|cf-.*)',
- 'always-nodeps': '(udev|ulogd|rpc.*|rsyslog|syslog-ng|metalog|lvmetad' +
+ 'always-nodeps': '(udev|ulogd|rpc\..*|rsyslog|syslog-ng|metalog|lvmetad' +
  		  '|xencommons)',
  'critical': '((bareos|bacula)-(sd|dir)|.*ftpd|minidlna|git-daemon' +
  	     '|nginx|uwsgi|apache2|php-fpm|exim|dovecot|ejabberd|asterisk' +
 	     '|mysql|postgresql-.*|mongodb|riak|dnet_.*|ceph-.*|radosgw.*' +
-	     '|elasticsearch|kibana|carbon-*|grafana|jenkins|consul|samba|nagios' +
-	     '|openvpn.*|racoon|bird|bird6|quagga|suricata.*' +
-	     '|pacemaker|salt-master|watchdog|kafka)',
+	     '|elasticsearch|kibana|carbon-.*|grafana|jenkins|consul|samba|nagios' +
+	     '|openvpn\..*|racoon|bird|quagga|suricata.*' +
+	     '|pacemaker|salt-master|watchdog|kafka' +
+	     '|net\..*)',
  'critical-nodeps': '()',
  'always-reload-only': '(libvirtd)',
  'ignore': '(ntp-client|xendomains|xenstored)',
