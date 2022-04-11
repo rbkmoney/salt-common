@@ -1,6 +1,11 @@
+{% import 'pkg/common' as pkg %}
 ca-certificates:
   pkg.latest:
-    - name: app-misc/ca-certificates
+{% if grains['os'] == 'Gentoo' %}
+    - pkgs: [{{ pkg.gen_atom('app-misc/ca-certificates') }}]
+{% else %}
+    - name: ca-certificates
+{% endif %}
 
 /etc/ca-certificates.conf:
   file.managed:
