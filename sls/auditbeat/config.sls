@@ -10,8 +10,8 @@ conf_path = '/etc/auditbeat/'
 
 File.directory(conf_path, create=True, mode=755, user='root', group='root')
 File.recurse(
-  conf_path + 'rules.d/',
-  source="salt://auditbeat/files/rules.d",
+  conf_path + 'audit.rules.d/',
+  source="salt://auditbeat/files/audit.rules.d",
   dir_mode=755, file_mode=644, user='root', group='root',
   require=[File(conf_path)])
 
