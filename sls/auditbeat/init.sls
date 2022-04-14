@@ -11,7 +11,7 @@ extend:
       - watch:
         - pkg: sys-process/auditbeat
         - file: /etc/auditbeat/auditbeat.yml
-        - file: /etc/auditbeat/audit.rules.d/
+        - file: /etc/auditbeat/audit.rules
         {% for out in output %}
         {% if out in tls.keys() %}
         {% for pemtype in ['cert', 'key', 'ca'] %}
