@@ -21,7 +21,8 @@ tls = pillar('auditbeat:tls', {})
 # defaults
 config = {
   'name': str(fqdn),
-  'setup': {'template':{'enabled': False}},
+  'setup': {'template':{'enabled': False}
+            'ilm':{'enabled': False}},
   'logging': {
     'level': 'info',
     'selectors': ["*"],
