@@ -40,7 +40,9 @@ modules = {
        'audit_rule_files': [ '${path.config}/audit.rules' ]},
       'file_integrity': {
        'recursive': True,
-       'paths': ['/bin','/sbin/','/lib','/lib64','/usr','/etc'],
+       'paths': ['/bin','/sbin/','/lib','/lib64',
+                 '/usr/bin','/usr/sbin','/usr/lib','/usr/lib64',
+                 '/etc'],
        'exclude_files': [
          '^/etc/lvm/(backup|archive)',
          '^/etc/portage/package\.',
