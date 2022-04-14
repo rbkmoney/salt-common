@@ -1,7 +1,9 @@
 include:
   - .pkg
-  - .conf
+  - .config
   - .service
+{% set ouput = pillar('auditbeat:output') %}
+{% set tls = salt.pillar.get('auditbeat:tls', {}) %}
 
 extend:
   auditbeat:
@@ -9,22 +11,11 @@ extend:
       - watch:
         - pkg: sys-process/auditbeat
         - file: /etc/auditbeat/auditbeat.yml
-        - file: /etc/auditbeat/audit.rules.d/rules.conf
-        - file: /etc/auditbeat/elasticsearch-key.pem
-        - file: /etc/auditbeat/elasticsearch-cert.pem
-        - file: /etc/auditbeat/elasticsearch-ca.pem
-      - require:
-        - file: /etc/auditbeat/auditbeat.yml
-        - file: /etc/auditbeat/audit.rules.d/rules.conf
-        - file: /etc/auditbeat/elasticsearch-key.pem
-        - file: /etc/auditbeat/elasticsearch-cert.pem
-        - file: /etc/auditbeat/elasticsearch-ca.pem
-  sys-process/auditbeat:
-    pkg.installed:
-      - require_in:
-        - file: /etc/auditbeat/auditbeat.yml
-        - file: /etc/auditbeat/audit.rules.d/rules.conf
-        - file: /etc/auditbeat/elasticsearch-key.pem
-        - file: /etc/auditbeat/elasticsearch-cert.pem
-        - file: /etc/auditbeat/elasticsearch-ca.pem
-
+        - file: /etc/auditbeat/audit.rules.d/
+        {% for out in output %}
+        {% if out in tls.keys() %}
+        {% for pemtype in ['cert', 'key', 'ca'] %}
+        - file: /etc/auditbeat/{{ out }}-{{ pemtype }}.pem
+        {% endfor %}
+        {% endif %}
+        {% endfor %}
