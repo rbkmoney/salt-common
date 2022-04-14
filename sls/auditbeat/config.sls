@@ -9,10 +9,11 @@ fqdn_ipv6 = grains('fqdn_ipv6')
 conf_path = '/etc/auditbeat/'
 
 File.directory(conf_path, create=True, mode=755, user='root', group='root')
-File.recurse(
-  conf_path + 'audit.rules.d/',
-  source="salt://auditbeat/files/audit.rules.d",
-  dir_mode=755, file_mode=644, user='root', group='root',
+File.managed(
+  conf_path + 'audit.rules',
+  source="salt://auditbeat/files/audit.rules.tpl",
+  template="jinja",
+  mode=644, user='root', group='root',
   require=[File(conf_path)])
 
 tls = pillar('auditbeat:tls', {})
@@ -36,7 +37,7 @@ config = {
 
 modules = {
       'auditd': {
-       'audit_rule_files': [ '${path.config}/audit.rules.d/*.conf' ]},
+       'audit_rule_files': [ '${path.config}/audit.rules' ]},
       'file_integrity': {
        'recursive': True,
        'paths': ['/bin','/sbin/','/lib','/lib64','/usr','/etc'],
