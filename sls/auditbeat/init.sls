@@ -2,7 +2,7 @@ include:
   - .pkg
   - .config
   - .service
-{% set ouput = pillar('auditbeat:output') %}
+{% set ouput = salt.pillar.get('auditbeat:output', {}) %}
 {% set tls = salt.pillar.get('auditbeat:tls', {}) %}
 
 extend:
