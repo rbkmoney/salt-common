@@ -4,6 +4,6 @@ include:
 pkg_salt-minion:
   pkg.latest:
     - name: salt-minion
+    - refresh: True
     - require:
-      - pkgrepo: salt-repo
-      - file: /usr/share/keyrings/salt-archive-keyring.gpg
+      - file: /etc/apt/sources.list.d/salt.list
