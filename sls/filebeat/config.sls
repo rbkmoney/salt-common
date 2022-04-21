@@ -36,6 +36,7 @@ config = {
 
 config['filebeat']['inputs'] = pillar('filebeat:inputs')
 config['output'] = pillar('filebeat:output')
+elastic_template = pillar('filebeat:template', False)
 
 if elastic_template:
   File.managed(
