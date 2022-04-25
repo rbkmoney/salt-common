@@ -18,9 +18,9 @@ sys-process/auditbeat:
 {% elif grains['os'] == 'Ubuntu' %}
     - name: auditbeat
     - require:
-      - pkgrepo: elastic-oss-repo
+      - file: elastic-oss-repo
 {% elif grains['os'] == 'Debian' %}
     - name: auditbeat
     - require:
-      - pkgrepo: elastic-oss-repo
+      - file: elastic-oss-repo
 {% endif %}

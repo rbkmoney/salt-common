@@ -2,6 +2,8 @@
   file.managed:
     - contents: |
         deb [signed-by=/usr/share/keyrings/hashicorp.gpg arch=amd64] https://apt.releases.hashicorp.com {{ grains.lsb_distrib_codename }} main
+    - require:
+      - file: /usr/share/keyrings/hashicorp.gpg
 
 /usr/share/keyrings/hashicorp.gpg:
   file.managed:

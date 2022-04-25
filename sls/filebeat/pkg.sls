@@ -18,11 +18,11 @@ app-admin/filebeat:
 {% elif grains['os'] == 'Ubuntu' %}
     - name: filebeat
     - require:
-      - pkgrepo: elastic-oss-repo
+      - file: elastic-oss-repo
 {% elif grains['os'] == 'Debian' %}
     - name: filebeat
     - require:
-      - pkgrepo: elastic-oss-repo
+      - file: elastic-oss-repo
 {% endif %}
 
 /var/lib/filebeat/module/:
