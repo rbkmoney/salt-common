@@ -4,7 +4,7 @@
 {% else %}
   {% set nginx_default_user = 'nginx' %}
 {% endif %}
-{% set nginx_user = nginx.get('user', 'nginx') %}
+{% set nginx_user = nginx.get('user', nginx_default_user) %}
 {% set nginx_group = nginx.get('group', nginx_user) %}
 
 {% set worker_processes = salt.pillar.get(
@@ -13,7 +13,7 @@
 {% set worker_rlimit_nofile = salt.pillar.get(
   'nginx:worker:rlimit_nofile',  worker_processes*worker_connections*2) -%}
 
-{% set ssl_protocols = salt.pillar.get('nginx:ssl:protocols', 'TLSv1.1 TLSv1.2') %}
+{% set ssl_protocols = salt.pillar.get('nginx:ssl:protocols', 'TLSv1.2 TLSv1.3') %}
 {% set ssl_ciphers = salt.pillar.get('nginx:ssl:ciphers', ':'.join([
 'ECDHE-ECDSA-AES256-GCM-SHA384', 'ECDHE-ECDSA-AES128-GCM-SHA256',
 'ECDHE-RSA-AES256-GCM-SHA384', 'ECDHE-RSA-AES128-GCM-SHA256',
