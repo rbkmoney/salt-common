@@ -1,10 +1,20 @@
-{% set worker_processes = salt['pillar.get'](
+{% set nginx = salt.pillar.get('nginx', {}) %}
+{% if grains.os_family == 'Debian' %}
+  {% set nginx_default_user = 'www-data' %}
+{% else %}
+  {% set nginx_default_user = 'nginx' %}
+{% endif %}
+{% set nginx_user = nginx.get('user', 'nginx') %}
+{% set nginx_group = nginx.get('group', nginx_user) %}
+
+{% set worker_processes = salt.pillar.get(
   'nginx:worker:processes', grains.get('num_cpus', 2)) -%}
-{% set worker_connections = salt['pillar.get']('nginx:worker:connections', 4096) -%}
-{% set worker_rlimit_nofile = salt['pillar.get'](
+{% set worker_connections = salt.pillar.get('nginx:worker:connections', 4096) -%}
+{% set worker_rlimit_nofile = salt.pillar.get(
   'nginx:worker:rlimit_nofile',  worker_processes*worker_connections*2) -%}
-{% set ssl_protocols = salt['pillar.get']('nginx:ssl:protocols', 'TLSv1.1 TLSv1.2') %}
-{% set ssl_ciphers = salt['pillar.get']('nginx:ssl:ciphers', ':'.join([
+
+{% set ssl_protocols = salt.pillar.get('nginx:ssl:protocols', 'TLSv1.1 TLSv1.2') %}
+{% set ssl_ciphers = salt.pillar.get('nginx:ssl:ciphers', ':'.join([
 'ECDHE-ECDSA-AES256-GCM-SHA384', 'ECDHE-ECDSA-AES128-GCM-SHA256',
 'ECDHE-RSA-AES256-GCM-SHA384', 'ECDHE-RSA-AES128-GCM-SHA256',
 'ECDHE-ECDSA-AES128-SHA', 'ECDHE-RSA-AES128-SHA',
@@ -31,6 +41,8 @@ nginx-reload:
     - source: salt://nginx/files/nginx.conf.tpl
     - template: jinja
     - defaults:
+        nginx_user: {{ nginx_user }}
+        nginx_group: {{ nginx_user }}
         worker_processes: {{ worker_processes }}
         worker_connections: {{ worker_connections }}
         worker_rlimit_nofile: {{ worker_rlimit_nofile }}
@@ -43,23 +55,16 @@ nginx-reload:
     - user: root
     - group: root
 
-/etc/nginx/listen:
+{% for f in ('listen', 'listen_ssl')%}
+/etc/nginx/{{ f }}:
     file.managed:
-    - source: salt://nginx/files/listen.conf
+    - source: salt://nginx/files/{{ f }}.conf
     - mode: 755
     - user: root
     - group: root
     - watch_in:
       - service: nginx
-
-/etc/nginx/listen_ssl:
-    file.managed:
-    - source: salt://nginx/files/listen_ssl.conf
-    - mode: 755
-    - user: root
-    - group: root
-    - watch_in:
-      - service: nginx
+{% endfor %}
 
 /etc/nginx/cf_real_ip.conf:
   file.managed:
@@ -161,7 +166,16 @@ nginx-reload:
   file.directory:
     - create: True
     - mode: 755
-    - user: nginx
-    - group: nginx
+    - user: {{ nginx_user }}
+    - group: {{ nginx_group }}
+    - watch_in:
+      - service: nginx
+
+/var/tmp/nginx/:
+  file.directory:
+    - create: True
+    - mode: 755
+    - user: {{ nginx_user }}
+    - group: {{ nginx_group }}
     - watch_in:
       - service: nginx
