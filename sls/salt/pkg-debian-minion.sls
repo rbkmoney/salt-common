@@ -1,5 +1,5 @@
 include:
-  - .repo-ubuntu
+  - .repo-debian
 
 pkg_salt-minion:
   pkg.latest:
