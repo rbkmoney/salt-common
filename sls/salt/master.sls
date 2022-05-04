@@ -1,11 +1,7 @@
 include:
   - .repos
   - .selinux
-{% if grains.os == 'Gentoo' %}
   - .pkg
-{% elif grains.os_family == 'Debian' %}
-  - .pkg-debian-master
-{% endif %}
 
 salt-master:
   service.running:
@@ -14,12 +10,7 @@ salt-master:
     - watch:
       - file: /etc/salt/master
       - file: /etc/salt/master.d/roots.conf
-{% if grains.os == 'Gentoo' %}
       - pkg: app-admin/salt
-{% elif grains.os_family == 'Debian' %}
-      - pkg: pkg_salt-master
-{% endif %}
-
 
 /etc/salt/master:
   file.serialize:
