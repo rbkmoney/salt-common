@@ -1,11 +1,9 @@
 include:
   - .repos
   - .selinux
-{% if grains['os'] == 'Gentoo' %}
+{% if grains.os == 'Gentoo' %}
   - .pkg
-{% elif grains['os'] == 'Ubuntu' %}
-  - .pkg-ubuntu-master
-{% elif grains['os'] == 'Debian' %}
+{% elif grains.os_family == 'Debian' %}
   - .pkg-debian-master
 {% endif %}
 
@@ -16,11 +14,9 @@ salt-master:
     - watch:
       - file: /etc/salt/master
       - file: /etc/salt/master.d/roots.conf
-{% if grains['os'] == 'Gentoo' %}
+{% if grains.os == 'Gentoo' %}
       - pkg: app-admin/salt
-{% elif grains['os'] == 'Ubuntu' %}
-      - pkg: pkg_salt-master
-{% elif grains['os'] == 'Debian' %}
+{% elif grains.os_family == 'Debian' %}
       - pkg: pkg_salt-master
 {% endif %}
 
