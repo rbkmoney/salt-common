@@ -14,7 +14,8 @@
   'nginx:worker:rlimit_nofile',  worker_processes*worker_connections*2) -%}
 
 {% set ssl_protocols = salt.pillar.get('nginx:ssl:protocols', 'TLSv1.2 TLSv1.3') %}
-{% set ssl_ciphers = salt.pillar.get('nginx:ssl:ciphers', ':'.join([
+{% set ssl_ciphers = ':'.join(salt.pillar.get('nginx:ssl:ciphers', [
+'AEAD-CHACHA20-POLY1305-SHA384', 'AEAD-CHACHA20-POLY1305-SHA256',
 'ECDHE-ECDSA-AES256-GCM-SHA384', 'ECDHE-ECDSA-AES128-GCM-SHA256',
 'ECDHE-RSA-AES256-GCM-SHA384', 'ECDHE-RSA-AES128-GCM-SHA256',
 'ECDHE-ECDSA-AES128-SHA', 'ECDHE-RSA-AES128-SHA',
