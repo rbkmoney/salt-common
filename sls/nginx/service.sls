@@ -22,6 +22,7 @@
 'ECDH-ECDSA-AES128-SHA', 'ECDH-RSA-AES128-SHA',
 'DHE-RSA-AES128-SHA', 'AES128-SHA256', 'AES128-SHA',
 '!3DES', '!MD5', '!aNULL', '!EDH'])) -%}
+{% set ssl_ecdh_curve = salt.pillar.get('nginx:ssl:ecdh_curve', 'auto') %}
 
 nginx:
   service.running:
@@ -49,7 +50,7 @@ nginx-reload:
         worker_rlimit_nofile: {{ worker_rlimit_nofile }}
         ssl_protocols: {{ ssl_protocols }}
         ssl_ciphers: {{ ssl_ciphers }}
-        ssl_ecdh_curve: prime256v1
+        ssl_ecdh_curve: {{ ssl_ecdh_curve }}
         ssl_session_cache: 'shared:SSL:20m'
         ssl_session_timeout: 120m
     - mode: 755
