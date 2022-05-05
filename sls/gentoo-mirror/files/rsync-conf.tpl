@@ -1,5 +1,5 @@
 # -*- mode: shell-script -*-
-{% set default_rsync_opts = "--quiet --recursive --links --hard-links --chmod D755,F644 --times --devices --delete --timeout=300" %}
+{% set default_rsync_opts = "--quiet --recursive --links --hard-links --perms --chmod D755,F644 --times --devices --delete --timeout=300" %}
 {% if rsync_binary is not defined %}
 # Using default rsync binary location
 RSYNC="/usr/bin/rsync"
