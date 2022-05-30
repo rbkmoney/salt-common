@@ -11,4 +11,4 @@ elastic-oss-repo:
 
 /usr/share/keyrings/elastic.gpg:
   file.managed:
-    - source: salt://elasticsearch/files/release-sign-key
+    - source: salt://elasticsearch/files/release-sign-keyring.gpg
