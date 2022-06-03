@@ -1,4 +1,7 @@
 {% set ceph_conf = salt['pillar.get']('ceph:conf') -%}
+{% macro true_false(o, key, default) %}
+{{ 'true' if o.get(key, default) else 'false' }}
+{% endmacro %}
 ##
 # This file defines cluster membership, the various locations
 # that Ceph stores data, and any other runtime options.
@@ -45,34 +48,36 @@ max open files = {{ ceph_conf.get('max-open-files', 131072) }}
 {% set ceph_auth = ceph_conf.get('auth', {}) %}
 # If enabled, the Ceph Storage Cluster daemons (i.e., ceph-mon, ceph-osd,
 # and ceph-mds) must authenticate with each other.
-auth cluster required = {{ ceph_auth.get('cluster-required', 'none') }}
+auth cluster required = {{ ceph_auth.get('cluster-required', 'cephx') }}
 
 # If enabled, the Ceph Storage Cluster daemons require Ceph Clients to
 # authenticate with the Ceph Storage Cluster in order to access Ceph
 # services.
-auth service required = {{ ceph_auth.get('service-required', 'none') }}
+auth service required = {{ ceph_auth.get('service-required', 'cephx') }}
 
 # If enabled, the Ceph Client requires the Ceph Storage Cluster to
 # authenticate with the Ceph Client.
-auth client required = {{ ceph_auth.get('client-required', 'none') }}
+auth client required = {{ ceph_auth.get('client-required', 'cephx') }}
+
+auth allow insecure global id reclaim = {{ true_false(ceph_auth, 'allow-insecure-global-id-reclaim', False) }}
 
 {% set ceph_cephx = ceph_conf.get('cephx', {}) %}
 # If set to true, Ceph requires signatures on all message traffic between
 # the Ceph Client and the Ceph Storage Cluster, and between daemons
 # comprising the Ceph Storage Cluster.
-cephx require signatures = {{ 'true' if ceph_cephx.get('require-signatures', False) else 'false' }}
+cephx require signatures = {{ true_false(ceph_cephx, 'require-signatures', False) }}
 
 # kernel RBD client do not support authentication yet:
-cephx cluster require signatures = {{ 'true' if ceph_cephx.get('cluster-require-signatures', True) else 'false' }}
-cephx service require signatures = {{ 'true' if ceph_cephx.get('service-require-signatures', False) else 'false' }}
+cephx cluster require signatures = {{ true_false(ceph_cephx, 'cluster-require-signatures', True) }}
+cephx service require signatures = {{ true_false(ceph_cephx, 'service-require-signatures', False) }}
 
 # The location of the logging file for your cluster.
 log file = /var/log/ceph/$cluster-$name.log
 
 # Determines if logging messages should appear in syslog.
-log to syslog = {{ 'true' if ceph_conf.get('log-to-syslog', True) else 'false' }}
-ms bind ipv6 = {{ 'true' if ceph_conf.get('ms-bind-ipv6', True) else 'false' }}
-ms bind ipv4 = {{ 'true' if ceph_conf.get('ms-bind-ipv4', False) else 'false' }}
+log to syslog = {{ true_false(ceph_conf, 'log-to-syslog', True) }}
+ms bind ipv6 = {{ true_false(ceph_conf, 'ms-bind-ipv6', True) }}
+ms bind ipv4 = {{ true_false(ceph_conf, 'ms-bind-ipv4', False) }}
 
 {% set ceph_mon = ceph_conf.get('mon', {}) %}
 {% set ceph_mon_clock = ceph_mon.get('clock', {}) %}
@@ -97,7 +102,7 @@ mon osd nearfull ratio = {{ ceph_mon_osd.get('nearfull-ratio', '.90') }}
 mon osd down out interval  = {{ ceph_mon_osd.get('down-out-interval', 300) }}
 # The grace period in seconds before declaring unresponsive Ceph OSD down
 mon osd report timeout = {{ ceph_mon_osd.get('report-timeout', 900) }}
-mon osd allow primary affinity = {{ 'true' if ceph_mon_osd.get('allow-primary-affinity', True) else 'false' }}
+mon osd allow primary affinity = {{ true_false(ceph_mon_osd, 'allow-primary-affinity', True) }}
 
 # TODO: Extra configuration options
 
@@ -134,10 +139,10 @@ osd max backfills = {{ ceph_osd.get('max-backfills', 1) }}
 osd max scrubs = {{ ceph_osd.get('max-scrubs', 1) }}
 
 # Check log files for corruption. Can be computationally expensive.
-osd check for log corruption = {{ 'true' if ceph_osd.get('check-for-log-corruption', False) else 'false' }}
+osd check for log corruption = {{ true_false(ceph_osd, 'check-for-log-corruption', False) }}
 
 # By default OSDs update their details (location, weight and root) on the CRUSH map during startup
-osd crush update on start = {{ 'true' if ceph_osd.get('crush-update-on-start', True) else 'false' }}
+osd crush update on start = {{ true_false(ceph_osd, 'crush-update-on-start', True) }}
 
 # The size of the journal in megabytes.
 osd journal size = {{ ceph_osd.get('journal-size', 10240) }}
@@ -169,9 +174,9 @@ osd {{ key.replace('-', ' ') }} = {{ ceph_osd[key] }}
 filestore max sync interval = {{ ceph_osd_filestore.get('max-sync-interval', 5) }}
 
 # Enables the filestore flusher.
-filestore flusher = {{ 'true' if ceph_osd_filestore.get('flusher', False) else 'false' }}
-filestore fiemap = {{ 'true' if ceph_osd_filestore.get('fiemap', True) else 'false' }}
-filestore seek data hole = {{ 'true' if ceph_osd_filestore.get('seek-data-hole', True) else 'false' }}
+filestore flusher = {{ true_false(ceph_osd_filestore, 'flusher', False) }}
+filestore fiemap = {{ true_false(ceph_osd_filestore, 'fiemap', True) }}
+filestore seek data hole = {{ true_false(ceph_osd_filestore, 'seek-data-hole', True) }}
 
 # Defines the maximum number of in progress operations the file store
 # accepts before blocking on queuing new operations.
@@ -237,7 +242,7 @@ bluestore cache kv max = {{ ceph_osd_bluestore.get('cache-kv-max', 536870912) }}
 [client]
 
 # Enable caching for RADOS Block Device (RBD).
-rbd cache = {{ 'true' if ceph_client_cache.get('enabled', True) else 'false' }}
+rbd cache = {{ true_false(ceph_client_cache, 'enabled', True) }}
 {% if ceph_client_cache.get('enabled', True) %}
 # The RBD cache size in bytes.
 rbd cache size = {{ ceph_client_cache.get('size', 33554432) }}
