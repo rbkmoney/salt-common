@@ -13,7 +13,6 @@ ceph:
     - system: True
     - home: /var/lib/ceph
     - shell: /sbin/nologin
-    - gid_from_name: True
 
 /etc/ceph/:
   file.directory:
