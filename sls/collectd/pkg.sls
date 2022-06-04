@@ -36,7 +36,3 @@ app-metrics/collectd:
       - python3-protobuf
       - libmicrohttpd12 # write_prometheus
 {% endif %}
-
-
-
-
