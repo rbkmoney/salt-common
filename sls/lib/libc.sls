@@ -1,6 +1,8 @@
 {% import 'pkg/common' as pkg with context %}
+{% if grains.os == 'Gentoo' %}
 include:
   - gentoo.portage.packages
+{% endif %}
 
 {% macro pkg_dep() -%}
 {%- if grains['elibc'] == 'glibc' -%}
@@ -11,12 +13,18 @@ include:
 {% if grains['elibc'] == 'glibc' %}
 sys-libs/glibc:
   pkg.latest:
+{% if grains.os == 'Gentoo' %}
     - oneshot: True
+    - pkgs:
+      - {{ pkg.gen_atom('sys-libs/glibc') }}
+{% elif grains.os_family == 'Debian' %}
+    - pkgs:
+      - libc6
+      - libc-bin
+{% endif %}
     - require:
       - file: gentoo.portage.packages
       - file: /etc/locale.gen
-    - pkgs:
-      - {{ pkg.gen_atom('sys-libs/glibc') }}
 
 /etc/locale.gen:
   file.managed:
@@ -34,12 +42,14 @@ locale-gen:
     - watch:
       - file: /etc/locale.gen
 
+{% if grains.os == 'Gentoo' %}
 eselect-locale:
   eselect.set:
     - name: locale
     - target: {{ salt.pillar.get('locale:LANG', 'en_IE.utf8') }}
     - require:
       - cmd: locale-gen
+{% endif %}
 
 /etc/env.d/02locale:
   augeas.change:

@@ -1,9 +1,9 @@
 {% import 'pkg/common' as pkg %}
 {% import 'lib/libc.sls' as libc %}
-{% if grains.os == 'Gentoo' %}
 include:
-  - gentoo.makeconf
   - lib.libc
+{% if grains.os == 'Gentoo' %}
+  - gentoo.makeconf
 {% endif %}
 
 {%- set extra_plugins = salt.pillar.get('collectd:extra-plugins', []) %}
@@ -28,13 +28,13 @@ app-metrics/collectd:
     - require:
       - file: gentoo.portage.packages
       {{ libc.pkg_dep() }}
-{% elif grains.os == 'Ubuntu' %}
+{% elif grains.os_family == 'Debian' %}
     - pkgs:
       - collectd-core
-      - libyajl2
+      - libyajl2 # json parsers
       - libprotobuf-c1
       - python3-protobuf
-      - libmicrohttpd12
+      - libmicrohttpd12 # write_prometheus
 {% endif %}
 
 
