@@ -38,6 +38,19 @@ nginx-reload:
     - require:
       - file: /etc/nginx/nginx.conf
 
+/etc/nginx/:
+  file.directory:
+    - create: True
+    - mode: 755
+    - user: root
+    - group: root
+
+/etc/ssl/nginx/:
+    - create: True
+    - mode: 755
+    - user: root
+    - group: root
+
 /etc/nginx/nginx.conf:
   file.managed:
     - source: salt://nginx/files/nginx.conf.tpl
@@ -56,6 +69,8 @@ nginx-reload:
     - mode: 755
     - user: root
     - group: root
+    - require:
+      - file: /etc/nginx/
 
 {% for f in ('listen', 'listen_ssl')%}
 /etc/nginx/{{ f }}:
@@ -64,6 +79,8 @@ nginx-reload:
     - mode: 755
     - user: root
     - group: root
+    - require:
+      - file: /etc/nginx/
     - watch_in:
       - service: nginx
 {% endfor %}
@@ -97,6 +114,8 @@ nginx-reload:
     - mode: 755
     - user: root
     - group: root
+    - require:
+      - file: /etc/nginx/
     - watch_in:
       - service: nginx-reload
 
@@ -107,6 +126,8 @@ nginx-reload:
     - file_mode: 644
     - user: root
     - group: root
+    - require:
+      - file: /etc/nginx/
     - watch_in:
       - service: nginx-reload
 
@@ -116,6 +137,8 @@ nginx-reload:
     - mode: 755
     - user: root
     - group: root
+    - require:
+      - file: /etc/nginx/
     - watch_in:
       - service: nginx
 
@@ -125,6 +148,8 @@ nginx-reload:
     - mode: 755
     - user: root
     - group: root
+    - require:
+      - file: /etc/nginx/
     - watch_in:
       - service: nginx
 
@@ -147,6 +172,8 @@ nginx-reload:
     - mode: 755
     - user: root
     - group: root
+    - require:
+      - file: /etc/nginx/
 
 /usr/lib/nginx/:
   file.directory:
