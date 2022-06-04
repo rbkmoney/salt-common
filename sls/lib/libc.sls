@@ -13,17 +13,19 @@ include:
 {% if grains['elibc'] == 'glibc' %}
 sys-libs/glibc:
   pkg.latest:
-{% if grains.os == 'Gentoo' %}
+    {% if grains.os == 'Gentoo' %}
     - oneshot: True
     - pkgs:
       - {{ pkg.gen_atom('sys-libs/glibc') }}
-{% elif grains.os_family == 'Debian' %}
+    {% elif grains.os_family == 'Debian' %}
     - pkgs:
       - libc6
       - libc-bin
-{% endif %}
+    {% endif %}
     - require:
+      {% if grains.os == 'Gentoo' %}
       - file: gentoo.portage.packages
+      {% endif %}
       - file: /etc/locale.gen
 
 /etc/locale.gen:
