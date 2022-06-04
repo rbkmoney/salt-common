@@ -1,7 +1,7 @@
 {% import 'pkg/common' as pkg %}
 {% import 'lib/libc.sls' as libc %}
-include:
 {% if grains.os == 'Gentoo' %}
+include:
   - gentoo.makeconf
   - lib.libc
 {% endif %}
@@ -36,3 +36,7 @@ app-metrics/collectd:
       - python3-protobuf
       - libmicrohttpd12
 {% endif %}
+
+
+
+
