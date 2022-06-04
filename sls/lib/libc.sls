@@ -49,7 +49,6 @@ eselect-locale:
     - target: {{ salt.pillar.get('locale:LANG', 'en_IE.utf8') }}
     - require:
       - cmd: locale-gen
-{% endif %}
 
 /etc/env.d/02locale:
   augeas.change:
@@ -60,4 +59,5 @@ eselect-locale:
     - changes:
       - set LC_TIME "{{ salt.pillar.get('locale:LC_TIME','en_IE.UTF-8') }}"
       - set LC_ALL "{{ salt.pillar.get('locale:LC_ALL','en_IE.UTF-8') }}"
+{% endif %}
 {% endif %}
