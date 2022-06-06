@@ -6,7 +6,7 @@
 {% set p_aggregation = collectd.get('aggregation', False) %}
 {% set p_write_graphite = collectd.get('write_graphite', False) %}
 {% set p_write_riemann = collectd.get('write_riemann', False) %}
-{% set p_write_graphite = collectd.get('write_prometheus', False) %}
+{% set p_write_prometheus = collectd.get('write_prometheus', False) %}
 {% set p_ceph = collectd.get('ceph', False) %}
 {% set p_mysql = collectd.get('mysql', False) %}
 {% set p_processes = collectd.get('processes', {}) %}

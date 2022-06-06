@@ -54,12 +54,14 @@ collectd:
 
 /etc/collectd.conf: file.absent
 
-/etc/collectd:
+/etc/collectd/:
   file.directory:
     - create: True
     - mode: 755
     - user: root
     - group: collectd
+    - require:
+      - user: collectd
 
 /etc/collectd/collectd.conf:
   file.managed:
@@ -72,7 +74,7 @@ collectd:
     - user: root
     - group: collectd
     - require:
-      - file: /etc/collectd
+      - file: /etc/collectd/
       - file: /etc/collectd/types.db
 
 /etc/collectd/types.db:
@@ -82,7 +84,7 @@ collectd:
     - user: root
     - group: collectd
     - require:
-      - file: /etc/collectd
+      - file: /etc/collectd/
 
 {% if p_network.get('users', False) %}
 /etc/collectd/collectd.passwd:
@@ -93,7 +95,7 @@ collectd:
     - user: root
     - group: collectd
     - require:
-      - file: /etc/collectd
+      - file: /etc/collectd/
     - watch_in:
       - service: collectd
 {% endif %}
@@ -107,6 +109,8 @@ collectd:
     - mode: 755
     - user: root
     - group: collectd
+    - require:
+      - file: /etc/collectd/
 
 /etc/collectd/conf.d/placeholder.conf:
   file.managed:
@@ -148,6 +152,14 @@ collectd:
       - service: collectd
 
 {% if extra_plugin_config.get('consul_health_plugin', False) %}
+/usr/share/collectd/consul-health/:
+  file.directory:
+    - create: True
+    - mode: 755
+    - user: root
+    - group: collectd
+    - require:
+      - user: collectd
 /usr/share/collectd/consul-health/consul_health_plugin.py:
   file.managed:
     - source: salt://collectd/files/consul_health_plugin.py
@@ -155,13 +167,7 @@ collectd:
     - user: root
     - group: collectd
     - require:
-      - file: /usr/share/collectd/consul-health
+      - file: /usr/share/collectd/consul-health/
     - require_in:
       - file: /etc/collectd/conf.d/20-python-consul-health.conf
-/usr/share/collectd/consul-health:
-  file.directory:
-    - create: True
-    - mode: 755
-    - user: root
-    - group: collectd
 {% endif %}
