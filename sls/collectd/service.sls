@@ -9,6 +9,10 @@ collectd:
       - file: /etc/collectd/collectd.conf
       - file: /etc/collectd/types.db
       - file: /etc/collectd/conf.d/
+  user.present:
+    - system: True
+    - home: /var/lib/collectd
+    - shell: /sbin/nologin
 
 {% if grains['init'] == 'openrc' %}
 /etc/init.d/collectd:
@@ -62,8 +66,8 @@ collectd:
     - source: salt://collectd/files/collectd.conf.tpl
     - template: jinja
     - defaults:
-        virtual_machine: {{ salt['grains.get']('virtual', False) }}
-        nfs_server: {{ salt['grains.get']('nfs_server', False) }}
+        virtual_machine: {{ salt.grains.get('virtual', False) }}
+        nfs_server: {{ salt.grains.get('nfs_server', False) }}
     - mode: 640
     - user: root
     - group: collectd
@@ -94,6 +98,9 @@ collectd:
       - service: collectd
 {% endif %}
 
+/etc/collectd/collectd.conf.d/: file.absent
+/etc/collectd/collection.conf: file.absent
+
 /etc/collectd/conf.d/:
   file.directory:
     - create: True
@@ -107,6 +114,8 @@ collectd:
     - user: root
     - group: root
     - contents: ""
+    - require:
+      - file: /etc/collectd/conf.d/
 
 /etc/collectd/conf.d/10-jmx.conf:
   {% if extra_plugin_config.get('jmx', False) %}
