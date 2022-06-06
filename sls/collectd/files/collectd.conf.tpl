@@ -6,6 +6,7 @@
 {% set p_aggregation = collectd.get('aggregation', False) %}
 {% set p_write_graphite = collectd.get('write_graphite', False) %}
 {% set p_write_riemann = collectd.get('write_riemann', False) %}
+{% set p_write_graphite = collectd.get('write_prometheus', False) %}
 {% set p_ceph = collectd.get('ceph', False) %}
 {% set p_mysql = collectd.get('mysql', False) %}
 {% set p_processes = collectd.get('processes', {}) %}
@@ -149,11 +150,6 @@ LoadPlugin nginx
 #LoadPlugin onewire
 #LoadPlugin openvpn
 #LoadPlugin oracle
-{% if "perl" in extra_plugin_config %}
-<LoadPlugin perl>
-  Globals true
-</LoadPlugin>
-{% endif %}
 LoadPlugin processes
 #LoadPlugin protocols
 #LoadPlugin redis
@@ -162,9 +158,6 @@ LoadPlugin processes
 #LoadPlugin rrdtool
 #LoadPlugin serial
 #LoadPlugin sigrok
-{% if "snmp" in extra_plugin_config %}
-LoadPlugin snmp
-{% endif %}
 LoadPlugin statsd
 #LoadPlugin swap
 #LoadPlugin table
@@ -182,20 +175,20 @@ LoadPlugin users
 LoadPlugin vmem
 #LoadPlugin vserver
 #LoadPlugin wireless
-{% if p_write_graphite %}
-LoadPlugin write_graphite
-{% endif %}
-#LoadPlugin write_http
-#LoadPlugin write_mongodb
-#LoadPlugin write_redis
-{% if p_write_riemann %}
-LoadPlugin write_riemann
-{% endif %}
 {% if "xencpu" in extra_plugin_config %}
 LoadPlugin xencpu
 {% endif %}
 {% if "zookeeper" in extra_plugin_config %}
 LoadPlugin zookeeper
+{% endif %}
+{% if p_write_graphite %}
+LoadPlugin write_graphite
+{% endif %}
+{% if p_write_prometheus %}
+LoadPlugin write_prometheus
+{% endif %}
+{% if p_write_riemann %}
+LoadPlugin write_riemann
 {% endif %}
 ##############################################################################
 # Plugin configuration                                                       #
@@ -659,18 +652,6 @@ LoadPlugin zookeeper
 #  </Database>
 #</Plugin>
 
-#<Plugin perl>
-#	IncludeDir "/my/include/path"
-#	BaseName "Collectd::Plugins"
-#	EnableDebugger ""
-#	LoadPlugin Monitorus
-#	LoadPlugin OpenVZ
-#
-#	<Plugin foo>
-#		Foo "Bar"
-#		Qux "Baz"
-#	</Plugin>
-#</Plugin>
 {% endif %}
 
 {% if p_processes %}
@@ -908,6 +889,13 @@ LoadPlugin zookeeper
 	Verbose false
 </Plugin>
 
+{% if "zookeeper" in extra_plugin_config %}
+<Plugin "zookeeper">
+   Host "::1"
+   Port "2181"
+</Plugin>
+{% endif %}
+
 {% if p_write_graphite %}
 <Plugin write_graphite>
   {% for carbon in p_write_graphite['carbons'] %}
@@ -923,38 +911,12 @@ LoadPlugin zookeeper
   {% endfor %}
 </Plugin>
 {% endif %}
-{% if False %}
-#<Plugin write_http>
-#	<URL "http://example.com/collectd-post">
-#		User "collectd"
-#		Password "weCh3ik0"
-#		VerifyPeer true
-#		VerifyHost true
-#		CACert "/etc/ssl/ca.crt"
-#		Format "Command"
-#		StoreRates false
-#	</URL>
-#</Plugin>
 
-#<Plugin write_mongodb>
-#	<Node "example">
-#		Host "localhost"
-#		Port "27017"
-#		Timeout 1000
-#		StoreRates false
-#		Database "auth_db"
-#		User "auth_user"
-#		Password "auth_passwd"
-#	</Node>
-#</Plugin>
-
-#<Plugin write_redis>
-#	<Node "example">
-#		Host "localhost"
-#		Port "6379"
-#		Timeout 1000
-#	</Node>
-#</Plugin>
+{% if p_write_prometheus %}
+<Plugin "write_prometheus">
+  Port "{{ p_write_prometheus['port'] }}"
+  StalenessDelta {{ p_write_prometheus.get('StalenessDelta', 300) }}
+</Plugin>
 {% endif %}
 
 {% if p_write_riemann %}
@@ -973,13 +935,8 @@ LoadPlugin zookeeper
   {% endfor %}
 </Plugin>
 {% endif %}
+
 {% if False %}
-{% if "zookeeper" in extra_plugin_config %}
-<Plugin "zookeeper">
-   Host "::1"
-   Port "2181"
-</Plugin>
-{% endif %}
 ##############################################################################
 # Filter configuration                                                       #
 #----------------------------------------------------------------------------#
