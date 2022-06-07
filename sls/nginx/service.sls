@@ -46,6 +46,7 @@ nginx-reload:
     - group: root
 
 /etc/ssl/nginx/:
+  file.directory:
     - create: True
     - mode: 755
     - user: root
