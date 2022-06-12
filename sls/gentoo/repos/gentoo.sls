@@ -6,12 +6,12 @@ include:
 
 gentoo:
   file.directory:
-    - name: '/usr/portage'
+    - name: '/var/db/repos/gentoo'
     - create: True
   {% if not ('read-only-repos' in grains and grains['read-only-repos'] == True) %}
   git.latest:
     - name: '{{ sync_uri }}'
-    - target: '/usr/portage'
+    - target: '/var/db/repos/gentoo'
     - rev: master
     - depth: 30
     - force_clone: True
@@ -34,7 +34,7 @@ gentoo:
         DEFAULT:
           main-repo: gentoo
         gentoo:
-          location: '/usr/portage'
+          location: '/var/db/repos/gentoo'
           auto-sync: {{ 'false' if ('read-only-repos' in grains and grains['read-only-repos'] == True) else 'true' }}
           sync-type: git
           clone-depth: 1
