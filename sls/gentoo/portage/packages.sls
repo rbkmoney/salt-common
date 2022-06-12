@@ -53,11 +53,14 @@ include('gentoo.portage')
 
 packages = pillar('gentoo:portage:packages', {})
 profile = pillar('gentoo:portage:profile', {})
+clean_flags = pillar('gentoo:portage:clean-flags', True)
+clean_profile = pillar('gentoo:portage:clean-profile', False)
 filenames = []
 
 for var in ('accept_keywords', 'mask', 'unmask', 'use', 'env', 'license', 'properties'):
     d = '/etc/portage/package.{}/'.format(var)
-    File.directory(d, create=True, mode='0755', user='root', group='portage', clean=True, exclude_pat='*SALT')
+    File.directory(d, create=True, mode='0755', user='root', group='portage',
+                   clean=clean_flags, exclude_pat='*SALT')
 
     result = generate_result(packages, var)
     result_str = '\n'.join(["{} {}".format(atom, value) for atom, value in sorted(result)])
@@ -69,6 +72,7 @@ for var in ('accept_keywords', 'mask', 'unmask', 'use', 'env', 'license', 'prope
 for var in ('accept_keywords', 'mask', 'unmask', 'use', 'use.mask', 'use.force', 'provided'):
     d = '/etc/portage/profile/package.{}/'.format(var)
     File.directory(d, create=True, mode='0755', user='root', group='portage',
+                   clean=clean_profile, exclude_pat='*SALT',
                    require=[File('/etc/portage/profile/')])
 
     result = generate_result(profile, var)

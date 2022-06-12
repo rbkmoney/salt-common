@@ -824,15 +824,15 @@ LoadPlugin write_riemann
 {% endif %}
 
 <Plugin unixsock>
-	SocketFile "/run/collectd-unixsock"
-	SocketGroup "nagios"
-	SocketPerms "0660"
-#	DeleteSocket false
+  SocketFile "/run/collectd-unixsock"
+  SocketGroup "nagios"
+  SocketPerms "0660"
+  DeleteSocket false
 </Plugin>
 
 {% if False %}
 #<Plugin uuid>
-#	UUIDFile "/etc/uuid"
+  # UUIDFile "/etc/uuid"
 #</Plugin>
 {% endif %}
 {% if False %}
@@ -886,7 +886,7 @@ LoadPlugin write_riemann
 {% endif %}
 
 <Plugin vmem>
-	Verbose false
+  Verbose false
 </Plugin>
 
 {% if "zookeeper" in extra_plugin_config %}
