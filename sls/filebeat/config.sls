@@ -44,8 +44,10 @@ if elastic_template:
     mode=640, user='root', group='root',
     contents=json.dumps(elastic_template),
     require=[File(conf_path)])
+  config['setup'] = {'template.enabled': True}
 else:
   File.absent(conf_path + 'filebeat.template.json')
+  config['setup'] = {'template.enabled': False}
 
 for out in config['output'].keys():
   if out in tls.keys():
