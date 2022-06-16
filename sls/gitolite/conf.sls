@@ -14,7 +14,7 @@
 
 /var/lib/gitolite/.gitolite.rc:
   file.managed:
-    - source: salt://gitolite/files/gitolite.rc
+    - source: salt://{{ slspath }}/files/gitolite.rc
     - user: git
     - group: git
     - mode: 640
@@ -23,17 +23,17 @@
 
 /var/lib/gitolite/.ssh/config:
   file.managed:
-    - source: salt://gitolite/files/ssh_config.tpl
+    - source: salt://{{ slspath }}/files/ssh_config.tpl
     - template: jinja
     - user: git
     - group: git
-    - file_mode: 640
+    - mode: 640
     - require:
       - file: /var/lib/gitolite/.ssh/
 
 /var/lib/gitolite/start.pub:
   file.managed:
-    - source: salt://gitolite/files/start.pub
+    - source: salt://{{ slspath }}/files/start.pub
     - mode: 640
     - user: git
     - group: git
