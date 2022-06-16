@@ -1,6 +1,6 @@
 {% set ceph_conf = salt['pillar.get']('ceph:conf') -%}
 {% macro true_false(o, key, default) %}
-{{ 'true' if o.get(key, default) else 'false' }}
+{{- 'true' if o.get(key, default) else 'false' -}}
 {% endmacro %}
 ##
 # This file defines cluster membership, the various locations
