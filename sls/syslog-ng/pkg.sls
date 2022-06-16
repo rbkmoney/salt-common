@@ -4,7 +4,7 @@ include:
   - lib.libc
   - logrotate
 
-pkg_syslog-ng:
+app-admin/syslog-ng:
   pkg.installed:
     - pkgs:
       - {{ pkg.gen_atom('app-admin/syslog-ng') }}
