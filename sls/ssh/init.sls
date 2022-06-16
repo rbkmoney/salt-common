@@ -12,8 +12,8 @@ sshd:
     - watch:
       - pkg: net-misc/openssh
 {% if grains.os == 'Gentoo' %}
-      - pkg: ldns
-      - pkg: lksctp-tools
+      - pkg: net-libs/ldns
+      - pkg: net-misc/lksctp-tools
 {% endif %}
       - file: /etc/ssh/sshd_config
       - file: /etc/ssh/sshd_config.d/group-sftponly.conf
