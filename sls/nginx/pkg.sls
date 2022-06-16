@@ -23,12 +23,6 @@ manage-nginx-modules:
     - require:
       - file: augeas-makeconf
 
-# TODO: move this to separate file
-dev-libs/libpcre:
-  portage_config.flags:
-    - use:
-      - jit
-
 www-servers/nginx:
   pkg.installed:
     - pkgs:

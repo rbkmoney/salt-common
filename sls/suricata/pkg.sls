@@ -8,5 +8,3 @@ net-analyzer/suricata:
       - {{ pkg.gen_atom('net-analyzer/suricata') }}
     - require:
       - file: gentoo.portage.packages
-  portage_config.flags:
-    - accept_keywords: ["~*"]

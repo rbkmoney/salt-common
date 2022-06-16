@@ -1,7 +1,10 @@
+{% import 'pkg/common' as pkg %}
+include:
+  - gentoo.portage.packages
+
 dev-ruby/msgpack:
-  portage_config.flags:
-    - accept_keywords:
-      - '~*'
   pkg.latest:
+    - pkgs:
+      - {{ pkg.gen_atom('dev-ruby/msgpack') }}
     - require:
-      - portage_config: dev-ruby/msgpack
+      - file: gentoo.portage.packages

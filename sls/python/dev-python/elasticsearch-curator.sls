@@ -1,16 +1,12 @@
-# TODO: refactor
+{% import 'pkg/common' as pkg %}
 include:
-  - python.dev-python.click
+  - gentoo.portage.packages
   - python.dev-python.elasticsearch-py
 
 dev-python/elasticsearch-curator:
   pkg.latest:
     - pkgs:
-      - dev-python/elasticsearch-curator: "~>=5.6.0"
-      - dev-python/elasticsearch-py: ">=6.3.1-r1"
-      - dev-python/certifi: "~>=2018.10.15"
+      - {{ pkg.gen_atom('dev-python/elasticsearch-curator') }}
     - require:
-      - portage_config: dev-python/elasticsearch-curator
-  portage_config.flags:
-    - accept_keywords:
-      - "~*"
+      - file: gentoo.portage.packages
+      - pkg: dev-python/elasticsearch-py

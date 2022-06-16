@@ -1,10 +1,13 @@
+{% import 'pkg/common' as pkg %}
+include:
+  - gentoo.portage.packages
+
 www-apps/grafana-bin:
-  portage_config.flags:
-    - accept_keywords:
-      - ~*
   pkg.latest:
+    - pkgs:
+      - {{ pkg.gen_atom('www-apps/grafana-bin') }}
     - require:
-      - portage_config: www-apps/grafana-bin
+      - file: gentoo.portage.packages
 
 /etc/grafana/grafana.ini:
   file.managed:

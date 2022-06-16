@@ -1,8 +1,10 @@
-# TODO: убрать зависимости на стейт
+{% import 'pkg/common' as pkg %}
+include:
+  - gentoo.portage.packages
+
 dev-python/python-gnupg:
-  portage_config.flags:
-    - accept_keywords:
-      - "~*"
   pkg.latest:
+    - pkgs:
+      - {{ pkg.gen_atom('dev-python/python-gnupg') }}
     - require:
-      - portage_config: dev-python/python-gnupg
+      - file: gentoo.portage.packages

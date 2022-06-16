@@ -1,7 +1,10 @@
+{% import 'pkg/common' as pkg %}
+include:
+  - gentoo.portage.packages
+
 dev-ruby/concurrent-ruby:
-  portage_config.flags:
-    - accept_keywords:
-      - '~*'
   pkg.latest:
+    - pkgs:
+      - {{ pkg.gen_atom('dev-ruby/concurrent-ruby') }}
     - require:
-      - portage_config: dev-ruby/concurrent-ruby
+      - file: gentoo.portage.packages

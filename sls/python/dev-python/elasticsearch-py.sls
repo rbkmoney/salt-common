@@ -1,14 +1,11 @@
-# TODO: уже можно стабильный, стейт можно удалить
+{% import 'pkg/common' as pkg %}
 include:
+  - gentoo.portage.packages
   - python.dev-python.urllib3
 
 dev-python/elasticsearch-py:
   pkg.latest:
     - pkgs:
-      - dev-python/elasticsearch-py: "~>=5.4.0"
+      - {{ pkg.gen_atom('dev-python/elasticsearch-py') }}
     - require:
-      - portage_config: dev-python/elasticsearch-py
-  portage_config.flags:
-    - name: ">=dev-python/elasticsearch-py-5.4.0"
-    - accept_keywords:
-      - "~*"
+      - file: gentoo.portage.packages
