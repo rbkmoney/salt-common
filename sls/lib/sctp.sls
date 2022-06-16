@@ -4,7 +4,7 @@ include:
   - gentoo.portage.packages
 {% endif %}
 
-lksctp-tools:
+net-misc/lksctp-tools:
   pkg.latest:
     {% if grains.os == 'Gentoo' %}
     - pkgs:
