@@ -7,20 +7,13 @@
 
 # This is the sshd server system-wide configuration file.  See
 # sshd_config(5) for more information.
-
-# This sshd was compiled with PATH=/usr/bin:/bin:/usr/sbin:/sbin
-
-# The strategy used for options in the default sshd_config shipped with
-# OpenSSH is to specify options with their default value where
-# possible, but leave them commented.  Uncommented options override the
-# default value.
-Include /etc/ssh/sshd_config.d/*.conf
 Protocol 2
 
 {{ op_pillar('Port', '22') }}
 {{ op_pillar('AddressFamily', 'any') }}
+{% if grains['os'] == 'Gentoo' %}
 {{ op_pillar('Transport', 'TCP') }}
-
+{% endif %}
 {{ op_pillar('SyslogFacility', 'AUTH') }}
 {{ op_pillar('LogLevel', 'INFO') }}
 
@@ -85,14 +78,14 @@ AuthorizedKeysFile .ssh/authorized_keys
 
 # override default of no subsystems
 {{ op_pillar('Subsystem', 'sftp internal-sftp') }}
-
+{% if grains['os'] == 'Gentoo' %}
 # the following are HPN related configuration options
 # tcp receive buffer polling. disable in non autotuning kernels
 {{ op_pillar('TcpRcvBufPoll', 'yes') }}
 
 # buffer size for hpn to non-hpn connections
 {{ op_pillar('HPNBufferSize', '2048') }}
-
+{% endif %}
 # Allow client to pass locale environment variables #367017
 {{ op_pillar('AcceptEnv', 'LANG LC_*') }}
 {{ op_pillar('PermitUserEnvironment', 'no') }}
