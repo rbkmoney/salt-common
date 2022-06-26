@@ -62,7 +62,7 @@ SV_IGNORE='{{ conf.get('ignore', defaults['ignore']) }}'
 # Define processes started via inittab that should be killed
 INITTAB_KILLALL='{{ conf.get('inittab-killall', defaults['inittab-killall']) }}'
 
-# load addional config files
+# load additional config files
 # to extend options in another file use a syntax like SV_ALWAYS+=( myservice )
 # where "myservice" can also be a regex
 include /etc/restart-services.d/*.conf

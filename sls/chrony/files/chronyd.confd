@@ -2,7 +2,7 @@
 
 CFGFILE="/etc/chrony/chrony.conf"
 
-# Configuration dependant options :
+# Configuration dependent options :
 #      -s - Set system time from RTC if rtcfile directive present
 #      -r - Reload sample histories if dumponexit directive present
 #

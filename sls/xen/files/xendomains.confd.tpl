@@ -19,7 +19,7 @@ SCREEN_NAME="xen"
 # Number of seconds between writes to screen's logfiles.
 #
 # Lower values mean more disk activity and hence a possible performance
-# impact, but higher values mean a greater chance of loosing some output
+# impact, but higher values mean a greater chance of losing some output
 # in the event of a crash.
 
 SCREEN_LOG_INTERVAL="1"
