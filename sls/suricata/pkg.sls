@@ -1,10 +1,10 @@
 {% import 'pkg/common' as pkg %}
-{% if os == 'Gentoo' %}
+{% if grains.os == 'Gentoo' %}
 include:
   - gentoo.portage.packages
 {% endif %}
 
-{% if os == 'Ubuntu' %}
+{% if grains.os == 'Ubuntu' %}
 pkgrepo_suricata_stable:
   pkgrepo.managed:
     - ppa: oisf/suricata-stable
@@ -12,14 +12,15 @@ pkgrepo_suricata_stable:
 
 net-analyzer/suricata:
   pkg.installed:
-    {% if os == 'Gentoo' %}
+    {% if grains.os == 'Gentoo' %}
     - pkgs: 
       - {{ pkg.gen_atom('net-analyzer/suricata') }}
     - require:
       - file: gentoo.portage.packages
-    {% elif == 'Ubuntu' %}
+    {% elif grains.os == 'Ubuntu' %}
     - pkgs:
       - suricata
+    - refresh: true
     - require:
         - pkgrepo: pkgrepo_suricata_stable
     {% endif %}
