@@ -31,14 +31,25 @@ user_{{ username }}:
     - groups: {{ data.get('groups', []) }}
     - optional_groups: {{ data.get('optional_groups', []) }}
 
+{% if data.get('createhome', True %}
+{{ homedir }}/:
+  file.directory:
+    - create: True
+    - mode: {{ data.get('homedir_mode', '755') }}
+    - user: {{ username }}
+    - group: {{ username }}
+    - require:
+      - user: {{ username }}
+
 {% if data.get('keys', False) %}
-{{ homedir }}/.ssh:
+{{ homedir }}/.ssh/:
   file.directory:
     - create: True
     - mode: 700
     - user: {{ username }}
+    - group: {{ username }}
     - require:
-      - user: {{ username }}
+      - file: {{ homedir }}/
 
 {{ homedir }}/.ssh/authorized_keys:
   file.managed:
@@ -49,21 +60,43 @@ user_{{ username }}:
     - mode: 600
     - user: {{ username }}
     - require:
-      - file: {{ homedir }}/.ssh
+      - file: {{ homedir }}/.ssh/
 {% endif %}
 
-{% if data.get('pgpass', False) %}
+{% if pgpass in data %}
 {{ homedir }}/.pgpass:
   file.managed:
     - template: jinja
     - mode: 600
     - user: {{ username }}
+    - group: {{ username }}
     - require:
-      - user: {{ username }}
+      - file: {{ homedir }}
     - content: |
        {% for l in data.pgpass %}
        {{ ':'.join((l.get('host', '*'),l.get('port', '*')|string,l.get('database', '*'),l.user,l.passwd)) }}
        {% endfor -%}
+{% endif %}
+
+{% if 'files' in data %}{% for f, d in data.files.items() %}
+{{ homedir }}/{{ f }}:
+  file.managed:
+    {% if 'source' in d %}
+    - source: {{ d }}
+    {% else %}
+    - contents_pillar: users:present:{{ username }}:files:{{ f }}:contents
+    {% endif %}
+    {% if 'template' in d %}
+    - template: {{ d.template }}
+    {% endif %}
+    - makedirs: {{ d.get('makedirs', False) }}
+    - mode: {{ d.get('mode', '644') }}
+    - user: {{ username }}
+    - group: {{ username }}
+    - require:
+      - file: {{ homedir }}
+{% endfor %}{% endif %}
+
 {% endif %}
 {% endfor %}
 
