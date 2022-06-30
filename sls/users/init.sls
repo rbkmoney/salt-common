@@ -31,7 +31,7 @@ user_{{ username }}:
     - groups: {{ data.get('groups', []) }}
     - optional_groups: {{ data.get('optional_groups', []) }}
 
-{% if data.get('createhome', True %}
+{% if data.get('createhome', True) %}
 {{ homedir }}/:
   file.directory:
     - create: True
@@ -59,6 +59,7 @@ user_{{ username }}:
         user: {{ username }}
     - mode: 600
     - user: {{ username }}
+    - group: {{ username }}
     - require:
       - file: {{ homedir }}/.ssh/
 {% endif %}
