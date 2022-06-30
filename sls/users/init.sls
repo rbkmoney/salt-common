@@ -64,7 +64,7 @@ user_{{ username }}:
       - file: {{ homedir }}/.ssh/
 {% endif %}
 
-{% if pgpass in data %}
+{% if 'pgpass' in data %}
 {{ homedir }}/.pgpass:
   file.managed:
     - template: jinja
