@@ -11,7 +11,7 @@ identity_file = '/root/.ssh/suricata-rules-access'
 include('suricata.pkg')
 
 suricata_confd='/etc/conf.d/suricata'
-if grains['init'] == 'openrc':
+if grains('init') == 'openrc':
   confd_contents="""# Managed by Salt
 # Config file for /etc/init.d/suricata
 """
@@ -23,7 +23,7 @@ if grains['init'] == 'openrc':
 
   File.managed(suricata_confd, mode=644, user='root', group='root', contents=confd_contents)
 
-elif grains['init'] == 'systemd':
+elif grains('init') == 'systemd':
   File.absent(suricata_confd)
   File.managed('/etc/systemd/system/suricata@.service',
                source='salt://suricata/files/suricata.service',
@@ -31,7 +31,7 @@ elif grains['init'] == 'systemd':
 
   for name, data in instances.items():
     contents = "# Managed by Salt\n[Service]\n"
-    for key in ('OPTS'):
+    for key in ('OPTS',):
       if 'SURICATA_' + key in data:
         contents += 'Environment='+key+ '="' + data['SURICATA_' + key] + '"\n'
     File.managed('/etc/systemd/system/suricata@'+ name+ '.service',
@@ -39,7 +39,7 @@ elif grains['init'] == 'systemd':
 
 for name, data in instances.items():
   rules_dir = '/etc/suricata/rules-' + name
-  suricata_service = 'suricata' +('@' if grains['init'] == 'systemd' else '.')+ name
+  suricata_service = 'suricata' +('@' if grains('init') == 'systemd' else '.')+ name
   suricata_yaml = '/etc/suricata/suricata-'+ name +'.yaml'
   initd_symlink = '/etc/init.d/' + suricata_service
   Service.running(suricata_service, enable=True, reload=True,
@@ -48,7 +48,7 @@ for name, data in instances.items():
   File.directory(rules_dir, create=True, mode=755, user='root', group='root')
 
   with Service(suricata_service, 'watch_in'):
-    if not grains['init'] == 'systemd':
+    if not grains('init') == 'systemd':
       File.symlink(initd_symlink, target='/etc/init.d/suricata')
     File.managed(
       suricata_yaml, mode=644, user='root', group='root',
