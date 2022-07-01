@@ -34,8 +34,9 @@ elif grains('init') == 'systemd':
     for key in ('OPTS',):
       if 'SURICATA_' + key in data:
         contents += 'Environment='+key+ '="' + data['SURICATA_' + key] + '"\n'
-    File.managed('/etc/systemd/system/suricata@'+ name+ '.service',
-                 mode=644, user='root', group='root', contents=contents)
+
+    File.managed('/etc/systemd/system/suricata@'+ name+ '.service.d/override.conf',
+                 mode=644, user='root', group='root', makedirs=True, contents=contents)
 
 for name, data in instances.items():
   rules_dir = '/etc/suricata/rules-' + name

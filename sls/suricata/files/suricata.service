@@ -1,3 +1,4 @@
+# Managed by Salt
 [Unit]
 Description=Suricata IDS/IDP daemon
 After=network.target
@@ -7,7 +8,7 @@ Documentation=https://suricata.readthedocs.io/
 
 [Service]
 PIDFile=/run/suricata/suricata-%i.pid
-ExecStart=/usr/bin/suricata -c /etc/suricata/suricata-%i.pid --pidfile /run/suricata/suricata-%i.pid ${OPTS}
+ExecStart=/usr/bin/suricata -c /etc/suricata/suricata-%i.yaml --pidfile /run/suricata/suricata-%i.pid -D ${OPTS}
 ExecReload=/bin/kill -HUP $MAINPID
 ExecStop=/bin/kill $MAINPID
 PrivateTmp=yes
