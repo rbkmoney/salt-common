@@ -11,33 +11,45 @@ identity_file = '/root/.ssh/suricata-rules-access'
 include('suricata.pkg')
 
 suricata_confd='/etc/conf.d/suricata'
-confd_contents="""# Managed by Salt
+if grains['init'] == 'openrc':
+  confd_contents="""# Managed by Salt
 # Config file for /etc/init.d/suricata
 """
 
-for name, data in instances.items():
-  for key in ('OPTS','LOG_FILE','USER','GROUP'):
-    if 'SURICATA_' + key in data:
-      confd_contents += '_'.join(('SURICATA', key, name)) + '="' + data['SURICATA_' + key] + '"\n'
+  for name, data in instances.items():
+    for key in ('OPTS','LOG_FILE','USER','GROUP'):
+      if 'SURICATA_' + key in data:
+        confd_contents += '_'.join(('SURICATA', key, name)) + '="' + data['SURICATA_' + key] + '"\n'
 
-File.managed(suricata_confd, mode=644, user='root', group='root', contents=confd_contents)
+  File.managed(suricata_confd, mode=644, user='root', group='root', contents=confd_contents)
+
+elif grains['init'] == 'systemd':
+  File.absent(suricata_confd)
+  File.managed('/etc/systemd/system/suricata@.service',
+               source='salt://suricata/files/suricata.service',
+               mode=644, user='root', group='root')
+
+  for name, data in instances.items():
+    contents = "# Managed by Salt\n[Service]\n"
+    for key in ('OPTS'):
+      if 'SURICATA_' + key in data:
+        contents += 'Environment='+key+ '="' + data['SURICATA_' + key] + '"\n'
+    File.managed('/etc/systemd/system/suricata@'+ name+ '.service',
+                 mode=644, user='root', group='root', contents=contents)
 
 for name, data in instances.items():
   rules_dir = '/etc/suricata/rules-' + name
-  suricata_service = 'suricata.' + name
-  suricata_yaml = '/etc/suricata/'+ suricata_service.replace('.', '-') +'.yaml'
+  suricata_service = 'suricata' +('@' if grains['init'] == 'systemd' else '.')+ name
+  suricata_yaml = '/etc/suricata/suricata-'+ name +'.yaml'
   initd_symlink = '/etc/init.d/' + suricata_service
   Service.running(suricata_service, enable=True, reload=True,
                   watch=(File(suricata_confd), Pkg('net-analyzer/suricata')))
 
-  File.directory(
-    rules_dir,
-    create=True,
-    user='root',
-    group='root')
+  File.directory(rules_dir, create=True, mode=755, user='root', group='root')
 
   with Service(suricata_service, 'watch_in'):
-    File.symlink(initd_symlink, target='/etc/init.d/suricata')
+    if not grains['init'] == 'systemd':
+      File.symlink(initd_symlink, target='/etc/init.d/suricata')
     File.managed(
       suricata_yaml, mode=644, user='root', group='root',
       check_cmd='suricata --init-errors-fatal -v -T -c',
