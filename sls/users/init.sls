@@ -72,7 +72,7 @@ user_{{ username }}:
     - user: {{ username }}
     - group: {{ username }}
     - require:
-      - file: {{ homedir }}
+      - file: {{ homedir }}/
     - content: |
        {% for l in data.pgpass %}
        {{ ':'.join((l.get('host', '*'),l.get('port', '*')|string,l.get('database', '*'),l.user,l.passwd)) }}
@@ -95,7 +95,7 @@ user_{{ username }}:
     - user: {{ username }}
     - group: {{ username }}
     - require:
-      - file: {{ homedir }}
+      - file: {{ homedir }}/
 {% endfor %}{% endif %}
 
 {% endif %}
