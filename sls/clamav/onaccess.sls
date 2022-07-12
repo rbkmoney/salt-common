@@ -2,13 +2,14 @@ include:
   - .pkg
   - .svc
   
+{% if grains['init'] == 'openrc' %}
 /etc/conf.d/clamd:
   file.managed:
     - source: salt://clamav/files/clamd-onacess.confd
     - mode: 644
     - user: root
     - group: root
-
+{% endif %}
 /etc/clamav.conf:
   file.managed:
     - source: salt://clamav/files/clamd-onacess.conf
@@ -27,6 +28,8 @@ extend:
   clamd:
     service.running:
       - watch:
-        - pkg: app-antivirus/clamav
-        - file: /etc/conf.d/clamd
         - file: /etc/clamav.conf
+        {% if grains['init'] == 'openrc' %}
+        - file: /etc/conf.d/clamd
+        {% endif %}
+        - pkg: app-antivirus/clamav
