@@ -1,7 +1,13 @@
 include:
   - .pkg
   - .svc
-  
+
+{% if grains.os_family == 'Debian' %}
+{% set conf_dir = '/etc/clamav' %}
+{% else %}
+{% set conf_dir = '/etc' %}
+{% endif %}
+
 {% if grains['init'] == 'openrc' %}
 /etc/conf.d/clamd:
   file.managed:
@@ -10,14 +16,14 @@ include:
     - user: root
     - group: root
 {% endif %}
-/etc/clamav.conf:
+{{ conf_dir }}/clamav.conf:
   file.managed:
     - source: salt://clamav/files/clamd-onacess.conf
     - mode: 644
     - user: root
     - group: root
 
-/etc/freshclam.conf:
+{{ conf_dir }}/freshclam.conf:
   file.managed:
     - source: salt://clamav/files/freshclam.conf
     - mode: 644
@@ -28,7 +34,7 @@ extend:
   clamd:
     service.running:
       - watch:
-        - file: /etc/clamav.conf
+        - file: {{ conf_dir }}/clamav.conf
         {% if grains['init'] == 'openrc' %}
         - file: /etc/conf.d/clamd
         {% endif %}
