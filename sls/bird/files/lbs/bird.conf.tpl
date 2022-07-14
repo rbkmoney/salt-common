@@ -1,6 +1,6 @@
 {% set lbs = salt.pillar.get('bird:lbs') %}
 {% set ecmp_areas = lbs.ecmp_areas %}
-{% set router_id = lbs.get('router-id', 'from eth0') %}
+{% set router_id = lbs.get('router-id', 'from "eth0"') %}
 {% set anycast_networks = lbs.get('anycast_networks', {}) %}
 log syslog { info, remote, warning, error, auth, fatal, bug, debug };
 router id {{ router_id }};
