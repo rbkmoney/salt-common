@@ -1,9 +1,9 @@
 {% set lbs = salt.pillar.get('bird:lbs') %}
-{% set ecmp_area_id = lbs.ecmp_area_id %}
-{% set ecmp_interface = lbs.get('ecmp_interface', 'eth0') %}
+{% set ecmp_areas = lbs.ecmp_areas %}
+{% set router_id = lbs.get('router-id', 'from eth0') %}
 {% set anycast_networks = lbs.get('anycast_networks', {}) %}
 log syslog { info, remote, warning, error, auth, fatal, bug, debug };
-router id from "{{ ecmp_interface }}";
+router id {{ router_id }};
 protocol kernel {
         learn; # Learn all alien routes from the kernel
         persist; # Don't remove routes on bird shutdown
@@ -48,19 +48,26 @@ protocol ospf v3 lbsOSPF{{ v }} {
         tick 1;
         ecmp yes;
         stub router yes;
-        area {{ ecmp_area_id }} {
-             nssa;
-             interface "{{ ecmp_interface }}" {
-                priority 0;
-                bfd yes;
-                hello 10;
-                retransmit 6;
-                transmit delay 5;
-                dead count 5;
-                wait 50;
-                type broadcast;
+	{% for area, data in ecmp_areas.items() %}
+        area {{ area }} {
+	     {% set area_type = data.get('type', None) %}
+	     {% if area_type == 'nssa' %}
+	     nssa;
+	     {% endif %}
+	     {% for iface, ifdata in data['interfaces'] %}
+             interface "{{ iface }}" {
+                type {{ ifdata.get('type', 'broadcast') }};
+                priority {{ ifdata.get('priority', 0) }};
+                bfd {{ ifdata.get('bfd', 'yes') }};;
+                hello {{ ifdata.get('hello', 10) }};
+                retransmit {{ ifdata.get('retransmit', '6') }};
+                transmit {{ ifdata.get('transmit', 'delay 5') }};
+                dead {{ ifdata.get('dead', 'count 4') }};
+                wait {{ ifdata.get('wait', '50') }};
              };
+	     {% endfor %}
         };
+	{% endfor %}
 }
 {% endif %}
 {% endfor %}
