@@ -58,7 +58,7 @@ protocol ospf v3 lbsOSPF{{ v }} {
              interface "{{ iface }}" {
                 type {{ ifdata.get('type', 'broadcast') }};
                 priority {{ ifdata.get('priority', 0) }};
-                bfd {{ ifdata.get('bfd', 'yes') }};;
+                bfd {{ ifdata.get('bfd', 'yes') }};
                 hello {{ ifdata.get('hello', 10) }};
                 retransmit {{ ifdata.get('retransmit', '6') }};
                 transmit {{ ifdata.get('transmit', 'delay 5') }};
