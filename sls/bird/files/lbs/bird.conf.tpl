@@ -54,7 +54,7 @@ protocol ospf v3 lbsOSPF{{ v }} {
 	     {% if area_type == 'nssa' %}
 	     nssa;
 	     {% endif %}
-	     {% for iface, ifdata in data['interfaces'] %}
+	     {% for iface, ifdata in data['interfaces'].items() %}
              interface "{{ iface }}" {
                 type {{ ifdata.get('type', 'broadcast') }};
                 priority {{ ifdata.get('priority', 0) }};
