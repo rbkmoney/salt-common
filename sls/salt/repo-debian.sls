@@ -1,10 +1,19 @@
+{% set os = grains.os.lower() %}
+{% set osrelease = grains.osrelease %}
+{% set lsb_distrib_codename = grains.lsb_distrib_codename %}
+
+{% if grains.os == 'Ubuntu' and grains.osmajorrelease == 22 %}
+{% set osrelease = '20.04' %}
+{% set lsb_distrib_codename = 'focal' %}
+{% endif %}
+
 /etc/apt/sources.list.d/salt.list:
   file.managed:
     - contents: |
-        deb [signed-by=/usr/share/keyrings/salt-archive-keyring.gpg arch={{ grains.osarch }}] https://repo.saltproject.io/py3/{{ grains.os.lower() }}/{{ grains.osrelease }}/{{ grains.osarch }}/latest {{ grains.lsb_distrib_codename }} main
+        deb [signed-by=/usr/share/keyrings/salt-archive-keyring.gpg arch={{ grains.osarch }}] https://repo.saltproject.io/py3/{{ os }}/{{ osrelease }}/{{ grains.osarch }}/latest {{ lsb_distrib_codename }} main
     - require:
       - file: /usr/share/keyrings/salt-archive-keyring.gpg
 
 /usr/share/keyrings/salt-archive-keyring.gpg:
   file.managed:
-    - source: salt://{{ slspath }}/files/{{ grains.os.lower() }}-{{ grains.osrelease }}-salt-archive-keyring.gpg
+    - source: salt://{{ slspath }}/files/{{ os }}-{{ osrelease }}-salt-archive-keyring.gpg
