@@ -29,6 +29,10 @@ nginx:
     - enable: True
     - watch:
       - file: /etc/nginx/nginx.conf
+  user.present:
+    - system: True
+    - home: /var/lib/collectd
+    - shell: /sbin/nologin
 
 nginx-reload:
   # This is for watch_in reloads
