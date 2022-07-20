@@ -37,11 +37,16 @@ disable-ntpd:
     - name: ntpd
     - sig: ntpd
 
+disable-systemd-timesyncd:
+  service.dead:
+    - name: systemd-timesyncd
+
 chronyd:
   service.running:
     - enable: True
     - require:
       - service: disable-ntpd
+      - disable-systemd-timesyncd
     - watch:
       - pkg: net-misc/chrony
       - file: /etc/chrony/chrony.conf
