@@ -3,7 +3,11 @@
 
 driftfile /var/lib/chrony/drift
 {% if grains.init == 'systemd' %}
+{% if grains.os == 'Ubuntu' and grains.osmajorrelease == 20 %}
+pidfile /run/chronyd.pid
+{% else %}
 pidfile /run/chrony/chronyd.pid
+{% endif %}
 {% else %}
 pidfile /run/chronyd.pid
 {% endif %}

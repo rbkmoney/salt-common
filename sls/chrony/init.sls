@@ -46,7 +46,7 @@ chronyd:
     - enable: True
     - require:
       - service: disable-ntpd
-      - disable-systemd-timesyncd
+      - service: disable-systemd-timesyncd
     - watch:
       - pkg: net-misc/chrony
       - file: /etc/chrony/chrony.conf
