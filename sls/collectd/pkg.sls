@@ -33,7 +33,6 @@ app-metrics/collectd:
     {% if grains.os == 'Gentoo' %}
     - watch:
       - augeas: manage-collectd-plugins
-    {% if grains.os == 'Gentoo' %}
     - require:
       - file: gentoo.portage.packages
       {{ libc.pkg_dep() }}
