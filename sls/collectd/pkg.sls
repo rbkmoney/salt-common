@@ -30,10 +30,14 @@ app-metrics/collectd:
       - python3-protobuf
       - libmicrohttpd12 # write_prometheus
       {% endif %}
+    {% if grains.os == 'Gentoo' %}
     - watch:
       - augeas: manage-collectd-plugins
+    {% if grains.os == 'Gentoo' %}
     - require:
-      {% if grains.os == 'Gentoo' %}
       - file: gentoo.portage.packages
-      {% endif %}
       {{ libc.pkg_dep() }}
+    {% elif grains.os_family == 'Debian' %}
+    - require:
+      {{ libc.pkg_dep() }}
+    {% endif %}
