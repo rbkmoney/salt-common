@@ -90,3 +90,14 @@ AuthorizedKeysFile .ssh/authorized_keys
 {{ op_pillar('AcceptEnv', 'LANG LC_*') }}
 {{ op_pillar('PermitUserEnvironment', 'no') }}
 {{ op_pillar('Ciphers', 'aes256-gcm@openssh.com,chacha20-poly1305@openssh.com,aes256-ctr') }}
+
+{% for k, v in salt.pillar.get('ssh:sshd_config:extra', {}).items() %}
+{% if v is mapping %}
+{{ k }}
+  {% for mk, mv in v %}
+  {{ mk }} {{ mv }}
+  {% endfor %}
+{% else %}
+{{ k }} {{ v}}
+{% endif %}
+{% endfor %}
