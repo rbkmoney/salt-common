@@ -9,3 +9,4 @@ cron-freshclam:
     - user: root
     - require:
       - pkg: app-antivirus/clamav
+      - file: /usr/local/bin/clam-wrapper.py
