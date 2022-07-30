@@ -331,14 +331,15 @@ LoadPlugin write_riemann
   ReportByDevice {{ "true" if p_df.get('ReportByDevice', False) else "false" }}
   ReportInodes {{ "true" if p_df.get('ReportInodes', True) else "false" }}
   {% for pattern in p_df.get('MountPoint_patterns',
-  ['/dev', '/dev/shm']) %}
+  ['/dev', '/dev/shm', '/^/run.+/', '/sys/fs/cgroup']) %}
   MountPoint "{{ pattern }}"
   {% endfor %}
   {% for pattern in p_df.get('FSType_patterns', []) %}
   FSType "{{ pattern }}"
   {% endfor %}
   {% for pattern in p_df.get('Device_patterns',
-  ['root', 'overlay', 'cgroup_root', 'shm', 'devtmpfs', '/^docker-.+/', '/^mapper_docker-.+/']) %}
+  ['root', 'overlay', 'cgroup_root', 'shm', 'devtmpfs', '/^docker-.+/', '/^mapper_docker-.+/',
+   '/^loop.+/']) %}
   Device "{{ pattern }}"
   {% endfor %}
 </Plugin>
