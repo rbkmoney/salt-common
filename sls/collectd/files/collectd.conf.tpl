@@ -328,7 +328,7 @@ LoadPlugin write_riemann
 
 <Plugin df>
   IgnoreSelected {{ "true" if p_df.get('IgnoreSelected', True) else "false" }}
-  ReportByDevice {{ "true" if p_df.get('ReportByDevice', True) else "false" }}
+  ReportByDevice {{ "true" if p_df.get('ReportByDevice', False) else "false" }}
   ReportInodes {{ "true" if p_df.get('ReportInodes', True) else "false" }}
   {% for pattern in p_df.get('MountPoint_patterns',
   ['/dev', '/dev/shm']) %}
