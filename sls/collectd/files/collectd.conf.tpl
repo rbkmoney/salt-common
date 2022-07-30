@@ -11,9 +11,9 @@
 {% set p_mysql = collectd.get('mysql', False) %}
 {% set p_processes = collectd.get('processes', {}) %}
 {% set p_interface = collectd.get('interface', {}) %}
-{% set p_disk = collectd.get('disk', {}) %}
-{% set p_df = collectd.get('df', {}) %}
-{% set p_md = collectd.get('md', {}) %}
+{% macro op_true_false(o, name, default, key=None) %}
+{{ name }} {{ "true" if o.get(key if key else name, default) else "false" }}
+{% endmacro %}
 
 FQDNLookup {{ collectd_conf.get('FQDNLookup', 'true') }}
 BaseDir  "/var/lib/collectd"
@@ -326,10 +326,13 @@ LoadPlugin write_riemann
 </Plugin>
 {% endif %}
 
+{% set p_df = collectd.get('df', {}) %}
 <Plugin df>
-  IgnoreSelected {{ "true" if p_df.get('IgnoreSelected', True) else "false" }}
-  ReportByDevice {{ "true" if p_df.get('ReportByDevice', False) else "false" }}
-  ReportInodes {{ "true" if p_df.get('ReportInodes', True) else "false" }}
+  {{ op_true_false(p_df, 'ReportByDevice', False) }}
+  {{ op_true_false(p_df, 'ReportInodes', True) }}
+  {{ op_true_false(p_df, 'ValuesAbsolute', True) }}
+  {{ op_true_false(p_df, 'ValuesPercentage', True) }}
+  {{ op_true_false(p_df, 'IgnoreSelected', True) }}
   {% for pattern in p_df.get('MountPoint_patterns',
   ['/dev', '/dev/shm', '/^/run.+/', '/sys/fs/cgroup']) %}
   MountPoint "{{ pattern }}"
@@ -344,8 +347,9 @@ LoadPlugin write_riemann
   {% endfor %}
 </Plugin>
 
+{% set p_disk = collectd.get('disk', {}) %}
 <Plugin disk>
-  IgnoreSelected {{ "true" if p_disk.get('IgnoreSelected', False) else "false" }}
+  {{ op_true_false(p_disk, 'IgnoreSelected', False) }}
   {% for pattern in p_disk.get('Disk_patterns',
   ['/^[hs]d[a-z]$/', '/^nvme[0-9]+n[0-9]+$/', '/^xvd[a-z]$/', '/^md[0-9]+$/']) %}
   Disk "{{ pattern }}"
@@ -383,7 +387,7 @@ LoadPlugin write_riemann
 {% endif %}
 
 <Plugin interface>
-  IgnoreSelected {{ "true" if p_interface.get('IgnoreSelected', True) else "false" }}
+  {{ op_true_false(p_interface, 'IgnoreSelected', True) }}
   {% for pattern in p_interface.get('Interface_patterns',
   ['/^vif.+/', '/^veth.+/', '/^br.+/', '/^lxc.+/']) %}
   Interface "{{ pattern }}"
@@ -448,9 +452,10 @@ LoadPlugin write_riemann
 #	Port "411"
 #</Plugin>
 {% endif %}
+{% set p_md = collectd.get('md', {}) %}
 {% if "md" in extra_plugin_config %}
 <Plugin md>
-  IgnoreSelected {{ "true" if p_md.get('IgnoreSelected', False) else "false" }}
+  {{ op_true_false(p_md, 'IgnoreSelected', False) }}
   {% for pattern in p_md.get('Device_patterns', ['/dev/md0']) %}
   Device "{{ pattern }}"
   {% endfor %}
