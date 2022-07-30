@@ -13,7 +13,7 @@
 {% set p_interface = collectd.get('interface', {}) %}
 {% macro op_true_false(o, name, default, key=None) %}
 {{ name }} {{ "true" if o.get(key if key else name, default) else "false" }}
-{% endmacro %}
+{%- endmacro %}
 
 FQDNLookup {{ collectd_conf.get('FQDNLookup', 'true') }}
 BaseDir  "/var/lib/collectd"
