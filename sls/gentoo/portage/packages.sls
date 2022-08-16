@@ -49,7 +49,7 @@ def generate_result(packages, flag, _recurse=False):
             result.append((atom, value))
     return result
 
-include('gentoo.portage')
+include('gentoo.portage.base-dirs')
 
 packages = pillar('gentoo:portage:packages', {})
 profile = pillar('gentoo:portage:profile', {})

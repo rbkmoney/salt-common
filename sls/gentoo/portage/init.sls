@@ -1,6 +1,6 @@
 {% import 'pkg/common' as pkg %}
 include:
-  - gentoo.portage.packages
+  - .packages
   - gentoo.repos.gentoo
 {% if pillar.get('overlay', False) %}
   - gentoo.repos.{{ pillar.get('overlay') }}
@@ -26,24 +26,3 @@ app-portage-purged:
   pkg.purged:
     - pkgs:
       - app-portage/epkg
-
-/etc/portage/repos.conf/:
-  file.directory:
-    - mode: 755
-    - user: root
-    - group: root
-
-/etc/portage/profile/:
-  file.directory:
-    - create: True
-    - mode: 755
-    - user: root
-    - group: root
-
-/etc/portage/env/:
-  file.directory:
-    - create: True
-    - mode: 755
-    - user: root
-    - group: root
-
