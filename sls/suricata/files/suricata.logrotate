@@ -5,7 +5,11 @@
         sharedscripts
         postrotate
 	        {% for name in instances %}
+		{% if grains.os == "Gentoo" %}
                 /etc/init.d/suricata.{{ name }} relog
+		{% else %}
+		kill -HUP $(cat /run/suricata/suricata.{{ name }}.pid)
+		{% endif %}
 		{% endfor %}
         endscript
 }
