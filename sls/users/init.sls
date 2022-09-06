@@ -36,8 +36,8 @@ user_{{ username }}:
   file.directory:
     - create: True
     - mode: {{ data.get('homedir_mode', '755') }}
-    - user: {{ username }}
-    - group: {{ username }}
+    - user: {{ data.get('homedir_user', username) }}
+    - group: {{ data.get('homedir_group', username) }}
     - require:
       - user: {{ username }}
 
