@@ -94,7 +94,7 @@ AuthorizedKeysFile .ssh/authorized_keys
 {% for k, v in salt.pillar.get('ssh:sshd_config:extra', {}).items() %}
 {% if v is mapping %}
 {{ k }}
-  {% for mk, mv in v %}
+  {% for mk, mv in v.items() %}
   {{ mk }} {{ mv }}
   {% endfor %}
 {% else %}
