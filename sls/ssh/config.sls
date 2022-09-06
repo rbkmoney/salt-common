@@ -12,5 +12,3 @@
     - mode: 600
     - user: root
     - group: root
-    - require:
-      - file: /etc/ssh/sshd_config.d/

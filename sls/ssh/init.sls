@@ -16,4 +16,3 @@ sshd:
       - pkg: net-misc/lksctp-tools
 {% endif %}
       - file: /etc/ssh/sshd_config
-      - file: /etc/ssh/sshd_config.d/group-sftponly.conf
