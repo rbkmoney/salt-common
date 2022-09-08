@@ -1,0 +1,22 @@
+/var/log/auth.log
+/var/log/syslog
+/var/log/cron.log
+/var/log/mail.log
+/var/log/daemon.log
+/var/log/user.log
+/var/log/error.log
+/var/log/dhcp.log
+/var/log/news.log
+/var/log/uucp.log
+/var/log/ftp.log
+/var/log/kernel.log
+/var/log/iptables.log
+/var/log/messages
+/var/log/messages.json {
+    missingok
+    delaycompress
+    sharedscripts
+    postrotate
+        /etc/init.d/syslog-ng reload > /dev/null 2>&1 || true
+    endscript
+}

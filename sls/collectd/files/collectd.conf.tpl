@@ -15,7 +15,7 @@
 {{ name }} {{ "true" if o.get(key if key else name, default) else "false" }}
 {%- endmacro %}
 
-FQDNLookup {{ collectd_conf.get('FQDNLookup', 'true') }}
+FQDNLookup {{ op_true_false(collectd_conf, 'FQDNLookup', True) }}
 BaseDir  "/var/lib/collectd"
 PIDFile  "/run/collectd/collectd.pid"
 TypesDB  "/etc/collectd/types.db"
@@ -27,7 +27,7 @@ Include "/etc/collectd/conf.d/*.conf"
 # when an appropriate <Plugin ...> block is encountered.                     #
 # Disabled by default.                                                       #
 #----------------------------------------------------------------------------#
-AutoLoadPlugin {{ 'true' if collectd_conf.get('AutoLoadPlugin', False) else 'false' }}
+AutoLoadPlugin {{ op_true_false(collectd_conf, 'AutoLoadPlugin', False) }}
 
 #----------------------------------------------------------------------------#
 # Interval at which to query values. This may be overwritten on a per-plugin #

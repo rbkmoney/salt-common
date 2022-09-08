@@ -1,19 +1,15 @@
 {% import 'pkg/common' as pkg %}
+{% import 'lib/libc.sls' as libc %}
 include:
-  - gentoo.portage.packages
+  - lib.libc
   - .nettle
-  {% if grains['elibc'] == 'glibc' %}
-  - .glibc
-  {% endif %}
 
 net-libs/gnutls:
   pkg.latest:
     - oneshot: True
     - require:
-      - file: gentoo.portage.packages
       - pkg: dev-libs/nettle
-      {% if grains['elibc'] == 'glibc' %}
-      - pkg: sys-libs/glibc
-      {% endif %}
+      - file: gentoo.portage.packages
+      {{ libc.pkg_dep() }}
     - pkgs:
       - {{ pkg.gen_atom('net-libs/gnutls') }}
