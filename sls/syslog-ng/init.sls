@@ -7,6 +7,7 @@ include:
 {% set syslog_udp_server = salt['pillar.get']('syslog:udp_server', False) %}
 {% set syslog_udp_client = salt['pillar.get']('syslog:udp_client', False) %}
 
+{% if salt.grains.get('init', 'openrc') == 'openrc' %}
 /etc/conf.d/syslog-ng:
   file.managed:
     - source: salt://{{slspath}}/syslog-ng.confd.tpl
@@ -16,6 +17,10 @@ include:
     - mode: 644
     - user: root
     - group: root
+{% else %}
+/etc/conf.d/syslog-ng:
+  file.absent
+{% endif %}
 
 /etc/syslog-ng/conf.d:
   file.directory:
@@ -64,6 +69,8 @@ syslog-ng:
     - watch:
       - group: log
       - pkg: app-admin/syslog-ng
-      - file: /etc/conf.d/syslog-ng
       - file: /etc/syslog-ng/syslog-ng.conf
+{% if salt.grains.get('init', 'openrc') == 'openrc' %}
+      - file: /etc/conf.d/syslog-ng
+{% endif %}
       # More files?
