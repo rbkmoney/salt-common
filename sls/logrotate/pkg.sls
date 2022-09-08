@@ -14,3 +14,4 @@ logrotate:
     {% elif grains.os_family == 'Debian' %}
     - pkgs:
       - logrotate
+    {% endif %}
