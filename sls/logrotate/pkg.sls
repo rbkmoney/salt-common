@@ -1,6 +1,6 @@
 {% import 'pkg/common' as pkg %}
-include:
 {% if grains.os == 'Gentoo' %}
+include:
   - gentoo.portage.packages
 {% endif %}
 
