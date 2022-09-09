@@ -30,6 +30,13 @@ include:
     - makedirs: True
     - watch_in:
       - service: syslog-ng
+
+/etc/systemd/system/syslog.service:
+  file.symlink:
+    - target: /lib/systemd/system/syslog-ng.service
+    - force: True
+    - watch_in:
+      - service: syslog-ng
 {% endif %}
 
 /etc/syslog-ng/conf.d:
