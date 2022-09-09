@@ -16,7 +16,6 @@ app-admin/syslog-ng:
     - pkgs:
         - syslog-ng-core
         - syslog-ng-mod-xml-parser
-        - syslog-ng-mod-snmptrapd-parser
     - require:
       {{ libc.pkg_dep() }}
     {% endif %}
