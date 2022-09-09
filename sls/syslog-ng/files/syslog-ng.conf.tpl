@@ -28,7 +28,11 @@ options {
 
 source syslog {
    internal();
+   {% if salt.grains.get('init', 'openrc') == 'systemd' %}
+   systemd-syslog();
+   {% else %}
    unix-stream("/dev/log" max-connections(256));
+   {% endif %}
 };
 source kernel {
    file("/proc/kmsg");

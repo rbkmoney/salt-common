@@ -1,5 +1,5 @@
 # Managed by Salt
-# -*- mode: jinja2 -*-
+{# -*- mode: jinja2 -*- #}
 [Service]
 ExecStart=
 ExecStart=/usr/sbin/collectd -C /etc/collectd/collectd.conf

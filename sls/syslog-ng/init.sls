@@ -10,16 +10,23 @@ include:
 {% if salt.grains.get('init', 'openrc') == 'openrc' %}
 /etc/conf.d/syslog-ng:
   file.managed:
-    - source: salt://{{slspath}}/syslog-ng.confd.tpl
+    - source: salt://{{slspath}}/files/syslog-ng.confd.tpl
     - template: jinja
     - defaults:
         use_net: {{ syslog_udp_server or syslog_udp_client }}
     - mode: 644
     - user: root
     - group: root
-{% else %}
+{% elif grains['init'] == 'systemd' %}
 /etc/conf.d/syslog-ng:
   file.absent
+
+/etc/systemd/system/syslog-ng.service.d/override.conf:
+  file.managed:
+    - source: salt://{{slspath}}/files/syslog-ng.service.conf
+    - mode: 644
+    - user: root
+    - group: root
 {% endif %}
 
 /etc/syslog-ng/conf.d:
@@ -38,7 +45,7 @@ log:
 
 /etc/syslog-ng/syslog-ng.conf:
   file.managed:
-    - source: salt://{{slspath}}/syslog-ng.conf.tpl
+    - source: salt://{{slspath}}/files/syslog-ng.conf.tpl
     - template: jinja
     - mode: 644
     - user: root
@@ -49,7 +56,7 @@ log:
 
 /etc/logrotate.d/syslog-ng:
   file.managed:
-    - source: salt://{{slspath}}/syslog-ng.logrotate
+    - source: salt://{{slspath}}/files/syslog-ng.logrotate
     - mode: 644
     - user: root
     - group: root
@@ -57,7 +64,7 @@ log:
 {% if syslog_udp_server %}
 /etc/logrotate.d/syslog-ng-remote:
   file.managed:
-    - source: salt://{{slspath}}/syslog-ng-remote.logrotate
+    - source: salt://{{slspath}}/files/syslog-ng-remote.logrotate
     - mode: 644
     - user: root
     - group: root
