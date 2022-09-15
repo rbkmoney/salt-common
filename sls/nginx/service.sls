@@ -31,7 +31,7 @@ nginx:
       - file: /etc/nginx/nginx.conf
   user.present:
     - system: True
-    - home: /var/lib/collectd
+    - home: /var/lib/nginx
     - shell: /sbin/nologin
 
 nginx-reload:
