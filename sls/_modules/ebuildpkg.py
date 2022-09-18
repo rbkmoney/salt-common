@@ -32,8 +32,6 @@ import salt.utils.pkg
 import salt.utils.systemd
 import salt.utils.versions
 from salt.exceptions import CommandExecutionError, MinionError
-from salt.ext import six
-
 
 # Import third party libs
 HAS_PORTAGE = False
@@ -711,7 +709,7 @@ def install(name=None,
 
     if pkg_type == 'repository':
         targets = list()
-        for param, version_num in six.iteritems(pkg_params):
+        for param, version_num in pkg_params.items():
             original_param = param
             param = _p_to_cp(param)
             if param is None:

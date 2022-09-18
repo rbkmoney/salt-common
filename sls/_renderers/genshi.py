@@ -8,7 +8,6 @@ import logging
 log = logging.getLogger(__name__)
 
 # Import salt libs
-from salt.ext import six
 from salt.exceptions import SaltRenderError
 
 # Import 3rd party libs
@@ -42,7 +41,7 @@ def render(genshi_data, saltenv='base', sls='', method='xml', **kws):
   if not HAS_LIBS:
     raise SaltRenderError('Failed to import genshi template')
 
-  if not isinstance(genshi_data, six.string_types):
+  if not isinstance(genshi_data, str):
     genshi_data = genshi_data.read()
 
   if genshi_data.startswith('#!'):

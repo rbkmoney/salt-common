@@ -3,9 +3,9 @@ import collectd
 import json
 import logging
 import time
-import six.moves.urllib as urllib
-from six.moves.urllib.error import HTTPError, URLError
-from six.moves.urllib.request import HTTPSHandler
+import urllib as urllib
+from urllib.error import HTTPError, URLError
+from urllib.request import HTTPSHandler
 import ssl
 
 

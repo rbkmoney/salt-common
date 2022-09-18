@@ -92,15 +92,12 @@ from salt.exceptions import (
 )
 from salt.modules.pkg_resource import _repack_pkgs
 
-# Import 3rd-party libs
-from salt.ext import six
-
 # pylint: disable=invalid-name
 _repack_pkgs = _namespaced_function(_repack_pkgs, globals())
 
 if salt.utils.platform.is_windows():
     # pylint: disable=import-error,no-name-in-module,unused-import
-    from salt.ext.six.moves.urllib.parse import urlparse as _urlparse
+    from urllib.parse import urlparse as _urlparse
     from salt.exceptions import SaltRenderError
     import collections
     import datetime
@@ -332,7 +329,7 @@ def _find_download_targets(name=None,
                 )
             if problems.get('suggest'):
                 for pkgname, suggestions in \
-                        six.iteritems(problems['suggest']):
+                        problems['suggest'].items():
                     comments.append(
                         'Package \'{0}\' not found (possible matches: '
                         '{1})'.format(pkgname, ', '.join(suggestions))
@@ -349,7 +346,7 @@ def _find_download_targets(name=None,
     # Check current downloaded versions against specified versions
     targets = {}
     problems = []
-    for pkgname, pkgver in six.iteritems(to_download):
+    for pkgname, pkgver in to_download.items():
         cver = cur_pkgs.get(pkgname, {})
         # Package not yet downloaded, so add to targets
         if not cver:
@@ -460,12 +457,12 @@ def _find_remove_targets(name=None,
     # Check current versions against specified versions
     targets = []
     problems = []
-    for pkgname, pkgver in six.iteritems(to_remove):
+    for pkgname, pkgver in to_remove.items():
         # FreeBSD pkg supports `openjdk` and `java/openjdk7` package names
         origin = bool(re.search('/', pkgname))
 
         if __grains__['os'] == 'FreeBSD' and origin:
-            cver = [k for k, v in six.iteritems(cur_pkgs) if v['origin'] == pkgname]
+            cver = [k for k, v in cur_pkgs.items() if v['origin'] == pkgname]
         else:
             cver = cur_pkgs.get(pkgname, [])
 
@@ -624,7 +621,7 @@ def _find_install_targets(name=None,
         origin = bool(re.search('/', name))
 
         if __grains__['os'] == 'FreeBSD' and origin:
-            cver = [k for k, v in six.iteritems(cur_pkgs)
+            cver = [k for k, v in cur_pkgs.items()
                     if v['origin'] == name]
         else:
             cver = cur_pkgs.get(name, [])
@@ -679,7 +676,7 @@ def _find_install_targets(name=None,
                         )
                     if problems.get('suggest'):
                         for pkgname, suggestions in \
-                                six.iteritems(problems['suggest']):
+                                problems['suggest'].items():
                             comments.append(
                                 'Package \'{0}\' not found (possible matches: '
                                 '{1})'.format(pkgname, ', '.join(suggestions))
@@ -696,7 +693,7 @@ def _find_install_targets(name=None,
     # package version
     wants_latest = [] \
         if sources \
-        else [x for x, y in six.iteritems(desired) if y == 'latest']
+        else [x for x, y in desired.items() if y == 'latest']
     if wants_latest:
         resolved_latest = __salt__['pkg.latest_version'](*wants_latest,
                                                          refresh=refresh,
@@ -727,7 +724,7 @@ def _find_install_targets(name=None,
     problems = []
     warnings = []
     failed_verify = False
-    for package_name, version_string in six.iteritems(desired):
+    for package_name, version_string in desired.items():
         cver = cur_pkgs.get(package_name, [])
         if resolve_capabilities and not cver and package_name in cur_prov:
             cver = cur_pkgs.get(cur_prov.get(package_name)[0], [])
@@ -865,7 +862,7 @@ def _verify_install(desired, new_pkgs, ignore_epoch=False, new_caps=None):
         has_origin = '/' in pkgname
 
         if __grains__['os'] == 'FreeBSD' and has_origin:
-            cver = [k for k, v in six.iteritems(new_pkgs) if v['origin'] == pkgname]
+            cver = [k for k, v in new_pkgs.items() if v['origin'] == pkgname]
         elif __grains__['os'] == 'MacOS' and has_origin:
             cver = new_pkgs.get(pkgname, new_pkgs.get(pkgname.split('/')[-1]))
         elif __grains__['os'] == 'OpenBSD':
@@ -1563,8 +1560,8 @@ def installed(
                 'result': False,
                 'comment': 'pkg.verify not implemented'}
 
-    if not isinstance(version, six.string_types) and version is not None:
-        version = six.text_type(version)
+    if not isinstance(version, str) and version is not None:
+        version = str(version)
 
     kwargs['allow_updates'] = allow_updates
 
@@ -1597,7 +1594,7 @@ def installed(
                 return {'name': name,
                         'changes': {},
                         'result': False,
-                        'comment': six.text_type(exc)}
+                        'comment': str(exc)}
 
             if 'result' in hold_ret and not hold_ret['result']:
                 return {'name': name,
@@ -1640,8 +1637,8 @@ def installed(
 
     # Remove any targets not returned by _find_install_targets
     if pkgs:
-        pkgs = [dict([(x, y)]) for x, y in six.iteritems(targets)]
-        pkgs.extend([dict([(x, y)]) for x, y in six.iteritems(to_reinstall)])
+        pkgs = [dict([(x, y)]) for x, y in targets.items()]
+        pkgs.extend([dict([(x, y)]) for x, y in to_reinstall.items()])
     elif sources:
         oldsources = sources
         sources = [x for x in oldsources
@@ -1738,7 +1735,7 @@ def installed(
 
         if isinstance(pkg_ret, dict):
             changes['installed'].update(pkg_ret)
-        elif isinstance(pkg_ret, six.string_types):
+        elif isinstance(pkg_ret, str):
             comment.append(pkg_ret)
             # Code below will be looking for a dictionary. If this is a string
             # it means that there was an exception raised and that no packages
@@ -1754,7 +1751,7 @@ def installed(
                 name=name, pkgs=desired
             )
         except (CommandExecutionError, SaltInvocationError) as exc:
-            comment.append(six.text_type(exc))
+            comment.append(str(exc))
             ret = {'name': name,
                    'changes': changes,
                    'result': False,
@@ -2444,9 +2441,9 @@ def latest(
                 'comment': exc.strerror}
 
     # Repack the cur/avail data if only a single package is being checked
-    if isinstance(cur, six.string_types):
+    if isinstance(cur, str):
         cur = {desired_pkgs[0]: cur}
-    if isinstance(avail, six.string_types):
+    if isinstance(avail, str):
         avail = {desired_pkgs[0]: avail}
 
     targets = {}
@@ -2991,12 +2988,12 @@ def uptodate(name, refresh=False, pkgs=None, **kwargs):
         try:
             packages = __salt__['pkg.list_upgrades'](refresh=refresh, **kwargs)
             expected = {pkgname: {'new': pkgver, 'old': __salt__['pkg.version'](pkgname)}
-                        for pkgname, pkgver in six.iteritems(packages)}
+                        for pkgname, pkgver in packages.items()}
             if isinstance(pkgs, list):
                 packages = [pkg for pkg in packages if pkg in pkgs]
-                expected = {pkgname: pkgver for pkgname, pkgver in six.iteritems(expected) if pkgname in pkgs}
+                expected = {pkgname: pkgver for pkgname, pkgver in expected.items() if pkgname in pkgs}
         except Exception as exc:
-            ret['comment'] = six.text_type(exc)
+            ret['comment'] = str(exc)
             return ret
     else:
         ret['comment'] = 'refresh must be either True or False'
@@ -3028,7 +3025,7 @@ def uptodate(name, refresh=False, pkgs=None, **kwargs):
     # If a package list was provided, ensure those packages were updated
     missing = []
     if isinstance(pkgs, list):
-        missing = [pkg for pkg in six.iterkeys(expected) if pkg not in ret['changes']]
+        missing = [pkg for pkg in expected.keys() if pkg not in ret['changes']]
 
     if missing:
         ret['comment'] = 'The following package(s) failed to update: {0}'.format(', '.join(missing))
@@ -3101,8 +3098,8 @@ def group_installed(name, skip=None, include=None, **kwargs):
             ret['comment'] = 'skip must be formatted as a list'
             return ret
         for idx, item in enumerate(skip):
-            if not isinstance(item, six.string_types):
-                skip[idx] = six.text_type(item)
+            if not isinstance(item, str):
+                skip[idx] = str(item)
 
     if include is None:
         include = []
@@ -3111,8 +3108,8 @@ def group_installed(name, skip=None, include=None, **kwargs):
             ret['comment'] = 'include must be formatted as a list'
             return ret
         for idx, item in enumerate(include):
-            if not isinstance(item, six.string_types):
-                include[idx] = six.text_type(item)
+            if not isinstance(item, str):
+                include[idx] = str(item)
 
     try:
         diff = __salt__['pkg.group_diff'](name)

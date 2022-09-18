@@ -3,7 +3,6 @@
 # To require this state in your state:
 # - require:
 #     - file: gentoo.portage.packages
-from salt.ext import six
 import re
 
 def process_target(package, version_num):
