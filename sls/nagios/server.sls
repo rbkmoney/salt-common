@@ -59,14 +59,14 @@ include:
     - require:
       - file: /root/.ssh/nagios-objects-access
 
-/var/nagios/home/nagios/.ssh/config:
+/var/lib/nagios/home/nagios/.ssh/config:
   file.managed:
     - source: salt://nagios/files/ssh-config
     - mode: 750
     - user: nagios
     - group: nagios
 
-/var/nagios/home/nagios/.ssh/nagios-hosts-access-key:
+/var/lib/nagios/home/nagios/.ssh/nagios-hosts-access-key:
   file.managed:
     - source: salt://ssl/openssh-privkey.tpl
     - template: jinja
@@ -76,7 +76,7 @@ include:
     - user: nagios
     - group: nagios
 
-/var/nagios/spool/:
+/var/lib/nagios/spool/:
   file.directory:
     - create: True
     - user: nagios
@@ -85,23 +85,23 @@ include:
     - require:
       - user: nagios
 
-/var/nagios/spool/checkresults/:
+/var/lib/nagios/spool/checkresults/:
   file.directory:
     - create: True
     - user: nagios
     - group: nagios
     - mode: 750
     - require:
-      - file: /var/nagios/spool/
+      - file: /var/lib/nagios/spool/
 
-/var/nagios/spool/graphios/:
+/var/lib/nagios/spool/graphios/:
   file.directory:
     - create: True
     - user: nagios
     - group: nagios
     - mode: 750
     - require:
-      - file: /var/nagios/spool/
+      - file: /var/lib/nagios/spool/
 
 nagios:
   service.running:
@@ -111,9 +111,9 @@ nagios:
       - user: nagios
       - file: /etc/nagios/
       - file: /etc/nagios/nagios.cfg
-      - file: /var/nagios/spool/
-      - file: /var/nagios/spool/checkresults/
-      - file: /var/nagios/spool/graphios/
+      - file: /var/lib/nagios/spool/
+      - file: /var/lib/nagios/spool/checkresults/
+      - file: /var/lib/nagios/spool/graphios/
 
 nagios-reload:
   # This is for watch_in reloads

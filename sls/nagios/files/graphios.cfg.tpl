@@ -10,10 +10,10 @@
 replacement_character = _
 
 # nagios spool directory
-spool_directory = /var/nagios/spool/graphios
+spool_directory = /var/lib/nagios/spool/graphios
 
 # graphios log info
-log_file = /var/nagios/graphios.log
+log_file = /var/lib/nagios/graphios.log
 
 # max log size in megabytes (it will rotate the files)
 log_max_size = 100

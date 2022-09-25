@@ -3,7 +3,7 @@
 depend() {
     use network
 }
-PIDFILE="/var/nagios/graphios.pid"
+PIDFILE="/var/lib/nagios/graphios.pid"
 start() {
     ebegin "Starting graphios"
     start-stop-daemon --start --background --make-pidfile \
