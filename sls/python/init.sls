@@ -1,20 +1,20 @@
 include:
-  - python.python39
+  - python.python310
 
 eselect-python:
   eselect.set:
     - name: python
-    - target: 'python3.9'
+    - target: 'python3.10'
     - require:
-      - pkg: python39
+      - pkg: python310
 
 eselect-python3:
   eselect.set:
     - name: python
     - action_parameter: '--python3'
-    - target: 'python3.9'
+    - target: 'python3.10'
     - require:
-      - pkg: python39
+      - pkg: python310
 
 pkg_python-config:
   pkg.latest:

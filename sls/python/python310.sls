@@ -3,10 +3,10 @@ include:
   - gentoo.makeconf
   - gentoo.portage.packages
 
-python37:
+python310:
   pkg.latest:
     - name: dev-lang/python
-    - slot: '3.7'
+    - slot: '3.10'
     - require:
       - augeas: manage-make-conf
       - file: gentoo.portage.packages
