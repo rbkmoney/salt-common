@@ -9,6 +9,13 @@ include:
     - group: root
     - mode: 644
 
+/etc/fail2ban/filter.d/openvpn-otp-auth.conf:
+  file.managed:
+    - source: salt://{{ slspath }}/files/filter.d/openvpn-otp-auth.conf
+    - user: root
+    - group: root
+    - mode: 644
+
 /etc/fail2ban/jail.d/salt.conf:
   file.managed:
     - source: salt://{{ slspath }}/files/jail.d.tpl
@@ -24,3 +31,4 @@ fail2ban:
       - pkg: net-analyzer/fail2ban
       - file: /etc/fail2ban/fail2ban.conf
       - file: /etc/fail2ban/jail.d/salt.conf
+      - file: /etc/fail2ban/filter.d/openvpn-otp-auth.conf

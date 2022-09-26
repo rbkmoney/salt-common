@@ -6,7 +6,7 @@ eselect-python:
     - name: python
     - target: 'python3.10'
     - require:
-      - pkg: python310
+      - pkg: dev-lang/python-310
 
 eselect-python3:
   eselect.set:
@@ -14,7 +14,7 @@ eselect-python3:
     - action_parameter: '--python3'
     - target: 'python3.10'
     - require:
-      - pkg: python310
+      - pkg: dev-lang/python-310
 
 pkg_python-config:
   pkg.latest:

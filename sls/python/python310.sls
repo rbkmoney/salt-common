@@ -3,7 +3,7 @@ include:
   - gentoo.makeconf
   - gentoo.portage.packages
 
-python310:
+dev-lang/python-310:
   pkg.latest:
     - name: dev-lang/python
     - slot: '3.10'
