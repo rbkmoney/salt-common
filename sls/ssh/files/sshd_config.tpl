@@ -20,7 +20,7 @@ Protocol 2
 # Authentication
 {{ op_pillar('LoginGraceTime', '2m') }}
 {{ op_pillar('StrictModes', 'yes') }}
-{{ op_pillar('MaxAuthTries', '3') }}
+{{ op_pillar('MaxAuthTries', '6') }}
 {{ op_pillar('MaxStartups', '10:30:100') }}
 {{ op_pillar('MaxSessions', '100') }}
 
