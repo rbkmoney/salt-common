@@ -4,7 +4,7 @@
 UserID                  {{ conf.get('user', 'opendkim') }}
 Umask                   {{ conf.get('umask', '113') }}
 PidFile                 {{ conf.get('pidfile', '/run/opendkim.pid') }}
-Socket                  {{ conf.get('socket', 'unix:/run/opendkim.sock') }}
+Socket                  {{ conf.get('socket', 'unix:/run/opendkim/opendkim.sock') }}
 Statistics              /var/lib/opendkim/stats.dat
 
 Canonicalization        {{ conf.get('canonicalization', 'relaxed/simple') }}

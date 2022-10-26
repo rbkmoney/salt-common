@@ -1,5 +1,5 @@
 mail-filter/pypolicyd-spf:
   pkg.latest:
     - pkgs:
-      - mail-filter/pypolicyd-spf
+      - mail-filter/spf-engine
       - dev-python/pyspf
