@@ -87,8 +87,8 @@ opendkim:
 /etc/opendkim/{{ key }}.pem:
   file.managed:
     - mode: 600
-    - user: milter
-    - group: milter
+    - user: {{ conf.get('user', 'opendkim') }}
+    - group: {{ conf.get('group', 'opendkim') }}
     - contents_pillar: pki:dkim:keys:{{ key }}:contents
     - require:
       - file: /etc/opendkim/
