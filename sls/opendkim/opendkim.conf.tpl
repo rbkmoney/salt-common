@@ -1,10 +1,10 @@
 # Managed by Salt    
 {% set conf = salt['pillar.get']('opendkim:conf') %}
 
-UserID                  milter
-Umask                   113
-PidFile                 /run/opendkim.pid
-Socket                  unix:/run/opendkim.sock
+UserID                  {{ conf.get('user', 'opendkim') }}
+Umask                   {{ conf.get('umask', '113') }}
+PidFile                 {{ conf.get('pidfile', '/run/opendkim.pid') }}
+Socket                  {{ conf.get('socket', 'unix:/run/opendkim.sock') }}
 Statistics              /var/lib/opendkim/stats.dat
 
 Canonicalization        {{ conf.get('canonicalization', 'relaxed/simple') }}
