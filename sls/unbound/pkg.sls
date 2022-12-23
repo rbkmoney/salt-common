@@ -5,8 +5,13 @@ include:
 
 net-dns/unbound:
   pkg.installed:
-    - require:
-      - file: gentoo.portage.packages
-      {{ libc.pkg_dep() }}
     - pkgs:
+      {% if grains.os == 'Gentoo' %}
       - {{ pkg.gen_atom('net-dns/unbound') }}
+      {% elif grains.os_family == 'Debian' %}
+      - unbound
+      - unbound-anchor
+      - unbound-host
+      {% endif %}
+    - require:
+      {{ libc.pkg_dep() }}

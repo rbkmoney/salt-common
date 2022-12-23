@@ -1,12 +1,18 @@
 {% import 'pkg/common' as pkg %}
+{% import 'lib/libc.sls' as libc %}
 include:
-  - gentoo.portage.packages
+  - lib.libc
   - unbound.pkg
 
 mail-filter/opendkim:
   pkg.latest:
     - pkgs:
+      {% if grains.os == 'Gentoo' %}
       - {{ pkg.gen_atom('mail-filter/opendkim') }}
+      {% elif grains.os_family == 'Debian' %}
+      - opendkim
+      - opendkim-tools
+      {% endif %}
     - require:
-      - file: gentoo.portage.packages
       - pkg: net-dns/unbound      
+      {{ libc.pkg_dep() }}
