@@ -7,7 +7,7 @@ include:
   {% endif %}
 
 app-admin/consul:
-  pkg.installed:
+  pkg.latest:
   {% if grains.os == 'Gentoo' %}
     - pkgs:
       - {{ pkg.gen_atom('app-admin/consul') }}
