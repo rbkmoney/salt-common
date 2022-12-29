@@ -36,6 +36,8 @@
     - mode: 644
     - user: consul
     - group: consul
+    - require:
+      - file: /etc/consul.d/
 
 /etc/consul.d/private-config.json:
     file.serialize:
@@ -48,6 +50,8 @@
     - mode: 600
     - user: consul
     - group: consul
+    - require:
+      - file: /etc/consul.d/
 
 /etc/consul.d/reloadable-config.json:
   file.serialize:
@@ -60,6 +64,8 @@
     - mode: 644
     - user: consul
     - group: consul
+    - require:
+      - file: /etc/consul.d/
 
 {{ data_dir }}/:
   file.directory:
@@ -67,3 +73,5 @@
     - mode: 755
     - user: consul
     - group: consul
+    - require:
+      - file: /etc/consul.d/
