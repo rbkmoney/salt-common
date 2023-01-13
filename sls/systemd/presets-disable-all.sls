@@ -1,8 +1,13 @@
-/etc/systemd/system-preset/00-disable-all.preset:
+include:
+  - systemd
+
+/etc/systemd/system-preset/00-disable-all-services.preset:
   file.managed:
     - contents: |
         # Managed by Salt
-        disable *
+        disable *.service
     - user: root
     - group: root
     - mode: 644
+    - require:
+      - file: /etc/systemd/system-preset/
