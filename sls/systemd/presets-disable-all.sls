@@ -1,5 +1,5 @@
 include:
-  - systemd
+  - systemd.common
 
 /etc/systemd/system-preset/00-disable-all-services.preset:
   file.managed:
