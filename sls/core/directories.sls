@@ -10,8 +10,14 @@
     - user: root
     - group: root
 
+/var/tmp/:
+  file.directory:
+    - mode: 1777
+    - user: root
+    - group: root
+
 /tmp/:
   file.directory:
-    - mode: 777
+    - mode: 1777
     - user: root
     - group: root
