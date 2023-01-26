@@ -37,7 +37,17 @@ app-admin/salt:
     - require_in:
       - file: /etc/salt/minion
 
+{% if grains.os == 'Gentoo' %}
+/etc/logrotate.d/salt-common:
+  file.absent
+
 /etc/logrotate.d/salt:
+{% elif grains.os_family == 'Debian' %}
+/etc/logrotate.d/salt:
+  file.absent
+
+/etc/logrotate.d/salt-common:
+{% endif %}
   file.managed:
     - source: salt://salt/files/salt.logrotate
     - mode: 644
