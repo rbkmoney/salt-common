@@ -1,6 +1,6 @@
-# -*- mode: yaml -*-
 include:
   - syslog-ng.pkg
+  - core.directories
   - logrotate
 
 {% set syslog_local = salt['pillar.get']('syslog:local', True) %}
@@ -87,6 +87,7 @@ syslog-ng:
       - group: log
       - pkg: app-admin/syslog-ng
       - file: /etc/syslog-ng/syslog-ng.conf
+      - file: /var/log/
 {% if salt.grains.get('init', 'openrc') == 'openrc' %}
       - file: /etc/conf.d/syslog-ng
 {% endif %}
