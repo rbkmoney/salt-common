@@ -1,3 +1,6 @@
+## Managed by Salt
+## -*- mode: shell-script -*-
+
 ## This rule suppresses the time-change event when chrony does time updates
 -a never,exit -F arch=b64 -S adjtimex -F auid=unset -F uid=root
 
