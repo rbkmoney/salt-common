@@ -4,7 +4,7 @@ app-portage/eix:
 /var/cache/eix/:
   file.directory:
     - create: True
-    - mode: 755
+    - mode: 775
     - user: portage
     - group: portage
     - require_in:
