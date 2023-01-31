@@ -13,8 +13,10 @@ salt-minion:
 
 {% if not salt.pillar.get('salt:master', False) %}
 salt-master:
-  service.dead
+  service.dead:
+    - enable: False
 
 salt-syndic:
-  service.dead
+  service.dead:
+    - enable: False
 {% endif %}

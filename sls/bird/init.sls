@@ -26,7 +26,8 @@ include:
       - service: bird6
 
 bird6:
-  service.dead
+  service.dead:
+    - enable: False
 
 {% elif grains.init == 'systemd' %}
 /etc/systemd/system/bird.service:

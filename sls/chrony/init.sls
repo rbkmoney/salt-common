@@ -33,13 +33,15 @@ include:
 
 
 disable-ntpd:
-  service.disabled:
+  service.dead:
     - name: ntpd
     - sig: ntpd
+    - enable: False
 
 disable-systemd-timesyncd:
   service.dead:
     - name: systemd-timesyncd
+    - enable: False
 
 chronyd:
   service.running:
