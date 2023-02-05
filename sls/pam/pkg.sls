@@ -6,7 +6,6 @@ include:
 {% endif %}
 
 sys-libs/pam:
-  pkg.latest:
 {% if grains.os == 'Gentoo' %}
   pkg.installed:
     - oneshot: True
@@ -15,6 +14,7 @@ sys-libs/pam:
     - require:
       - file: gentoo.portage.packages
 {% elif grains.os_family == 'Debian' %}
+  pkg.latest:
     - pkgs:
       - libpam-modules
 {% endif %}
