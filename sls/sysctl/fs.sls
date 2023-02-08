@@ -9,3 +9,8 @@ fs.inotify.max_user_watches:
   sysctl.present:
     - config: '/etc/sysctl.d/fs.conf'
     - value: {{ fs.get('inotify.max_user_watches', 100000) }}
+
+fs.suid_dumpable:
+  sysctl.present:
+    - config: '/etc/sysctl.d/fs.conf'
+    - value: {{ fs.get('suid_dumpable', 0) }}
