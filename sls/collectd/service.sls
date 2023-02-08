@@ -17,7 +17,7 @@ collectd:
 {% if grains['init'] == 'openrc' %}
 /etc/init.d/collectd:
   file.managed:
-    - source: salt://collectd/files/collectd.init
+    - source: salt://{{ slspath }}/files/collectd.init
     - mode: 755
     - user: root
     - group: root
@@ -26,7 +26,7 @@ collectd:
 
 /etc/conf.d/collectd:
   file.managed:
-    - source: salt://collectd/files/collectd.confd.tpl
+    - source: salt://{{ slspath }}/files/collectd.confd.tpl
     - template: jinja
     - mode: 644
     - user: root
@@ -37,7 +37,7 @@ collectd:
 {% elif grains['init'] == 'systemd' %}
 /etc/systemd/system/collectd.service.d/override.conf:
   file.managed:
-    - source: salt://collectd/files/collectd.service.tpl
+    - source: salt://{{ slspath }}/files/collectd.service.tpl
     - template: jinja
     - mode: 644
     - user: root
@@ -65,7 +65,7 @@ collectd:
 
 /etc/collectd/collectd.conf:
   file.managed:
-    - source: salt://collectd/files/collectd.conf.tpl
+    - source: salt://{{ slspath }}/files/collectd.conf.tpl
     - template: jinja
     - defaults:
         virtual_machine: {{ salt.grains.get('virtual', False) }}
@@ -79,7 +79,7 @@ collectd:
 
 /etc/collectd/types.db:
   file.managed:
-    - source: salt://collectd/files/types.db
+    - source: salt://{{ slspath }}/files/types.db
     - mode: 644
     - user: root
     - group: collectd
@@ -89,7 +89,7 @@ collectd:
 {% if p_network.get('users', False) %}
 /etc/collectd/collectd.passwd:
   file.managed:
-    - source: salt://collectd/files/collectd.passwd
+    - source: salt://{{ slspath }}/files/collectd.passwd
     - template: jinja
     - mode: 640
     - user: root
@@ -124,7 +124,7 @@ collectd:
 /etc/collectd/conf.d/10-jmx.conf:
   {% if extra_plugin_config.get('jmx', False) %}
   file.managed:
-    - source: salt://collectd/files/conf.d/10-jmx.conf
+    - source: salt://{{ slspath }}/files/conf.d/10-jmx.conf
     - mode: 640
     - user: root
     - group: collectd
@@ -139,7 +139,7 @@ collectd:
 /etc/collectd/conf.d/20-python-consul-health.conf:
   {% if extra_plugin_config.get('consul_health_plugin', False) %}
   file.managed:
-    - source: salt://collectd/files/conf.d/20-python-consul-health.conf
+    - source: salt://{{ slspath }}/files/conf.d/20-python-consul-health.conf
     - mode: 640
     - user: root
     - group: collectd
@@ -162,7 +162,7 @@ collectd:
       - user: collectd
 /usr/share/collectd/consul-health/consul_health_plugin.py:
   file.managed:
-    - source: salt://collectd/files/consul_health_plugin.py
+    - source: salt://{{ slspath }}/files/consul_health_plugin.py
     - mode: 640
     - user: root
     - group: collectd
