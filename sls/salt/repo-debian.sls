@@ -6,6 +6,10 @@
 {% set osrelease = '20.04' %}
 {% set lsb_distrib_codename = 'focal' %}
 {% endif %}
+{% if grains.osarch == 'arm64' and grains.os == 'Debian' and grains.osmajorrelease == 10 %}
+{% set osrelease = '11' %}
+{% set lsb_distrib_codename = 'bullseye' %}
+{% endif %}
 
 /etc/apt/sources.list.d/salt.list:
   file.managed:
