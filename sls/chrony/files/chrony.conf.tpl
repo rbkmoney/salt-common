@@ -15,13 +15,13 @@ dumpdir /var/lib/chrony
 dumponexit
 
 {% for h,c in conf.get('server', {'ntp.bakka.su': 'iburst'}).items() %}
-server {{ h }} {{ c }}
+{% if c is not False %}server {{ h }} {{ c }}{% endif %}
 {% endfor %}
 {% for h,c in conf.get('peer', {}).items() %}
-peer {{ h }} {{ c }}
+{% if c is not False %}peer {{ h }} {{ c }}{% endif %}
 {% endfor %}
 {% for h,c in conf.get('pool', {}).items() %}
-pool {{ h }} {{ c }}
+{% if c is not False %}pool {{ h }} {{ c }}{% endif %}
 {% endfor %}
 
 maxupdateskew {{ conf.get('maxupdateskew', 100) }}
