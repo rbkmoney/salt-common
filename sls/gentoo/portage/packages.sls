@@ -41,11 +41,17 @@ def generate_result(packages, flag, _recurse=False):
         elif value is False:
             pass
         elif type(value) == list:
-            result.append((atom, ' '.join(value)))
+            if flag == 'use':
+                result.append((cp, ' '.join(value)))
+            else:
+                result.append((atom, ' '.join(value)))
         elif isinstance(value, dict):
             result.extend(generate_result(value, flag, True))
         else:
-            result.append((atom, value))
+            if flag == 'use':
+                result.append((cp, value))
+            else:
+                result.append((atom, value))
     return result
 
 include('gentoo.portage.base-dirs')
