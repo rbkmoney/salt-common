@@ -15,9 +15,15 @@
   file.managed:
     - contents: |
         deb [signed-by=/usr/share/keyrings/salt-archive-keyring.gpg arch={{ grains.osarch }}] https://repo.saltproject.io/py3/{{ os }}/{{ osrelease }}/{{ grains.osarch }}/latest {{ lsb_distrib_codename }} main
+    - mode: 644
+    - user: root
+    - group: root
     - require:
       - file: /usr/share/keyrings/salt-archive-keyring.gpg
 
 /usr/share/keyrings/salt-archive-keyring.gpg:
   file.managed:
     - source: salt://{{ slspath }}/files/{{ os }}-{{ osrelease }}-salt-archive-keyring.gpg
+    - mode: 644
+    - user: root
+    - group: root
