@@ -11,19 +11,25 @@
 {% set lsb_distrib_codename = 'bullseye' %}
 {% endif %}
 
+include:
+  - apt.common
+
 /etc/apt/sources.list.d/salt.list:
   file.managed:
     - contents: |
-        deb [signed-by=/usr/share/keyrings/salt-archive-keyring.gpg arch={{ grains.osarch }}] https://repo.saltproject.io/py3/{{ os }}/{{ osrelease }}/{{ grains.osarch }}/latest {{ lsb_distrib_codename }} main
+        deb [signed-by=/etc/apt/keyrings/salt-archive-keyring.gpg arch={{ grains.osarch }}] https://repo.saltproject.io/py3/{{ os }}/{{ osrelease }}/{{ grains.osarch }}/latest {{ lsb_distrib_codename }} main
     - mode: 644
     - user: root
     - group: root
     - require:
-      - file: /usr/share/keyrings/salt-archive-keyring.gpg
+      - file: /etc/apt/keyrings/salt-archive-keyring.gpg
+      - file: /etc/apt/sources.list.d/
 
-/usr/share/keyrings/salt-archive-keyring.gpg:
+/etc/apt/keyrings/salt-archive-keyring.gpg:
   file.managed:
     - source: salt://{{ slspath }}/files/{{ os }}-{{ osrelease }}-salt-archive-keyring.gpg
     - mode: 644
     - user: root
     - group: root
+    - require:
+      - file: /etc/apt/keyrings/
