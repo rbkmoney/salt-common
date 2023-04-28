@@ -2,7 +2,7 @@ include:
   - .core
   - .arch
   - .shell
-  - .ldns-utils
+  - lib.ldns
   - .net
   - .disk
   - .jq

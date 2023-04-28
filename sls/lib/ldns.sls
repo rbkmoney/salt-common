@@ -14,4 +14,5 @@ net-libs/ldns:
     {% elif grains.os_family == 'Debian' %}
     - pkgs:
       - libldns2
+      - ldnsutils
     {% endif %}
