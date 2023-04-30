@@ -22,11 +22,23 @@ include:
 
 {% if grains.init == 'systemd' %}
 /etc/conf.d/chronyd: file.absent
+/lib/systemd/system/chronyd.service: file.absent
+/lib/systemd/system/chrony.service:
+  file.managed:
+    - source: salt://{{ slspath }}/files/chrony.service
+    - mode: 644
+    - user: root
+    - group: root
+    - watch_in:
+      - service: chronyd
+
 {% else %}
 /etc/conf.d/chronyd:
   file.managed:
-    - source: salt://chrony/files/chronyd.confd
+    - source: salt://{{ slspath }}/files/chronyd.confd
     - mode: 644
+    - user: root
+    - group: root
     - watch_in:
       - service: chronyd
 {% endif %}
