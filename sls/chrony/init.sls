@@ -26,6 +26,7 @@ include:
 /lib/systemd/system/chrony.service:
   file.managed:
     - source: salt://{{ slspath }}/files/chrony.service
+    - template: jinja
     - mode: 644
     - user: root
     - group: root
