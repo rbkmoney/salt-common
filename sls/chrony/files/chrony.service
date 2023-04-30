@@ -9,7 +9,11 @@ After=network.target
 
 [Service]
 Type=forking
+{% if grains.os == 'Ubuntu' and grains.osmajorrelease == 20 %}
+PIDFile=/run/chronyd.pid
+{% else %}
 PIDFile=/run/chrony/chronyd.pid
+{% endif %}
 EnvironmentFile=-/etc/default/chrony
 {% if grains.os == 'Ubuntu' %}
 ExecStart=/usr/lib/systemd/scripts/chronyd-starter.sh $DAEMON_OPTS
