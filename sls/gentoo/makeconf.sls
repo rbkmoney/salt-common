@@ -65,9 +65,12 @@ if (cpuarch == 'x86_64' or cpuarch == 'amd64'
     'aes': '',
     '3dnow': '', '3dnowext': '', 'sse4a': '', 'xop': ''}
   cpu_flags_var = 'CPU_FLAGS_X86'
-elif cpuarch.startswith('arm'):
+elif cpuarch.startswith('arm') or cpuarch == 'aarch64':
   cpu_flags_map = {}
   cpu_flags_var = 'CPU_FLAGS_ARM'
+elif cpuarch.startswith('ppc'):
+  cpu_flags_map = {}
+  cpu_flags_var = 'CPU_FLAGS_PPC'
 else:
   cpu_flags_var = False
 
