@@ -68,15 +68,18 @@ if (cpuarch == 'x86_64' or cpuarch == 'amd64'
 elif cpuarch.startswith('arm'):
   cpu_flags_map = {}
   cpu_flags_var = 'CPU_FLAGS_ARM'
-
-if arch_conf and arch_conf.get('CPU_FLAGS', False):
-  chap(cpu_flags_var, arch_conf['CPU_FLAGS'])
 else:
-  if arch_conf and 'cpu-flags-map' in arch_conf:
+  cpu_flags_var = False
+
+if cpu_flags_var:
+  if arch_conf and arch_conf.get('CPU_FLAGS', False):
+    chap(cpu_flags_var, arch_conf['CPU_FLAGS'])
+  else:
+    if arch_conf and 'cpu-flags-map' in arch_conf:
       cpu_flags_map = arch_conf['cpu-flags-map']
-  chap(cpu_flags_var, ' '.join(
-    [cpu_flags_map[flag] if cpu_flags_map[flag] else flag
-     for flag in cpu_flags_map.keys() if flag in cpu_flags]))
+    chap(cpu_flags_var, ' '.join(
+      [cpu_flags_map[flag] if cpu_flags_map[flag] else flag
+       for flag in cpu_flags_map.keys() if flag in cpu_flags]))
 
 if arch_conf:
   chap('CHOST', arch_conf['CHOST'])
