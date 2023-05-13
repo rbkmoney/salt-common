@@ -1,8 +1,10 @@
 #!jinja|yaml
 # -*- mode: conf -*-
 # Managed by Salt
+{%- set ssh_config = salt.pillar.get('ssh:sshd_config', {}) -%}
+{%- set ssh_config_keys = ssh_config.keys() -%}
 {%- macro op_pillar(option, default) %}
-{{ option }} {{ salt.pillar.get('ssh:sshd_config:' + option, default) }}
+{{ option }} {{ ssh_config.get(option, default) }}
 {%- endmacro %}
 
 # This is the sshd server system-wide configuration file.  See
@@ -11,7 +13,7 @@ Protocol 2
 
 {{ op_pillar('Port', '22') }}
 {{ op_pillar('AddressFamily', 'any') }}
-{% if grains['os'] == 'Gentoo' %}
+{% if 'Transport' in ssh_config_keys %}
 {{ op_pillar('Transport', 'TCP') }}
 {% endif %}
 {{ op_pillar('SyslogFacility', 'AUTH') }}
@@ -78,11 +80,12 @@ AuthorizedKeysFile .ssh/authorized_keys
 
 # override default of no subsystems
 {{ op_pillar('Subsystem', 'sftp internal-sftp') }}
-{% if grains['os'] == 'Gentoo' %}
+{% if 'TcpRcvBufPoll' in ssh_config_keys %}
 # the following are HPN related configuration options
 # tcp receive buffer polling. disable in non autotuning kernels
 {{ op_pillar('TcpRcvBufPoll', 'yes') }}
-
+{%- endif %}
+{% if 'HPNBufferSize' in ssh_config_keys %}
 # buffer size for hpn to non-hpn connections
 {{ op_pillar('HPNBufferSize', '2048') }}
 {% endif %}
