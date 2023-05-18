@@ -62,6 +62,7 @@ if (cpuarch == 'x86_64' or cpuarch == 'amd64'
     'sse2': '', 'pni': 'sse3', 'ssse3': '',
     'sse4_1': '', 'sse4_2': '', 'popcnt': '',
     'avx': '', 'avx2': '', 'fma': 'fma3', 'fma4': '',
+    'f16c': 'f16c',
     'aes': '',
     '3dnow': '', '3dnowext': '', 'sse4a': '', 'xop': ''}
   cpu_flags_var = 'CPU_FLAGS_X86'
