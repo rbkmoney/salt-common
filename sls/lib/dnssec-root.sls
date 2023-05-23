@@ -1,6 +1,8 @@
 {% import 'pkg/common' as pkg %}
+{% if grains.os == 'Gentoo' %}
 include:
   - gentoo.portage.packages
+{% endif %}
 
 net-dns/dnssec-root:
   pkg.latest:
