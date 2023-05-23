@@ -28,7 +28,7 @@ unbound:
     - source: salt://unbound/files/unbound.conf.tpl
     - template: jinja
     - mode: '0640'
-    - user: unbound
+    - user: root
     - group: unbound
     - require:
       - file: /etc/unbound/

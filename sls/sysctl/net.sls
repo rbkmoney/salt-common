@@ -1,6 +1,7 @@
 #!pyobjects
 
 File.absent('/etc/sysctl.d/ipv6_forwarding.conf')
+File.absent('/etc/sysctl.d/10-network-security.conf')
 
 net = pillar('sysctl:net', {})
 
