@@ -346,7 +346,7 @@ server:
     # you start unbound (i.e. in the system boot scripts).  And enable:
     # Please note usage of unbound-anchor root anchor is at your own risk
     # and under the terms of our LICENSE (see that file in the source).
-    auto-trust-anchor-file: "/etc/unbound/root-anchors.txt"
+    auto-trust-anchor-file: "/var/lib/unbound/root-anchors.txt"
 
     # File with DLV trusted keys. Same format as trust-anchor-file.
     # There can be only one DLV configured, it is trusted from root down.

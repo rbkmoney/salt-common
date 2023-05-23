@@ -9,6 +9,7 @@ unbound:
       - pkg: net-dns/unbound
       - pkg: net-dns/dnssec-root
       - file: /etc/unbound/unbound.conf
+      - file: /var/lib/unbound/root-anchors.txt
       {% if grains['elibc'] == 'glibc' %}
       - pkg: sys-libs/glibc
       {% endif %}
@@ -17,7 +18,7 @@ unbound:
   file.directory:
     - create: True
     - mode: '0750'
-    - user: unbound
+    - user: root
     - group: unbound
     - require:
       - pkg: net-dns/unbound
@@ -32,7 +33,16 @@ unbound:
     - require:
       - file: /etc/unbound/
 
-/etc/unbound/root-anchors.txt:
+/var/lib/unbound/:
+  file.directory:
+    - create: True
+    - mode: '0755'
+    - user: unbound
+    - group: unbound
+    - require:
+      - pkg: net-dns/unbound
+
+/var/lib/unbound/root-anchors.txt:
   file.managed:
     - replace: false
     - source:
