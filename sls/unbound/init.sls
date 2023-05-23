@@ -9,24 +9,15 @@ unbound:
       - pkg: net-dns/unbound
       - pkg: net-dns/dnssec-root
       - file: /etc/unbound/unbound.conf
-      - file: /etc/dnssec/
       {% if grains['elibc'] == 'glibc' %}
       - pkg: sys-libs/glibc
       {% endif %}
-
-/etc/dnssec/:
-  file.directory:
-    - user: unbound
-    - group: unbound
-    - mode: '0755'
-    - require:
-      - pkg: net-dns/dnssec-root
 
 /etc/unbound/:
   file.directory:
     - create: True
     - mode: '0750'
-    - user: root
+    - user: unbound
     - group: unbound
     - require:
       - pkg: net-dns/unbound
@@ -36,10 +27,23 @@ unbound:
     - source: salt://unbound/files/unbound.conf.tpl
     - template: jinja
     - mode: '0640'
-    - user: root
+    - user: unbound
     - group: unbound
     - require:
       - file: /etc/unbound/
+
+/etc/unbound/root-anchors.txt:
+  file.managed:
+    - replace: false
+    - source:
+      - /etc/dnssec/root-anchors.txt
+      - /usr/share/dns/root.ds
+    - mode: '644'
+    - user: unbound
+    - group: unbound
+    - require:
+      - file: /etc/unbound/
+      - pkg: net-dns/dnssec-root
 
 unbound-control-setup:
   cmd.run:
