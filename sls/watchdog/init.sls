@@ -11,7 +11,7 @@ include:
     - user: root
     - group: root
     - mode: 644
-
+# TODO: use separate module states
 {% if machine_type == "raspberry pi" %}
 /etc/modprobe.d/watchdog.conf:
   file.managed:
@@ -45,4 +45,7 @@ watchdog:
     - user: root
     - group: root
     - mode: 644
+{% else %}
+/etc/conf.d/watchdog:
+  file.absent
 {% endif %}

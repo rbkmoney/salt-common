@@ -167,18 +167,18 @@ server:
     # access-control: 0.0.0.0/0 refuse
     {% if salt['pillar.get']('docker:network-simple:'+grains['fqdn'], False) %}
     access-control: {{ salt['pillar.get']('docker:network-simple:'+grains['fqdn']+':fixed-cidr-v6') }} allow
-     {% for ip in grains['fqdn_ip6'] %}
+    {% for ip in grains['fqdn_ip6'] %}
     access-control: {{ ip }} allow
-     {% endfor %}
+    {% endfor %}
     access-control: ::1 allow
     {% else %}
-     {% if salt['pillar.get']('unbound:access-control', False) %}
-      {% for ac in salt['pillar.get']('unbound:access-control') %}
+    {% if salt['pillar.get']('unbound:access-control', False) %}
+    {% for ac in salt['pillar.get']('unbound:access-control') %}
     access-control: {{ ac['netblock'] }} {{ ac['rule'] }}
-      {% endfor %}
-     {% else %}
+    {% endfor %}
+    {% else %}
     access-control: ::1 allow
-     {% endif %}
+    {% endif %}
     {% endif %}
 
     # if given, a chroot(2) is done to the given directory.
@@ -554,5 +554,31 @@ forward-zone:
   forward-addr: {{ addr }}
   {% endfor %}
   forward-first: {{ 'yes' if fz.get('first', False) else 'no' }}
+{% endfor %}
+{% endif %}
+
+{% if salt['pillar.get']('unbound:auth-zone', False) %}
+# Authority zones
+{% for fz in salt['pillar.get']('unbound:auth-zone') %}
+auth-zone:
+  name: "{{ fz['name'] }}"
+  zonefile: {{ fz.get('zonefile', '/var/lib/unbound/'+fz['name']+'.zone') }}
+  {% if 'primary' in fz %}
+  {% for addr in fz['primary'] %}
+  primary: {{ addr }}
+  {% endfor %}
+  {% endif %}
+  {% if 'allow-notify' in fz %}
+  {% for addr in fz['allow-notify'] %}
+  allow-notify: {{ addr }}
+  {% endfor %}
+  {% endif %}
+  fallback-enabled: {{ 'yes' if fz.get('fallback-enabled', False) else 'no' }}
+  for-downstream: {{ 'yes' if fz.get('for-downstream', True) else 'no' }}
+  for-upstream: {{ 'yes' if fz.get('for-upstream', True) else 'no' }}
+  {% if 'zonemd-check' in fz %}
+  zonemd-check: {{ 'yes' if fz.get('zonemd-check', False) else 'no' }}
+  zonemd-reject-absense: {{ 'yes' if fz.get('zonemd-reject-absense', False) else 'no' }}
+  {% endif %}
 {% endfor %}
 {% endif %}
