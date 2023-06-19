@@ -93,4 +93,12 @@ unbound-control-setup:
         {% endif %}
         {% endif %}
         {% endfor %}
+
+unbound-auth_zone_reload-{{ name }}:
+  cmd.wait:
+    - name: unbound-control auth_zone_reload {{ name }}
+    - require:
+      - service: unbound
+    - watch:
+      - file: /var/lib/unbound/{{ name }}.zone
 {% endfor %}
