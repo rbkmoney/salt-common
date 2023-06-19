@@ -65,3 +65,32 @@ unbound-control-setup:
     - watch_in:
       - service: unbound
 
+{% for name, data in salt.pillar.get('unbound:zone-files', {}).items() %}
+/var/lib/unbound/{{ name }}.zone:
+  file.managed:
+    - mode: '644'
+    - user: unbound
+    - group: unbound
+    - require:
+      - file: /var/lib/unbound/
+    - contents: |
+        ;;; Managed by Salt
+        {% for s in data %}
+        {% if 'directive' in s %}
+        ${{ s['directive'] }} {{ s['value'] }}
+        {% elif 'comment' in s %}
+        ;; {{ s['comment'] }}
+        {% elif 'type' in s %}
+        {% if s['type'] == 'SOA' %}
+        {{ s.get('name', '@') }} {{ s.get('class', 'IN') }} SOA {{ s['ns'] }} {{ s['email'] }} (
+             {{ s['serial'] }} ; serial
+             {{ s['refresh'] }} ; refresh
+             {{ s['retry'] }} ; retry
+             {{ s['expire'] }} ; expire
+             {{ s['ttl'] }}) ; ttl
+        {% else %}
+        {{ s.get('name', '@') }} {{ s.get('ttl', '') }} {{ s.get('class', 'IN') }} {{ s['type'] }} {{ s['data'] }}
+        {% endif %}
+        {% endif %}
+        {% endfor %}
+{% endfor %}

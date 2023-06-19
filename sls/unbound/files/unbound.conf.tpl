@@ -380,8 +380,8 @@ server:
     # The signature inception and expiration dates are allowed to be off
     # by 10% of the signature lifetime (expir-incep) from our local clock.
     # This leeway is capped with a minimum and a maximum.  In seconds.
-    val-sig-skew-min: 3600
-    val-sig-skew-max: 86400
+    val-sig-skew-min: {{ salt['pillar.get']('unbound:val-sig-skew-min', 3600) }}
+    val-sig-skew-max: {{ salt['pillar.get']('unbound:val-sig-skew-max', 86400) }}
 
     # Should additional section of secure message also be kept clean of
     # unsecure data. Useful to shield the users of this validator from
