@@ -89,7 +89,7 @@ unbound-control-setup:
              {{ s['expire'] }} ; expire
              {{ s['ttl'] }}) ; ttl
         {% else %}
-        {{ s.get('name', '@') }} {{ s.get('ttl', '') }} {{ s.get('class', 'IN') }} {{ s['type'] }} {{ s['data'] }}
+        {{ s.get('name', ' ') }} {{ s.get('ttl', '') }} {{ s.get('class', 'IN') }} {{ s['type'] }} {{ s['data'] }}
         {% endif %}
         {% endif %}
         {% endfor %}
