@@ -1,0 +1,6 @@
+{% if grains.os_family == 'Debian' %}
+{% set conf_dir = '/etc/clamav' %}
+{% else %}
+{% set conf_dir = '/etc' %}
+{% endif %}
+

@@ -1,6 +1,8 @@
 # TODO: Take scan directories from pillar?
+{% import slspath + '/map.jinja' as m %}
 include:
   - .pkg
+  - .conf
 
 cron-clamscan:
   cron.present:

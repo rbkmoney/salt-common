@@ -1,5 +1,14 @@
+{% import slspath + '/map.jinja' as m %}
 include:
   - .pkg
+  - .conf
+
+freshclam:
+  service.dead:
+    - enable: False
+    {% if grains.os_family == 'Debian' %}
+    - name: clamav-freshclam
+    {% endif %}
 
 cron-freshclam:
   cron.present:

@@ -1,15 +1,8 @@
 include:
   - .pkg
+  - .conf
   - .cron-clamscan
   - .cron-freshclam
-  - .clam-wrapper
-
-/etc/freshclam.conf:
-  file.managed:
-    - source: salt://clamav/files/freshclam.conf
-    - mode: 644
-    - user: root
-    - group: root
 
 clamd_dead_svc:
   service.dead:
