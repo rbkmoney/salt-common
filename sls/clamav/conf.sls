@@ -1,13 +1,14 @@
 {% import slspath + '/map.jinja' as m %}
 
-/etc/conf.d/clamd:
 {% if grains['init'] == 'openrc' %}
+/etc/conf.d/clamd:
   file.managed:
     - source: salt://{{ slspath }}/files/clamd-onacess.confd
     - mode: 644
     - user: root
     - group: root
-{% else %}
+{% elif grains['init'] == 'systemd' %}
+/etc/conf.d/clamd:
   file.absent
 {% endif %}
 

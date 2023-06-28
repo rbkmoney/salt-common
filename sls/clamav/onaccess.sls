@@ -3,6 +3,7 @@ include:
   - .pkg
   - .conf
   - .svc-clamd
+  - .cron-freshclam
 
 extend:
   {{ m.conf_dir }}/clamav.conf:
