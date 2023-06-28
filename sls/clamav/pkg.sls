@@ -6,7 +6,7 @@ include:
 {% endif %}
 
 app-antivirus/clamav:
-  pkg.installed:
+  pkg.latest:
     {% if grains.os == 'Gentoo' %}
     - pkgs:
       - {{ pkg.gen_atom('app-antivirus/clamav') }}
