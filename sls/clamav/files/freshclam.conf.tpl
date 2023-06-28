@@ -144,7 +144,13 @@ Checks {{ c.get('checks', 12) }}
 
 # Send the RELOAD command to clamd.
 # Default: no
-NotifyClamd {{ c.get('notify-clamd', '/etc/clamd.conf') }}
+{% if 'notify-clamd' in c %}
+NotifyClamd {{ c['notify-clamd'] }}
+{% elif grains['os_family'] == 'Debian' %}
+NotifyClamd /etc/clamav/clamd.conf
+{% else %}
+NotifyClamd /etc/clamd.conf
+{% endif %}
 
 # Run command after successful database update.
 # Default: disabled
