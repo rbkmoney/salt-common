@@ -3,7 +3,7 @@ include:
   {% if grains.os == 'Gentoo' %}
   - gentoo.portage.packages
   {% elif grains.os == 'Ubuntu' %}
-  - .hashicorp-repo-ubuntu
+  - consul.hashicorp-repo-ubuntu
   {% endif %}
 
 app-admin/vault:
