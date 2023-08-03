@@ -45,3 +45,5 @@ www-servers/nginx:
       - nginx-common
       - nginx-core
     {% endif %}
+    - require:
+      {{ libc.pkg_dep() }}

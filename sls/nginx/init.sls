@@ -1,5 +1,4 @@
 include:
-  - augeas.lenses
   - logrotate
   - .pkg
   - .service
