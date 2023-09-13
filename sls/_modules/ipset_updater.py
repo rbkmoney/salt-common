@@ -44,7 +44,7 @@ def ipset_create_ifnotexists(ipset_name, ipset_type, family):
 def ipset_flush(ipset_name, family):
   log.info("Flushing ipset %s", ipset_name)
   ret = __salt__['ipset.flush'](ipset_name, family)
-  if ret is 'Success': return True
+  if ret == 'Success': return True
   return ret
 
 def ipset_test(ipset_name, ip_address, family):
@@ -90,7 +90,7 @@ def ipset_add_ifnotexits(ipset_name, ip_address, family, comment=None):
   ret = ipset_test(ipset_name, ip_address, family)
   if ret is True: return True
   ret = ipset_add(ipset_name, ip_address, family, comment)
-  if ret is 'Success': return True
+  if ret == 'Success': return True
   return ret
 
 def update_ipset(ipset_name, cqnames, family, flush=False, create_ifnotexists=False):
