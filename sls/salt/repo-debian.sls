@@ -2,6 +2,9 @@
 {% set osrelease = grains.osrelease %}
 {% set lsb_distrib_codename = grains.lsb_distrib_codename %}
 
+{% if grains.os == 'Ubuntu' and grains.osmajorrelease == 23 %}
+{% set osrelease = '20.04' %}
+{% set lsb_distrib_codename = 'focal' %}
 {% if grains.os == 'Ubuntu' and grains.osmajorrelease == 22 %}
 {% set osrelease = '20.04' %}
 {% set lsb_distrib_codename = 'focal' %}
