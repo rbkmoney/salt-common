@@ -1,4 +1,3 @@
-#!jinja|yaml
 # -*- mode: conf -*-
 # Managed by Salt
 {%- set ssh_config = salt.pillar.get('ssh:sshd_config', {}) -%}
