@@ -8,7 +8,7 @@ docker:
     - sig: dockerd
     - init_delay: 25
     - watch:
-      - pkg: app-emulation/docker
+      - pkg: app-containers/docker
       - file: /etc/conf.d/docker
       - file: /etc/docker/daemon.json
 

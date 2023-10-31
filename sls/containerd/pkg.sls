@@ -7,18 +7,15 @@ include:
   - lib.libc
   {% endif %}
 
-app-containers/docker:
+app-containers/containerd:
   pkg.installed:
     - reload_modules: true
     {% if grains.os == 'Gentoo' %}
     - require:
       - file: gentoo.portage.packages
     - pkgs:
-      - {{ pkg.gen_atom('app-containers/docker') }}
-      - {{ pkg.gen_atom('dev-python/docker') }}
+      - {{ pkg.gen_atom('app-containers/containerd') }}
     {% elif grains.os_family == 'Debian' %}
     - pkgs:
-      - docker.io
-      - python3-docker
+      - containerd
     {% endif %}
-
