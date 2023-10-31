@@ -7,7 +7,9 @@
 
 /etc/ssh/sshd_config:
   file.managed:
-    - source: salt://{{ slspath }}/files/sshd_config.tpl
+    - source:
+      - salt://{{ slspath }}/files/by-id/{{ grains.id}}/sshd_config.tpl
+      - salt://{{ slspath }}/files/sshd_config.tpl
     - template: jinja
     - mode: 600
     - user: root
