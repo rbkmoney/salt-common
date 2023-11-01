@@ -5,5 +5,5 @@ include:
 extend:
   containerd:
     service.running:
-      watch:
-        pkg: app-containers/containerd
+    - watch:
+      - pkg: app-containers/containerd

@@ -1,3 +1,6 @@
+include:
+  - python.dev-python.tomlkit
+
 /etc/containerd/:
   file.directory:
     - create: True
@@ -8,10 +11,12 @@
 /etc/containerd/config.toml:
   file.serialize:
     - dataset_pillar: containerd:conf
-    - formatter: tomlmod
+    - formatter: tomlkit
     - user: root
     - group: root
     - mode: 644
+    - require:
+      - pkg: dev-python/tomlkit
 
 containerd:
   service.running:

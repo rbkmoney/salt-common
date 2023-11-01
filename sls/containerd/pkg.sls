@@ -1,11 +1,12 @@
 {% import 'pkg/common' as pkg %}
+{% if grains.os == 'Gentoo' %}
 include:
-  {% if grains.os == 'Gentoo' %}
   - python
   - gentoo.portage.packages
-  {% elif grains.os_family == 'Debian' %}
+{% elif grains.os_family == 'Debian' %}
+include:
   - lib.libc
-  {% endif %}
+{% endif %}
 
 app-containers/containerd:
   pkg.installed:
