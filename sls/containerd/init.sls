@@ -1,8 +1,9 @@
 include:
   - .pkg
+  - .service
 
-containerd:
-  service.running:
-    - enable: True
-    - watch:
-      - pkg: app-containers/containerd
+extend:
+  containerd:
+    service.running:
+      watch:
+        pkg: app-containers/containerd
