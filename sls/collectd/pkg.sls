@@ -2,9 +2,9 @@
 {% import 'lib/libc.sls' as libc %}
 include:
   - lib.libc
-{% if grains.os == 'Gentoo' %}
+  {% if grains.os == 'Gentoo' %}
   - gentoo.makeconf
-{% endif %}
+  {% endif %}
 
 {%- set extra_plugins = salt.pillar.get('collectd:extra-plugins', []) %}
 {% set makeconf_collectd_plugins = 'aggregation cgroups chrony contextswitch conntrack cpu cpufreq csv curl curl_json curl_xml dbi df disk entropy ethstat exec filecount fscache interface iptables ipvs irq load logfile memcached memory nfs netlink network nginx numa hugepages processes python swap syslog log_logstash statsd table tail target_notification threshold unixsock uptime users vmem write_graphite write_riemann write_prometheus ' + ' '.join(extra_plugins) %}
