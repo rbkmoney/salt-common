@@ -1,5 +1,9 @@
 ## apcupsd.conf v1.1 ##
-{% set apcupsd_conf = salt['pillar.get']('apcupsd', {}) %}
+{% if instance is defined %}
+{% set apcupsd_conf = salt.pillar.get('apcupsd:'+ instance + ':conf', {}) %}
+{% else %}
+{% set apcupsd_conf = salt.pillar.get('apcupsd:conf', {}) %}
+{% endif %}
 {% set upsname = apcupsd_conf.get('upsname', 'UNNAMED') %}
 # General configuration parameters
 UPSNAME {{ upsname }}
@@ -76,27 +80,27 @@ DEVICE {{ apcupsd_conf.get('device', '') }}
 #   will improve apcupsd's responsiveness to certain events at the cost of
 #   higher CPU utilization. The default of 60 is appropriate for most
 #   situations.
-POLLTIME 30
+POLLTIME {{ apcupsd_conf.get('polltime', '30') }}
 
 # LOCKFILE <path to lockfile>
 #   Path for device lock file. Not used on Win32.
-LOCKFILE /run/apcupsd
+LOCKFILE {{ apcupsd_conf.get('lockfile', '/run/lock') }}
 
 # SCRIPTDIR <path to script directory>
 #   Directory in which apccontrol and event scripts are located.
-SCRIPTDIR /etc/apcupsd
+SCRIPTDIR {{ apcupsd_conf.get('scriptdir', '/etc/apcupsd') }}
 
 # PWRFAILDIR <path to powerfail directory>
 #   Directory in which to write the powerfail flag file. This file
 #   is created when apcupsd initiates a system shutdown and is
 #   checked in the OS halt scripts to determine if a killpower
 #   (turning off UPS output power) is required.
-PWRFAILDIR /etc/apcupsd
+PWRFAILDIR {{ apcupsd_conf.get('pwrfaildir', '/etc/apcupsd') }}
 
 # NOLOGINDIR <path to nologin directory>
 #   Directory in which to write the nologin file. The existence
 #   of this flag file tells the OS to disallow new logins.
-NOLOGINDIR /etc
+NOLOGINDIR {{ apcupsd_conf.get('nologondir', '/etc') }}
 
 
 #
@@ -141,7 +145,7 @@ MINUTES {{ apcupsd_conf.get('minutes', '2') }}
 #    if you pull the power plug.   
 #  If you have an older dumb UPS, you will want to set this to less than
 #    the time you know you can run on batteries.
-TIMEOUT 0
+TIMEOUT {{ apcupsd_conf.get('timeout', '0') }}
 
 #  Time in seconds between annoying users to signoff prior to
 #  system shutdown. 0 disables.
@@ -171,7 +175,7 @@ KILLDELAY 0
 #  information server. If netstatus is on, a network information
 #  server process will be started for serving the STATUS and
 #  EVENT data over the network (used by CGI programs).
-NETSERVER on 
+NETSERVER {{ apcupsd_conf.get('netserver', 'on') }}
 
 # NISIP <dotted notation ip address>
 #  IP address on which NIS server will listen for incoming connections.
@@ -182,18 +186,18 @@ NETSERVER on
 #  NIS will listen for connections only on that interface. Use the
 #  loopback address (127.0.0.1) to accept connections only from the
 #  local machine.
-NISIP 127.0.0.1 
+NISIP {{ apcupsd_conf.get('nisip', '127.0.0.1') }}
 
 # NISPORT <port> default is 3551 as registered with the IANA
 #  port to use for sending STATUS and EVENTS data over the network.
 #  It is not used unless NETSERVER is on. If you change this port,
 #  you will need to change the corresponding value in the cgi directory
 #  and rebuild the cgi programs.
-NISPORT 3551
+NISPORT {{ apcupsd_conf.get('nisport', '3551') }}
 
 # If you want the last few EVENTS to be available over the network
 # by the network information server, you must define an EVENTSFILE.
-EVENTSFILE /var/log/apcupsd.events
+EVENTSFILE {{ apcupsd_conf.get('eventsfile', '/var/log/apcupsd.events') }}
 
 # EVENTSFILEMAX <kilobytes>
 #  By default, the size of the EVENTSFILE will be not be allowed to exceed
@@ -201,7 +205,7 @@ EVENTSFILE /var/log/apcupsd.events
 #  be removed from the beginning of the file (first in first out).  The
 #  parameter EVENTSFILEMAX can be set to a different kilobyte value, or set
 #  to zero to allow the EVENTSFILE to grow without limit.
-EVENTSFILEMAX 25 
+EVENTSFILEMAX {{ apcupsd_conf.get('eventsfilemax', '25') }}
 
 #
 # ========== Configuration statements used if sharing =============
@@ -225,10 +229,10 @@ UPSMODE {{ apcupsd_conf.get('upsmode', 'disable') }}
 #
 
 # Time interval in seconds between writing the STATUS file; 0 disables
-STATTIME {{ apcupsd_conf.get('stattime', '60') }}
+STATTIME {{ apcupsd_conf.get('stattime', '0') }}
 
 # Location of STATUS file (written to only if STATTIME is non-zero)
-STATFILE /var/log/apcupsd.status
+STATFILE {{ apcupsd_conf.get('statfile', '/var/log/apcupsd.status') }} 
 
 # LOGSTATS [ on | off ] on enables, off disables
 # Note! This generates a lot of output, so if         
@@ -245,7 +249,7 @@ DATATIME {{ apcupsd_conf.get('datatime', '0') }}
 #          If not specified, it defaults to "daemon". This is useful 
 #          if you want to separate the data logged by apcupsd from other
 #          programs.
-FACILITY DAEMON
+FACILITY {{ apcupsd_conf.get('facility', 'DAEMON') }}
 
 #
 # ========== Configuration statements used in updating the UPS EPROM =========
@@ -259,8 +263,10 @@ FACILITY DAEMON
 # UPS name, max 8 characters 
 UPSNAME {{ upsname }}
 
+{%- if "battdate" in apcupsd_conf %}
 # Battery date - 8 characters
-#BATTDATE mm/dd/yy
+BATTDATE apcupsd_conf["battdate"]
+{% endif %}
 
 # Sensitivity to line voltage quality (H cause faster transfer to batteries)  
 # SENSITIVITY H M L        (default = H)
