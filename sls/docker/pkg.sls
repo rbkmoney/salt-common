@@ -1,24 +1,20 @@
 {% import 'pkg/common' as pkg %}
 include:
+  - lib.libc
   {% if grains.os == 'Gentoo' %}
   - python
-  - gentoo.portage.packages
-  {% elif grains.os_family == 'Debian' %}
-  - lib.libc
   {% endif %}
 
 app-containers/docker:
   pkg.installed:
     - reload_modules: true
-    {% if grains.os == 'Gentoo' %}
-    - require:
-      - file: gentoo.portage.packages
     - pkgs:
+      {% if grains.os == 'Gentoo' %}
       - {{ pkg.gen_atom('app-containers/docker') }}
       - {{ pkg.gen_atom('dev-python/docker') }}
-    {% elif grains.os_family == 'Debian' %}
-    - pkgs:
+      {% elif grains.os_family == 'Debian' %}
       - docker.io
       - python3-docker
-    {% endif %}
-
+      {% endif %}
+    - require:
+      {{ libc.pkg_dep() }}
