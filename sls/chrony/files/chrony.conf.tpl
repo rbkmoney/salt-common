@@ -1,4 +1,4 @@
-{% set conf = salt['pillar.get']('chrony:conf', {}) -%}
+{% set conf = salt.pillar.get('chrony:conf', {}) -%}
 # Managed by Salt
 
 driftfile /var/lib/chrony/drift

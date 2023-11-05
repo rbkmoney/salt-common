@@ -10,7 +10,9 @@ include:
 
 /etc/chrony/chrony.conf:
   file.managed:
-    - source: salt://chrony/files/chrony.conf.tpl
+    - source:
+      - salt://{{ slspath }}/files/by-id/{{ grains.id }}/chrony.conf.tpl
+      - salt://{{ slspath }}/files/chrony.conf.tpl
     - template: jinja
     - mode: 640
     - user: root
@@ -25,7 +27,9 @@ include:
 /lib/systemd/system/chronyd.service: file.absent
 /lib/systemd/system/chrony.service:
   file.managed:
-    - source: salt://{{ slspath }}/files/chrony.service
+    - source:
+      - salt://{{ slspath }}/files/by-id/{{ grains.id }}/chrony.service
+      - salt://{{ slspath }}/files/chrony.service
     - template: jinja
     - mode: 644
     - user: root
@@ -36,7 +40,10 @@ include:
 {% else %}
 /etc/conf.d/chronyd:
   file.managed:
-    - source: salt://{{ slspath }}/files/chronyd.confd
+    - source:
+      - salt://{{ slspath }}/files/by-id/{{ grains.id }}/chronyd.confd.tpl
+      - salt://{{ slspath }}/files/chronyd.confd.tpl
+    - template: jinja
     - mode: 644
     - user: root
     - group: root
