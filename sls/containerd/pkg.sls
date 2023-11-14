@@ -1,4 +1,5 @@
 {% import 'pkg/common' as pkg %}
+{% import 'lib/libc.sls' as libc %}
 include:
   - lib.libc
 

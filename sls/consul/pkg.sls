@@ -1,10 +1,11 @@
 {% import 'pkg/common' as pkg %}
+{% if grains.os == 'Gentoo' %}
 include:
-  {% if grains.os == 'Gentoo' %}
   - gentoo.portage.packages
-  {% elif grains.os == 'Ubuntu' %}
+{% elif grains.os == 'Ubuntu' %}
+include:
   - .hashicorp-repo-ubuntu
-  {% endif %}
+{% endif %}
 
 app-admin/consul:
   pkg.latest:
@@ -14,7 +15,8 @@ app-admin/consul:
     - require:
       - file: gentoo.portage.packages
   {% elif grains.os == 'Ubuntu' %}
-    - name: consul
+    - pkgs:
+        - consul
     - require:
       - file: /etc/apt/sources.list.d/hashicorp.list
   {% endif %}
