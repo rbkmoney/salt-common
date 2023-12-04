@@ -1,11 +1,14 @@
 {% set nagios = salt['pillar.get']('nagios') -%}
 {% set objects_remote_uri = salt['pillar.get']('nagios:objects:remote') -%}
-{% set nagios_home = "/var/lib/nagios/home" %}
+{% set var_dir = salt.pillar.get("nagios:conf:dirs:var", "/var/lib/nagios") %}
+{% set conf_dir = salt.pillar.get("nagios:conf:dirs:conf", "/etc/nagios") %}
+{% set conf_main = salt.pillar.get("nagios:conf:main", {}) %}
+{% set nagios_home = {{ var_dir }} + "/home" %}
 include:
   - users
   - nagios.server-pkg
 
-/etc/nagios/:
+{{ conf_dir }}/:
   file.directory:
     - create: True
     - mode: 755
@@ -14,17 +17,17 @@ include:
     - require:
       - user: nagios
     
-/etc/nagios/nagios.cfg:
+{{ conf_dir }}/nagios.cfg:
   file.managed:
-    - source: salt://nagios/files/nagios.cfg
+    - source: salt://nagios/files/nagios.cfg.tpl
     - template: jinja
     - mode: 644
     - user: nagios
     - group: nagios
     - require:
-      - file: /etc/nagios/
+      - file: {{ conf_dir }}/
     
-/etc/nagios/resource.cfg:
+{{ conf_dir }}/resource.cfg:
   file.managed:
     - source: salt://nagios/files/resource.cfg.tpl
     - template: jinja
@@ -32,7 +35,7 @@ include:
     - user: nagios
     - group: nagios
     - require:
-      - file: /etc/nagios/
+      - file: {{ conf_dir }}/
 
 /root/.ssh/nagios-objects-access:
   file.managed:
@@ -43,7 +46,7 @@ include:
     - mode: 600
     - user: root
 
-/etc/nagios/objects/:
+{{ conf_dir }}/objects/:
   file.directory:
     - create: True
     - user: nagios
@@ -52,7 +55,7 @@ include:
     - dir_mode: 750
   git.latest:
     - name: {{ objects_remote_uri }}
-    - target: /etc/nagios/objects
+    - target: {{ conf_dir }}/objects
     - rev: master
     - force_clone: True
     - force_checkout: True
@@ -77,7 +80,16 @@ include:
     - user: nagios
     - group: nagios
 
-/var/lib/nagios/spool/:
+{{ var_dir }}/rw/:
+  file.directory:
+    - create: True
+    - user: nagios
+    - group: nagios
+    - mode: 6755
+    - require:
+      - user: nagios
+
+{{ var_dir }}/spool/:
   file.directory:
     - create: True
     - user: nagios
@@ -86,24 +98,24 @@ include:
     - require:
       - user: nagios
 
-/var/lib/nagios/spool/checkresults/:
+{{ var_dir }}/spool/checkresults/:
   file.directory:
     - create: True
     - user: nagios
     - group: nagios
     - mode: 750
     - require:
-      - file: /var/lib/nagios/spool/
+      - file: {{ var_dir }}/spool/
 
 {% if False %}
-/var/lib/nagios/spool/graphios/:
+{{ var_dir }}/spool/graphios/:
   file.directory:
     - create: True
     - user: nagios
     - group: nagios
     - mode: 750
     - require:
-      - file: /var/lib/nagios/spool/
+      - file: {{ var_dir }}/spool/
 {% endif %}
 
 nagios:
@@ -115,12 +127,13 @@ nagios:
     - watch:
       - pkg: nagios_pkg
       - user: nagios
-      - file: /etc/nagios/
-      - file: /etc/nagios/nagios.cfg
-      - file: /var/lib/nagios/spool/
-      - file: /var/lib/nagios/spool/checkresults/
+      - file: {{ conf_dir }}/
+      - file: {{ conf_dir }}/nagios.cfg
+      - file: {{ var_dir }}/rw/
+      - file: {{ var_dir }}/spool/
+      - file: {{ var_dir }}/spool/checkresults/
       {% if False %}
-      - file: /var/lib/nagios/spool/graphios/
+      - file: {{ var_dir }}/spool/graphios/
       {% endif %}
 
 nagios-reload:
@@ -133,5 +146,5 @@ nagios-reload:
     {% endif %}
     - reload: True
     - watch:
-      - git: /etc/nagios/objects/
-      - file: /etc/nagios/resource.cfg
+      - git: {{ conf_dir }}/objects/
+      - file: {{ conf_dir }}/resource.cfg

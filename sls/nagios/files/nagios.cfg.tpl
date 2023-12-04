@@ -1,4 +1,7 @@
-{% set default_email = salt['pillar.get']('contacts:default:email') %}
+{% set default_email = salt.pillar.get('contacts:default:email') %}
+{% set var_dir = salt.pillar.get("nagios:conf:dirs:var", "/var/lib/nagios") %}
+{% set conf_dir = salt.pillar.get("nagios:conf:dirs:conf", "/etc/nagios") %}
+{% set conf = salt.pillar.get("nagios:conf:main", {}) %}
 # TODO: Use pillar for most variables here
 #
 # Read the documentation for more information on this configuration
@@ -13,7 +16,7 @@
 # This is the main log file where service and host events are logged
 # for historical purposes.  This should be the first option specified 
 # in the config file!!!
-log_file=/var/lib/nagios/nagios.log
+log_file={{ var_dir }}/nagios.log
 
 
 # OBJECT CONFIGURATION FILE(S)
@@ -23,22 +26,22 @@ log_file=/var/lib/nagios/nagios.log
 # if you wish (as shown below), or keep them all in a single config file.
 
 # You can specify individual object config files as shown below:
-cfg_file=/etc/nagios/objects/timeperiods.cfg
+cfg_file={{ conf_dir }}/objects/timeperiods.cfg
 
 
 # You can also tell Nagios to process all config files (with a .cfg
 # extension) in a particular directory by using the cfg_dir
 # directive as shown below:
-cfg_dir=/etc/nagios/objects/commands
-cfg_dir=/etc/nagios/objects/contacts
-cfg_dir=/etc/nagios/objects/templates
-cfg_dir=/etc/nagios/objects/hostgroups
-cfg_dir=/etc/nagios/objects/servicegroups
-cfg_dir=/etc/nagios/objects/externals
-cfg_dir=/etc/nagios/objects/servers
-cfg_dir=/etc/nagios/objects/vmservers
-cfg_dir=/etc/nagios/objects/switches
-cfg_dir=/etc/nagios/objects/routers
+cfg_dir={{ conf_dir }}/objects/commands
+cfg_dir={{ conf_dir }}/objects/contacts
+cfg_dir={{ conf_dir }}/objects/templates
+cfg_dir={{ conf_dir }}/objects/hostgroups
+cfg_dir={{ conf_dir }}/objects/servicegroups
+cfg_dir={{ conf_dir }}/objects/externals
+cfg_dir={{ conf_dir }}/objects/servers
+cfg_dir={{ conf_dir }}/objects/vmservers
+cfg_dir={{ conf_dir }}/objects/switches
+cfg_dir={{ conf_dir }}/objects/routers
 
 # OBJECT CACHE FILE
 # This option determines where object definitions are cached when
@@ -46,7 +49,7 @@ cfg_dir=/etc/nagios/objects/routers
 # this cache file (rather than looking at the object config files
 # directly) in order to prevent inconsistencies that can occur
 # when the config files are modified after Nagios starts.
-object_cache_file=/var/lib/nagios/objects.cache
+object_cache_file={{ var_dir }}/objects.cache
 
 # PRE-CACHED OBJECT FILE
 # This options determines the location of the precached object file.
@@ -59,7 +62,7 @@ object_cache_file=/var/lib/nagios/objects.cache
 # the Nagios process if you've got a large and/or complex configuration.
 # Read the documentation section on optimizing Nagios to find our more
 # about how this feature works.
-precached_object_file=/var/lib/nagios/objects.precache
+precached_object_file={{ var_dir }}/objects.precache
 
 # RESOURCE FILE
 # This is an optional resource file that contains $USERx$ macro
@@ -69,14 +72,14 @@ precached_object_file=/var/lib/nagios/objects.precache
 # considered to be sensitive (usernames, passwords, etc) can be
 # defined as macros in this file and restrictive permissions (600)
 # can be placed on this file.
-resource_file=/etc/nagios/resource.cfg
+resource_file={{ conf_dir }}/resource.cfg
 
 # STATUS FILE
 # This is where the current status of all monitored services and
 # hosts is stored.  Its contents are read and processed by the CGIs.
 # The contents of the status file are deleted every time Nagios
 #  restarts.
-status_file=/var/lib/nagios/status.dat
+status_file={{ var_dir }}/status.dat
 
 # STATUS FILE UPDATE INTERVAL
 # This option determines the frequency (in seconds) that
@@ -106,23 +109,23 @@ check_external_commands=1
 # is running as (usually 'nobody').  Permissions should be set at the 
 # directory level instead of on the file, as the file is deleted every
 # time its contents are processed.
-command_file=/var/lib/nagios/rw/nagios.cmd
+command_file={{ var_dir }}/rw/nagios.cmd
 
 # QUERY HANDLER INTERFACE
 # This is the socket that is created for the Query Handler interface
-#query_socket=/var/lib/nagios/rw/nagios.qh
+#query_socket={{ var_dir }}/rw/nagios.qh
 
 # LOCK FILE
 # This is the lockfile that Nagios will use to store its PID number
 # in when it is running in daemon mode.
-lock_file=/run/nagios.lock
+lock_file={{ conf.get("lock_file", "/run/nagios.lock") }}
 
 # TEMP FILE
 # This is a temporary file that is used as scratch space when Nagios
 # updates the status log, cleans the comment file, etc.  This file
 # is created, used, and deleted throughout the time that Nagios is
 # running.
-temp_file=/var/lib/nagios/nagios.tmp
+temp_file={{ conf.get("temp_file", var_dir + "/nagios.tmp") }}
 
 # TEMP PATH
 # This is path where Nagios can create temp files for service and
@@ -173,7 +176,7 @@ log_rotation_method=d
 # LOG ARCHIVE PATH
 # This is the directory where archived (rotated) log files should be 
 # placed (assuming you've chosen to do log rotation).
-log_archive_path=/var/lib/nagios/archives
+log_archive_path={{ var_dir }}/archives
 
 # LOGGING OPTIONS
 # If you want messages logged to the syslog facility, as well as the
@@ -322,7 +325,7 @@ max_check_result_reaper_time=30
 #
 # Note: Make sure that only one instance of Nagios has access
 # to this directory!  
-check_result_path=/var/lib/nagios/spool/checkresults
+check_result_path={{ var_dir }}/spool/checkresults
 
 
 # MAX CHECK RESULT FILE AGE
@@ -449,7 +452,7 @@ retain_state_information=1
 # starting to monitor the network when Nagios is restarted.
 # This file is used only if the retain_state_information
 # variable is set to 1.
-state_retention_file=/var/lib/nagios/retention.dat
+state_retention_file={{ var_dir }}/retention.dat
 
 # RETENTION DATA UPDATE INTERVAL
 # This setting determines how often (in minutes) that Nagios
@@ -615,8 +618,8 @@ process_performance_data=1
 # These files are used to store host and service performance data.
 # Performance data is only written to these files if the
 # enable_performance_data option (above) is set to 1.
-host_perfdata_file=/var/lib/nagios/spool/graphios/host-perfdata
-service_perfdata_file=/var/lib/nagios/spool/graphios/service-perfdata
+host_perfdata_file={{ var_dir }}/spool/graphios/host-perfdata
+service_perfdata_file={{ var_dir }}/spool/graphios/service-perfdata
 
 # HOST AND SERVICE PERFORMANCE DATA FILE TEMPLATES
 # These options determine what data is written (and how) to the
@@ -959,7 +962,7 @@ debug_verbosity=1
 
 # DEBUG FILE
 # This option determines where Nagios should write debugging information.
-debug_file=/var/lib/nagios/nagios.debug
+debug_file={{ var_dir }}/nagios.debug
 
 # MAX DEBUG FILE SIZE
 # This option determines the maximum size (in bytes) of the debug file.  If
