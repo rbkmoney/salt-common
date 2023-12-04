@@ -1,5 +1,6 @@
 {% set nagios = salt['pillar.get']('nagios') -%}
 {% set objects_remote_uri = salt['pillar.get']('nagios:objects:remote') -%}
+{% set nagios_home = "/var/lib/nagios/home" %}
 include:
   - users
   - nagios.server-pkg
@@ -59,14 +60,14 @@ include:
     - require:
       - file: /root/.ssh/nagios-objects-access
 
-/var/lib/nagios/home/nagios/.ssh/config:
+{{ nagios_home }}/.ssh/config:
   file.managed:
     - source: salt://nagios/files/ssh-config
     - mode: 750
     - user: nagios
     - group: nagios
 
-/var/lib/nagios/home/nagios/.ssh/nagios-hosts-access-key:
+{{ nagios_home }}/.ssh/nagios-hosts-access-key:
   file.managed:
     - source: salt://ssl/openssh-privkey.tpl
     - template: jinja
