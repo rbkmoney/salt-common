@@ -14,6 +14,7 @@ monitoring-plugins:
       {% if grains.os == 'Gentoo' %}
       - {{ pkg.gen_atom('net-analyzer/monitoring-plugins') }}
       {% elif grains.os_family == 'Debian' %}
+      - monitoring-plugins-common
       - monitoring-plugins-basic
       {% endif %}
     - require:

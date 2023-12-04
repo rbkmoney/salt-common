@@ -94,6 +94,7 @@ include:
     - require:
       - file: /var/lib/nagios/spool/
 
+{% if False %}
 /var/lib/nagios/spool/graphios/:
   file.directory:
     - create: True
@@ -102,10 +103,14 @@ include:
     - mode: 750
     - require:
       - file: /var/lib/nagios/spool/
+{% endif %}
 
 nagios:
   service.running:
     - enable: True
+    {% if grains.os_family == 'Debian' %}
+    - name: nagios4
+    {% endif %}
     - watch:
       - pkg: nagios_pkg
       - user: nagios
@@ -113,7 +118,9 @@ nagios:
       - file: /etc/nagios/nagios.cfg
       - file: /var/lib/nagios/spool/
       - file: /var/lib/nagios/spool/checkresults/
+      {% if False %}
       - file: /var/lib/nagios/spool/graphios/
+      {% endif %}
 
 nagios-reload:
   # This is for watch_in reloads
