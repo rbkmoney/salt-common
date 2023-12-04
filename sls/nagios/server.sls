@@ -125,7 +125,11 @@ nagios:
 nagios-reload:
   # This is for watch_in reloads
   service.running:
+    {% if grains.os_family == 'Debian' %}
+    - name: nagios4
+    {% else %}
     - name: nagios
+    {% endif %}
     - reload: True
     - watch:
       - git: /etc/nagios/objects/
