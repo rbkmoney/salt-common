@@ -3,7 +3,7 @@
 {% set var_dir = salt.pillar.get("nagios:conf:dirs:var", "/var/lib/nagios") %}
 {% set conf_dir = salt.pillar.get("nagios:conf:dirs:conf", "/etc/nagios") %}
 {% set conf_main = salt.pillar.get("nagios:conf:main", {}) %}
-{% set nagios_home = {{ var_dir }} + "/home" %}
+{% set nagios_home = var_dir + "/home" %}
 include:
   - users
   - nagios.server-pkg
@@ -48,11 +48,17 @@ include:
 
 {{ conf_dir }}/objects/:
   file.directory:
-    - create: True
+    - create: False
     - user: nagios
     - group: nagios
     - file_mode: 640
     - dir_mode: 750
+    - recurse:
+      - user
+      - group
+      - mode
+    - require:
+      - git: {{ conf_dir }}/objects/
   git.latest:
     - name: {{ objects_remote_uri }}
     - target: {{ conf_dir }}/objects
