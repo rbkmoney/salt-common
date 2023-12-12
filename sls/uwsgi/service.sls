@@ -34,7 +34,7 @@
 uwsgi:
   service.running:
     {% if grains.os_family == 'Debian' %}
-    - name: uwsgi-emperror
+    - name: uwsgi-emperor
     {% endif %}
     - enable: True
     - watch:
@@ -43,7 +43,7 @@ uwsgi:
 uwsgi-reload:
   service.running:
     {% if grains.os_family == 'Debian' %}
-    - name: uwsgi-emperror
+    - name: uwsgi-emperor
     {% else %}
     - name: uwsgi
     {% endif %}
