@@ -43,7 +43,7 @@ www-servers/nginx:
     - pkgs:
       - nginx
       - nginx-common
-      - nginx-full
+      - nginx-extras
     {% endif %}
     - require:
       {{ libc.pkg_dep() }}
