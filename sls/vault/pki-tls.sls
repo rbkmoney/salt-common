@@ -17,7 +17,7 @@ if vault_pki.get('enable', False):
   v_pki_path = vault_pki.get("pki-path", "pki_vault")
   v_pki_role = vault_pki.get("pki-role", "vault-listener")
   v_ttl = vault_pki.get("ttl", "24h")
-  min_remains = vault_pki.get("min_remains", "86400")
+  min_remains = vault_pki.get("min_remains", 86400)
   remaining = 0
 
   if os.path.isfile(expiration_file):
