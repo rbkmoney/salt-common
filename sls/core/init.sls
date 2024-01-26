@@ -1,5 +1,6 @@
 include:
-  - core.hostname
+  - .hostname
+  - .hosts
   - core.gcc
   - core.binutils
   - core.utils
