@@ -7,12 +7,12 @@ include:
 
 {{ repo_name }}:
   file.directory:
-    - name: '/var/lib/layman/{{ repo_name }}'
+    - name: '/var/db/repos/{{ repo_name }}'
     - create: True
   {% if not ('read-only-repos' in grains and grains['read-only-repos'] == True) %}
   git.latest:
     - name: '{{ sync_uri }}'
-    - target: '/var/lib/layman/{{ repo_name }}'
+    - target: '/var/db/repos/{{ repo_name }}'
     - rev: master
     - force_clone: True
     - force_checkout: True
@@ -29,7 +29,7 @@ include:
       - file: /etc/portage/repos.conf/{{ repo_name }}.conf
     - sections:
         {{ repo_name }}:
-          location: '/var/lib/layman/{{ repo_name }}'
+          location: '/var/db/repos/{{ repo_name }}'
           auto-sync: {{ 'false' if ('read-only-repos' in grains and grains['read-only-repos'] == True) else 'true' }}
           sync-type: git
           clone-depth: 1
