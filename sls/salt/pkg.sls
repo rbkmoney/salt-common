@@ -10,8 +10,8 @@ include:
 
 # TODO: move cython to another state
 app-admin/salt:
+  {% if grains.os == 'Gentoo' %}
   pkg.installed:
-    {% if grains.os == 'Gentoo' %}
     - refresh: False
     - pkgs:
       - {{ pkg.gen_atom('app-admin/salt') }}
@@ -20,7 +20,8 @@ app-admin/salt:
       - {{ pkg.gen_atom('dev-python/cython') }}
     - require:
       - file: gentoo.portage.packages
-    {% elif grains.os_family == 'Debian' %}
+  {% elif grains.os_family == 'Debian' %}
+  pkg.latest:
     - refresh: True
     - pkgs:
       - salt-common
@@ -32,7 +33,7 @@ app-admin/salt:
       - salt-cloud
     - require:
         - file: /etc/apt/sources.list.d/salt.list
-    {% endif %}
+  {% endif %}
     - reload_modules: true
     - require_in:
       - file: /etc/salt/minion
