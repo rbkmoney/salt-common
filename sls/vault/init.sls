@@ -1,6 +1,7 @@
 include:
   - .service
   - .pkg
+  - .pki-tls
 
 extend:
   vault:

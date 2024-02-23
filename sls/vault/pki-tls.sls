@@ -10,9 +10,12 @@ conf_dir = "/etc/vault/"
 pki_dir = "/etc/pki/vault/"
 expiration_file = pki_dir + "expiration"
 
+include('ssl.dirs')
+
 File.directory(
   pki_dir, create=True,
-  mode=755, user="root", group="root")
+  mode=755, user="root", group="root",
+  require=[File("/etc/pki/")])
 
 if vault_pki.get('enable', False):
   v_pki_path = vault_pki.get("pki-path", "pki_vault")

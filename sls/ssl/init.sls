@@ -1,2 +1,3 @@
 include:
-  - ssl.ca-certificates
+  - .ca-certificates
+  - .dirs
