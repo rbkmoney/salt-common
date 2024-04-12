@@ -5,7 +5,7 @@ include:
 
 extend:
   /etc/salt/minion:
-    file.managed:
+    file.serialize:
       - require:
         - pkg: app-admin/salt
 

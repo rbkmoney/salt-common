@@ -1,4 +1,4 @@
-{# mode: jinja2 #}
+{# -*- mode: jinja2 -*- #}
 {# ### getf stands for "get flags" ### #}
 {%- macro _getf(params, flag, join=False) -%}
   {%- set flag_val = params.get(flag) -%}
@@ -23,13 +23,20 @@
 {%- endmacro -%}
 
 
-{%- macro gen_atom(package_name) -%}
-{% set params = salt.pillar.get("gentoo:portage:packages" + ":" + package_name, {}) %}
-{%- if ((params is iterable) and (params is not string) ) and (('use' in params) or ('version' in params)) -%}
-{{- package_name -}}: "{{- _getf(params, 'version') -}}{{- _getf(params, 'use', join=True) -}}"
+{%- macro gen_atom(package_name, slot=None) -%}
+{%- if slot %}
+  {%- set params = salt.pillar.get("gentoo:portage:packages" + ":".join((package_name, slot)),
+  salt.pillar.get("gentoo:portage:packages" + ":" + package_name, {})) %}
 {%- else %}
-{{- package_name -}}
-{% endif %}
+  {%- set params = salt.pillar.get("gentoo:portage:packages" + ":" + package_name, {}) %}
+{%- endif %}
+{%- if ((params is iterable) and (params is not string) ) and (('use' in params) or ('version' in params)) -%}
+  {{- package_name }}: "{{ _getf(params, 'version') }}
+  {{- ':' + slot if slot else '' }}
+  {{- _getf(params, 'use', join=True) }}"
+{%- else %}
+{{- package_name }}
+{%- endif %}
 {%- endmacro -%}
 
 {% macro gpp_include(extra=[]) %}
