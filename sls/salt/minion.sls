@@ -3,6 +3,12 @@ include:
   - .selinux
   - .pkg
 
+extend:
+  /etc/salt/minion:
+    file.managed:
+      - require:
+        - pkg: app-admin/salt
+
 salt-minion:
   service.running:
     - enable: True

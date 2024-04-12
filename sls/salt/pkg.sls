@@ -6,7 +6,6 @@ include:
   {% elif grains.os_family == 'Debian' %}
   - .repo-debian
   {% endif %}
-  - salt.minion-config
 
 # TODO: move cython to another state
 app-admin/salt:
@@ -35,8 +34,6 @@ app-admin/salt:
         - file: /etc/apt/sources.list.d/salt.list
   {% endif %}
     - reload_modules: true
-    - require_in:
-      - file: /etc/salt/minion
 
 {% if grains.os == 'Gentoo' %}
 /etc/logrotate.d/salt-common:
