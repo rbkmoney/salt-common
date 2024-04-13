@@ -7,8 +7,10 @@ include:
 
 dev-lang/python-{{ py3_slot_nodot }}:
   pkg.latest:
-    - pkgs:
-      - {{ pkg.gen_atom('dev-lang/python', slot=py3_slot) }}
+    # - pkgs:
+    #   - {{ pkg.gen_atom('dev-lang/python', slot=py3_slot) }}
+    - name: dev-lang/python
+    - slot: "{{py3_slot}}"
     - require:
       - augeas: manage-make-conf
       - file: gentoo.portage.packages
