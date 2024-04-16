@@ -56,6 +56,9 @@ protocol ospf v3 lbsOSPF{{ v }} {
 	     {% endif %}
 	     {% for iface, ifdata in data['interfaces'].items() %}
              interface "{{ iface }}" {
+	        {% if ifdata.get('stub', False) %}
+		stub yes;
+		{% else %}
                 type {{ ifdata.get('type', 'broadcast') }};
                 priority {{ ifdata.get('priority', 0) }};
                 bfd {{ ifdata.get('bfd', 'yes') }};
@@ -64,6 +67,7 @@ protocol ospf v3 lbsOSPF{{ v }} {
                 transmit {{ ifdata.get('transmit', 'delay 5') }};
                 dead {{ ifdata.get('dead', 'count 4') }};
                 wait {{ ifdata.get('wait', '50') }};
+		{% endif %}
              };
 	     {% endfor %}
         };
