@@ -19,7 +19,7 @@ include:
     - group: {{ bird_group }}
     - mode: 750
     - require_in:
-      - file: {{ bird_conf }}
+      - file: /etc/bird.conf
 {% endif %}
 
 /etc/bird.conf:
