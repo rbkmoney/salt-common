@@ -13,53 +13,53 @@ CONF_FILE="/etc/${RC_SVCNAME}.conf"
 SOCK="/run/${RC_SVCNAME}/${RC_SVCNAME}.ctl"
 
 if [ ${BIRD_GROUP} ]; then
-        BIRD_OPTS="${BIRD_OPTS} -g ${BIRD_GROUP}"
+    BIRD_OPTS="${BIRD_OPTS} -g ${BIRD_GROUP}"
 fi
 if [ ${BIRD_USER} ]; then
-        BIRD_OPTS="${BIRD_OPTS} -u ${BIRD_USER}"
+    BIRD_OPTS="${BIRD_OPTS} -u ${BIRD_USER}"
 fi
 
 client_args="-s ${SOCK}"
 command_args="${client_args} -c ${CONF_FILE} -P ${pidfile} ${BIRD_OPTS}"
 
 depend() {
-        use net
-        use logger
+    use net
+    use logger
 }
 
 check_run() {
-        BIRD_CHECK_CONF="birdc ${client_args} configure check \"${CONF_FILE}\""
-        # Check if the bird parser returns what we want
-        # We can’t use $? because it’s always 0 if the sock works
-        STATE=$(${BIRD_CHECK_CONF} | grep 'Configuration OK')
+    BIRD_CHECK_CONF="birdc ${client_args} configure check \"${CONF_FILE}\""
+    # Check if the bird parser returns what we want
+    # We can’t use $? because it’s always 0 if the sock works
+    STATE=$(${BIRD_CHECK_CONF} | grep 'Configuration OK')
 
-        if [ -n "${STATE}" ]; then
-                return 0
-        else
-                # We remove the first three lines (garbage informations), the
-                # errors begin after that
-                eerror "$(${BIRD_CHECK_CONF} | sed '1,3d')"
-                return 1
-        fi
+    if [ -n "${STATE}" ]; then
+        return 0
+    else
+        # We remove the first three lines (garbage informations), the
+        # errors begin after that
+        eerror "$(${BIRD_CHECK_CONF} | sed '1,3d')"
+        return 1
+    fi
 }
 
 reload() {
-        check_run || return 1
-        ebegin "Reloading BIRD"
-        start-stop-daemon --signal HUP --pidfile "${pidfile}"
-        eend $?
+    check_run || return 1
+    ebegin "Reloading BIRD"
+    start-stop-daemon --signal HUP --pidfile "${pidfile}"
+    eend $?
 }
 
 start_pre() {
-        checkpath -d -m 0755 -o bird:bird "/run/${RC_SVCNAME}"
+    checkpath -d -m 0755 -o bird:bird "/run/${RC_SVCNAME}"
 }
 
 start_post() {
-        ln -sf "${SOCK}" /run
+    ln -sf "${SOCK}" /run
 }
 
 stop_pre() {
-        if [ "${RC_CMD}" = "restart" ] ; then
-                check_run || return 1
-        fi
+    if [ "${RC_CMD}" = "restart" ] ; then
+        check_run || return 1
+    fi
 }

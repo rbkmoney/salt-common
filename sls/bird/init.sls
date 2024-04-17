@@ -24,7 +24,7 @@ include:
 
 /etc/bird.conf:
   file.managed:
-    - name: /etc/bird.conf
+    - name: {{ bird_conf }}
     - source: salt://bird/files/{{ grains.id }}/bird.conf
     - template: jinja
     - user: {{ bird_user }}
