@@ -3,7 +3,7 @@
 include:
   - lib.libc
 
-pkg_bird:
+net-misc/bird:
   pkg.installed:
     - pkgs:
       {% if grains.os == 'Gentoo' %}
