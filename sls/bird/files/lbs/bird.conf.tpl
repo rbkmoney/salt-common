@@ -47,7 +47,7 @@ protocol ospf v3 lbsOSPF{{ v }} {
         ip{{ v }} { export filter export_to_ospf{{ v }}; };
         tick 1;
         ecmp yes;
-        stub router yes;
+        stub router {{ 'yes' if lbs.get('stub-router', True) else 'no' }};
 	{% for area, data in ecmp_areas.items() %}
         area {{ area }} {
 	     {% set area_type = data.get('type', None) %}
