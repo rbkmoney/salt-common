@@ -12,7 +12,7 @@
   file.absent
 {% endif %}
 
-{{ m.conf_dir }}/clamav.conf:
+{{ m.conf_dir }}/{{ m.conf_name }}:
   file.managed:
     - source: salt://{{ slspath }}/files/clamd.conf.tpl
     - template: jinja

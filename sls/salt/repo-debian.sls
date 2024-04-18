@@ -36,3 +36,4 @@ include:
     - group: root
     - require:
       - file: /etc/apt/keyrings/
+

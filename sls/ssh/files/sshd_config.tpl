@@ -92,6 +92,7 @@ AuthorizedKeysFile .ssh/authorized_keys
 {{ op_pillar('AcceptEnv', 'LANG LC_*') }}
 {{ op_pillar('PermitUserEnvironment', 'no') }}
 {{ op_pillar('Ciphers', 'aes256-gcm@openssh.com,chacha20-poly1305@openssh.com,aes256-ctr') }}
+{{ op_pillar('MACs', 'hmac-sha2-512-etm@openssh.com,hmac-sha2-256-etm@openssh.com,hmac-sha2-512,hmac-sha2-256') }}
 
 {% for k, v in salt.pillar.get('ssh:sshd_config:extra', {}).items() %}
 {% if v is mapping %}
