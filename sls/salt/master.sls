@@ -30,6 +30,7 @@ salt-master:
     - user: root
     - group: root
     - mode: 755
+    - require:
       - file: /etc/salt/
 
 extend:
