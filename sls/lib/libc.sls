@@ -7,6 +7,8 @@ include:
 {% macro pkg_dep() -%}
 {%- if grains['elibc'] == 'glibc' -%}
 - pkg: sys-libs/glibc
+{%- elif grains['elibc'] == 'musl' %}
+- pkg: sys-libs/musl
 {% endif %}
 {%- endmacro -%}
 
@@ -62,4 +64,17 @@ eselect-locale:
       - set LC_TIME "{{ salt.pillar.get('locale:LC_TIME','en_IE.UTF-8') }}"
       - set LC_ALL "{{ salt.pillar.get('locale:LC_ALL','en_IE.UTF-8') }}"
 {% endif %}
+{% elif grains['elibc'] == 'musl' %}
+sys-libs/musl:
+  pkg.latest:
+    {% if grains.os == 'Gentoo' %}
+    - oneshot: True
+    - pkgs:
+      - {{ pkg.gen_atom('sys-libs/musl') }}
+    - require:
+      - file: gentoo.portage.packages
+    {% elif grains.os_family == 'Debian' %}
+    - pkgs:
+      - musl
+    {% endif %}
 {% endif %}
