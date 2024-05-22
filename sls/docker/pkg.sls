@@ -14,7 +14,10 @@ app-containers/docker:
       - {{ pkg.gen_atom('app-containers/docker') }}
       - {{ pkg.gen_atom('dev-python/docker') }}
       {% elif grains.os_family == 'Debian' %}
-      - docker.io
+      - docker-ce
+      - docker-ce-cli
+      - docker-ce-rootless-extras
+      - containerd.io
       - python3-docker
       {% endif %}
     - require:
