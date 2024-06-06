@@ -31,7 +31,7 @@ app-admin/salt:
       - salt-api
       - salt-cloud
     - require:
-        - file: /etc/apt/sources.list.d/salt.list
+      - file: /etc/apt/sources.list.d/salt.list
   {% endif %}
     - reload_modules: true
 
