@@ -71,7 +71,6 @@ app-admin/salt:
 {{ onedir_dir }}/lib/python{{ onedir_pyslot }}/site-packages/certifi/cacert.pem:
   file.managed:
     - source: /etc/ssl/certs/ca-certificates.crt
-    - keep_source: false
     - show_changes: false
     - user: root
     - group: root
@@ -83,7 +82,6 @@ app-admin/salt:
 {{ onedir_dir }}/lib/python{{ onedir_pyslot }}/site-packages/pip/_vendor/certifi/cacert.pem:
   file.managed:
     - source: /etc/ssl/certs/ca-certificates.crt
-    - keep_source: false
     - show_changes: false
     - user: root
     - group: root
