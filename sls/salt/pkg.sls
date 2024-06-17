@@ -1,5 +1,6 @@
 {% import 'pkg/common' as pkg %}
 {% set onedir_dir = "/opt/saltstack/salt/" %}
+{% set salt_version = salt.pillar.get('salt:version', False) %}
 {% if grains.get('pythonexecutable', '/usr/bin/python').startswith(onedir_dir) %}
 {% set onedir = True %}
 {% set pythonversion = grains['pythonversion'] %}
@@ -34,13 +35,13 @@ app-admin/salt:
   pkg.latest:
     - refresh: True
     - pkgs:
-      - salt-common
-      - salt-minion
-      - salt-master
-      - salt-syndic
-      - salt-ssh
-      - salt-api
-      - salt-cloud
+      - salt-common{{ ': '+salt_version if salt_version else '' }}
+      - salt-minion{{ ': '+salt_version if salt_version else '' }}
+      - salt-master{{ ': '+salt_version if salt_version else '' }}
+      - salt-syndic{{ ': '+salt_version if salt_version else '' }}
+      - salt-ssh{{ ': '+salt_version if salt_version else '' }}
+      - salt-api{{ ': '+salt_version if salt_version else '' }}
+      - salt-cloud{{ ': '+salt_version if salt_version else '' }}
     - require:
       - file: /etc/apt/sources.list.d/salt.list
   {% endif %}
