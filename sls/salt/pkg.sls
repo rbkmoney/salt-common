@@ -1,10 +1,21 @@
 {% import 'pkg/common' as pkg %}
+{% set onedir_dir = "/opt/saltstack/salt/" %}
+{% if grains.get('pythonexecutable', '/usr/bin/python').startswith(onedir_dir) %}
+{% set onedir = True %}
+{% set pythonversion = grains['pythonversion'] %}
+{% set onedir_pyslot = pythonversion[0]|string + '.' + pythonversion[1]|string %}
+{% else %}
+{% set onedir = False %}
+{% endif %}
 include:
   {% if grains.os == 'Gentoo' %}
   - python
   - gentoo.portage.packages
   {% elif grains.os_family == 'Debian' %}
   - .repo-debian
+  {% endif %}
+  {% if onedir %}
+  - ssl.ca-certificates
   {% endif %}
 
 # TODO: move cython to another state
@@ -52,3 +63,24 @@ app-admin/salt:
     - user: root
     - group: root
 
+{% if onedir %}
+{{ onedir_dir }}/lib/python{{ onedir_pyslot }}/site-packages/certifi/cacert.pem:
+  file.managed:
+    - source: /etc/ssl/certs/ca-certificates.crt
+    - user: root
+    - group: root
+    - mode: 644
+    - require:
+      - cmd: /usr/sbin/update-ca-certificates
+      - pkg: app-admin/salt
+
+{{ onedir_dir }}/lib/python{{ onedir_pyslot }}/site-packages/pip/_vendor/certifi/cacert.pem:
+  file.managed:
+    - source: /etc/ssl/certs/ca-certificates.crt
+    - user: root
+    - group: root
+    - mode: 644
+    - require:
+      - cmd: /usr/sbin/update-ca-certificates
+      - pkg: app-admin/salt
+{% endif %}
