@@ -32,8 +32,11 @@ app-admin/salt:
     - require:
       - file: gentoo.portage.packages
   {% elif grains.os_family == 'Debian' %}
-  pkg.latest:
+  pkg.{{ 'installed' if salt_version else 'latest'}}:
     - refresh: True
+    {% if salt_version %}
+    - hold: true
+    {% endif %}
     - pkgs:
       - salt-common{{ ': '+salt_version if salt_version else '' }}
       - salt-minion{{ ': '+salt_version if salt_version else '' }}
