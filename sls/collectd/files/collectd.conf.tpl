@@ -11,6 +11,7 @@
 {% set p_mysql = collectd.get('mysql', False) %}
 {% set p_processes = collectd.get('processes', {}) %}
 {% set p_interface = collectd.get('interface', {}) %}
+{% set p_zookeeper = collectd.get('zookeeper', False) %}
 {% macro op_true_false(o, name, default, key=None) %}
 {{ name }} {{ "true" if o.get(key if key else name, default) else "false" }}
 {%- endmacro %}
@@ -178,7 +179,7 @@ LoadPlugin vmem
 {% if "xencpu" in extra_plugin_config %}
 LoadPlugin xencpu
 {% endif %}
-{% if "zookeeper" in extra_plugin_config %}
+{% if p_zookeeper %}
 LoadPlugin zookeeper
 {% endif %}
 {% if p_write_graphite %}
@@ -895,10 +896,10 @@ LoadPlugin write_riemann
   Verbose false
 </Plugin>
 
-{% if "zookeeper" in extra_plugin_config %}
+{% if p_zookeeper %}
 <Plugin "zookeeper">
-   Host "::1"
-   Port "2181"
+   Host "{{ p_zookeeper.get('host', '::1') }}"
+   Port "{{ p_zookeeper.get('port', '2181') }}"
 </Plugin>
 {% endif %}
 
@@ -920,7 +921,8 @@ LoadPlugin write_riemann
 
 {% if p_write_prometheus %}
 <Plugin "write_prometheus">
-  Port "{{ p_write_prometheus['port'] }}"
+  Host "{{ p_write_prometheus.get('host', '::1') }}"
+  Port "{{ p_write_prometheus.get('port', '9103') }}"
   StalenessDelta {{ p_write_prometheus.get('StalenessDelta', 300) }}
 </Plugin>
 {% endif %}
