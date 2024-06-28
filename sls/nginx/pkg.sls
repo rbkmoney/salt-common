@@ -11,6 +11,7 @@
 'upstream_hash', 'upstream_keepalive', 'upstream_least_conn', 'upstream_ip_hash']) -%}
 {% set modules_mail = makeconf_nginx.get('modules_mail', ['smtp', 'imap', 'pop3']) -%}
 {% set modules_stream = makeconf_nginx.get('modules_stream', []) -%}
+{% set custom_packages = salt.pillar.get('nginx:custom-packages', False) %}
 
 include:
   - lib.libc
@@ -41,9 +42,15 @@ www-servers/nginx:
       - file: gentoo.portage.packages
     {% elif grains.os_family == 'Debian' %}
     - pkgs:
+      {% if custom_packages %}
+      {% for p in custom_packages %}
+      - {{ p }}
+      {% endfor %}
+      {% else %}
       - nginx
       - nginx-common
       - nginx-extras
+      {% endif %}
     {% endif %}
     - require:
       {{ libc.pkg_dep() }}

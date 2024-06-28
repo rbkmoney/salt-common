@@ -51,17 +51,26 @@ http {
     keepalive_timeout 75 20;
 
     ignore_invalid_headers on;
+    {% if disable_server_tokens %}
     server_tokens off;
+    more_clear_headers Server;
+    {% endif %}
 
     ssl_protocols {{ ssl_protocols }};
     ssl_prefer_server_ciphers on;
     ssl_ciphers {{ ssl_ciphers }};
+    {% if ssl_dhparam %}
+    ssl_dhparam {{ ssl_dhparam }};
+    {% endif %}
     ssl_ecdh_curve {{ ssl_ecdh_curve }};
     ssl_session_cache {{ ssl_session_cache }};
     ssl_session_timeout {{ ssl_session_timeout }};
-    ssl_session_tickets on;
+    ssl_session_tickets {{ "on" if ssl_session_tickets else "off" }};
+    ssl_early_data {{ "on" if ssl_early_data else "off" }};
+
+    proxy_ssl_ciphers {{ proxy_ssl_ciphers }};
+    proxy_ssl_protocols {{ proxy_ssl_protocols }};
 
     include /etc/nginx/conf.d/*.conf;
     include /etc/nginx/vhosts.d/*.conf;
 }
-
