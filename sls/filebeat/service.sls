@@ -39,7 +39,7 @@ filebeat:
       {% endif %}
       {% endfor %}
 
-{% if schedule.get("enabled", False) %}
+{% if schedule.get("enable", False) %}
 filebeat-update-certificate:
   schedule.present:
     - function: state.apply
