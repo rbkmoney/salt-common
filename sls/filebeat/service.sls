@@ -10,6 +10,14 @@ include:
     - group: root
     - mode: 755
 
+/var/lib/filebeat/module/:
+  file.recurse:
+    - source: salt://filebeat/files/module/
+    - file_mode: 640
+    - dir_mode: 750
+    - user: root
+    - group: root
+
 filebeat:
   service.running:
     - enable: True
@@ -17,7 +25,6 @@ filebeat:
       - file: /etc/filebeat/filebeat.yml
       - file: /etc/filebeat/conf.d/
       - file: /etc/filebeat/filebeat.template.json
-      - file: /var/lib/filebeat/module/
       {% for out in output.keys() %}
       {% if out in tls %}
       {% if tls[out].get("vault", False) %}

@@ -25,10 +25,3 @@ app-admin/filebeat:
       - file: elastic-oss-repo
 {% endif %}
 
-/var/lib/filebeat/module/:
-  file.recurse:
-    - source: salt://filebeat/files/module/
-    - file_mode: 640
-    - dir_mode: 750
-    - user: root
-    - group: root
