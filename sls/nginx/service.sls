@@ -38,8 +38,9 @@ nginx:
     - watch:
       - file: /etc/nginx/nginx.conf
 
-{{ nginx_user }}:
+nginx_user:
   user.present:
+    - name: {{ nginx_user }}
     - system: True
     - home: /var/lib/nginx
     - shell: /sbin/nologin
