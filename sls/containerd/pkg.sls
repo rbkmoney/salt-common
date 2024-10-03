@@ -10,7 +10,7 @@ app-containers/containerd:
       {% if grains.os == 'Gentoo' %}
       - {{ pkg.gen_atom('app-containers/containerd') }}
       {% elif grains.os_family == 'Debian' %}
-      - containerd
+      - containerd.io
       {% endif %}
     - require:
       {{ libc.pkg_dep() }}
