@@ -48,6 +48,7 @@ include:
 {% endmacro %}
 
 {% macro pkg_latest(atoms, extra_deps=[]) %}
+{% if atoms is string %}{% set atoms = [atoms] %}{% endif %}
 {{ atoms[0] }}:
   pkg.latest:
     - pkgs:
