@@ -42,7 +42,7 @@
 {% macro gpp_include(extra=[]) %}
 include:
   - gentoo.portage.packages
-  {% for incl in extra_include %}
+  {% for incl in extra %}
   - {{ incl }}
   {% endfor %}
 {% endmacro %}
