@@ -1,6 +1,7 @@
 {% set os = grains.os.lower() %}
 {% set osrelease = grains.osrelease %}
 {% set lsb_distrib_codename = grains.lsb_distrib_codename %}
+{% set saltversion = "3006" %}
 
 {% if grains.os == 'Ubuntu' and grains.osmajorrelease == 23 %}
 {% set osrelease = '20.04' %}
@@ -20,7 +21,7 @@ include:
 /etc/apt/sources.list.d/salt.list:
   file.managed:
     - contents: |
-        deb [signed-by=/etc/apt/keyrings/salt-archive-keyring.gpg arch={{ grains.osarch }}] https://repo.saltproject.io/py3/{{ os }}/{{ osrelease }}/{{ grains.osarch }}/latest {{ lsb_distrib_codename }} main
+        deb [signed-by=/etc/apt/keyrings/salt-archive-keyring.gpg arch={{ grains.osarch }}] https://repo.saltproject.io/salt/py3/{{ os }}/{{ osrelease }}/{{ grains.osarch }}/{{ saltversion }} {{ lsb_distrib_codename }} main
     - mode: 644
     - user: root
     - group: root
