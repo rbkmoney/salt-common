@@ -44,6 +44,6 @@ filebeat-update-certificate:
   schedule.present:
     - function: state.apply
     - job_args: [filebeat.service]
-    - hours: schedule.get("hours", 24)
-    - splay: schedule.get("splay", 300)
+    - hours: {{ schedule.get("hours", 24) }}
+    - splay: {{ schedule.get("splay", 300) }}
 {% endif %}
