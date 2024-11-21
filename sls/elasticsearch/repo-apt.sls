@@ -1,5 +1,4 @@
-elastic-oss-repo:
-  pkgrepo.managed:
+/etc/apt/sources.list.d/elastic.list:
   file.managed:
     - name: /etc/apt/sources.list.d/elastic.list
     - contents: >
