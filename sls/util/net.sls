@@ -2,6 +2,7 @@
 {% import 'lib/libc.sls' as libc %}
 include:
   - lib.libc
+  - .ethtool
 
 util-net-purged:
   pkg.purged:
