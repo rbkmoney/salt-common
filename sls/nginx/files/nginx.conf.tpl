@@ -59,7 +59,7 @@ http {
     ssl_protocols {{ ssl_protocols }};
     ssl_prefer_server_ciphers on;
     ssl_ciphers {{ ssl_ciphers }};
-    {% for cmd, val in ssl_conf_command %}
+    {% for cmd, val in salt.pillar.get('nginx:ssl:conf_command', []) %}
     ssl_conf_command {{ cmd }} "{{ val }}";
     {% endfor %}
     {% if ssl_dhparam %}
