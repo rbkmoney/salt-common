@@ -13,7 +13,7 @@ gentoo:
     - name: '{{ sync_uri }}'
     - target: '/var/db/repos/gentoo'
     - rev: master
-    - depth: 30
+    - depth: 1
     - force_clone: True
     - force_checkout: True
     - reload_modules: true
