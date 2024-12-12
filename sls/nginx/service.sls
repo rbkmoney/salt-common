@@ -22,6 +22,8 @@
 'ECDH-ECDSA-AES128-SHA', 'ECDH-RSA-AES128-SHA',
 'DHE-RSA-AES128-SHA', 'AES128-SHA256', 'AES128-SHA',
 '!3DES', '!MD5', '!aNULL', '!EDH']) -%}
+{# The structure is [(command, value), ...] #}
+{% set ssl_conf_command = salt.pillar.get('nginx:ssl:conf_command', []) %}
 {% set ssl_dhparam = salt.pillar.get('nginx:ssl:dhparam', False) %}
 {% set ssl_ecdh_curve = salt.pillar.get('nginx:ssl:ecdh_curve', 'auto') %}
 {% set ssl_session_tickets = salt.pillar.get('nginx:ssl:session_tickets', True) %}
@@ -83,6 +85,7 @@ nginx-reload:
         disable_server_tokens: {{ disable_server_tokens }}
         ssl_protocols: "{{ ssl_protocols }}"
         ssl_ciphers: "{{ ':'.join(ssl_ciphers) }}"
+        ssl_conf_command: [{% for c,v in ssl_conf_command %}("{{c}}","v"),{% endfor %}]
         ssl_dhparam: {{ ssl_dhparam }}
         ssl_ecdh_curve: "{{ ssl_ecdh_curve }}"
         proxy_ssl_protocols: "{{ proxy_ssl_protocols }}"
