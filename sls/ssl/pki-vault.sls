@@ -148,7 +148,7 @@ def ca_chain_state(
   File.directory(
     pki_dir, create=True,
     mode=755, user="root", group="root",
-    require=[File(pki_path)])
+    require=[File(pki_rdir)])
 
   if p_vault.get('enable', False):
     pki_path = p_vault.get("pki-path", pki_path_default)
