@@ -1,36 +1,29 @@
-{% set vm = salt['pillar.get']('sysctl:vm', {}) %}
+#!pyobjects
 
-vm.swappiness:
-  sysctl.present:
-    - config: '/etc/sysctl.d/vm.conf'
-    - value: {{ vm.get('swappiness', 0) }}
+p_vm = pillar('sysctl:vm', {})
+defaults = {
+  # Swap
+  'swappiness': 0,
+  # NUMA
+  'zone_reclaim_mode': 0,
+  # Buf/cache
+  'dirty_bytes': 33554432,
+  'dirty_background_bytes': 8388608,
+  'max_map_count': 262144,
+  'vfs_cache_pressure': 100,
+  # OOM
+  'min_free_kbytes': 131072,
+}
 
-vm.zone_reclaim_mode:
-  sysctl.present:
-    - config: '/etc/sysctl.d/vm.conf'
-    - value: {{ vm.get('zone_reclaim_mode', 0) }}
+for k, v in defaults:
+  if not k in p_vm:
+    p_vm[k] = v
 
-vm.vfs_cache_pressure:
-  sysctl.present:
-    - config: '/etc/sysctl.d/vm.conf'
-    - value: {{ vm.get('vfs_cache_pressure', 100) }}
+def walk(path, data, conf_path='/etc/sysctl.d/vm.conf'):
+  for key, value in data.items():
+    if isinstance(value, dict):
+      walk(path + '.' + key, value, conf_path)
+    else:
+      Sysctl.present(path + '.' + key, config=conf_path, value=str(value))
 
-vm.dirty_bytes:
-  sysctl.present:
-    - config: '/etc/sysctl.d/vm.conf'
-    - value: {{ vm.get('dirty_bytes', 33554432) }}
-
-vm.dirty_background_bytes:
-  sysctl.present:
-    - config: '/etc/sysctl.d/vm.conf'
-    - value: {{ vm.get('dirty_background_bytes', 8388608) }}
-
-vm.min_free_kbytes:
-  sysctl.present:
-    - config: '/etc/sysctl.d/vm.conf'
-    - value: {{ vm.get('min_free_kbytes', 131072) }}
-
-vm.max_map_count:
-  sysctl.present:
-    - config: /etc/sysctl.d/vm.conf
-    - value: {{ vm.get('max_map_count', 262144) }}
+walk('vm', p_vm)
