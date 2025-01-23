@@ -1,4 +1,20 @@
-{% set data_dir = salt.pillar.get('consul:main-config:data_dir') %}
+{% set data_dir = salt.pillar.get('consul:main-config:data_dir').rstrip('/') %}
+{% set p_u_consul = salt.pillar.get('users:present:consul', {}) %}
+{% if p_u_consul %}
+include:
+  - users
+{% endif %}
+{% set data_dir_state = True %}
+{% if p_u_consul %}
+  {%- set consul_home = p_u_consul.get('home', False) %}
+  {%- if consul_home and consul_home.endswith('/') %}
+  {%- set consul_home = consul_home.rstrip('/') %}
+  {%- endif %}
+
+  {%- if consul_home == data_dir %}
+  {%- set data_dir_state = False %}
+  {%- endif %}
+{% endif %}
 
 {% if grains['init'] == 'openrc' %}
 /etc/conf.d/consul:
@@ -67,6 +83,7 @@
     - require:
       - file: /etc/consul.d/
 
+{% if data_dir_state %}
 {{ data_dir }}/:
   file.directory:
     - create: True
@@ -75,3 +92,4 @@
     - group: consul
     - require:
       - file: /etc/consul.d/
+{% endif %}
