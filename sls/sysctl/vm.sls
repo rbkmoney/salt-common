@@ -15,7 +15,7 @@ defaults = {
   'min_free_kbytes': 131072,
 }
 
-for k, v in defaults:
+for k, v in defaults.items():
   if not k in p_vm:
     p_vm[k] = v
 
