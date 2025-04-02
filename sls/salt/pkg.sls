@@ -38,13 +38,13 @@ app-admin/salt:
     - hold: true
     {% endif %}
     - pkgs:
-      - salt-common{{ ': '+salt_version if salt_version else '' }}
-      - salt-minion{{ ': '+salt_version if salt_version else '' }}
-      - salt-master{{ ': '+salt_version if salt_version else '' }}
-      - salt-syndic{{ ': '+salt_version if salt_version else '' }}
-      - salt-ssh{{ ': '+salt_version if salt_version else '' }}
-      - salt-api{{ ': '+salt_version if salt_version else '' }}
-      - salt-cloud{{ ': '+salt_version if salt_version else '' }}
+      - salt-common{{ ': "'+salt_version+'"' if salt_version else '' }}
+      - salt-minion{{ ': "'+salt_version+'"' if salt_version else '' }}
+      - salt-master{{ ': "'+salt_version+'"' if salt_version else '' }}
+      - salt-syndic{{ ': "'+salt_version+'"' if salt_version else '' }}
+      - salt-ssh{{ ': "'+salt_version+'"' if salt_version else '' }}
+      - salt-api{{ ': "'+salt_version+'"' if salt_version else '' }}
+      - salt-cloud{{ ': "'+salt_version+'"' if salt_version else '' }}
     - require:
       - file: /etc/apt/sources.list.d/salt.list
   {% endif %}
