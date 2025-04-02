@@ -31,7 +31,7 @@ include:
 
 /etc/apt/keyrings/salt-archive-keyring.gpg:
   file.managed:
-    - source: salt://{{ slspath }}/files/{{ os }}-{{ osrelease }}-salt-archive-keyring.gpg
+    - source: salt://{{ slspath }}/files/saltproject-deb-keyring.key
     - mode: 644
     - user: root
     - group: root
