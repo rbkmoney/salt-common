@@ -68,6 +68,7 @@ include:
     - identity: /root/.ssh/nagios-objects-access
     - require:
       - file: /root/.ssh/nagios-objects-access
+      - file: {{ conf_dir }}/
 
 {{ nagios_home }}/.ssh/config:
   file.managed:
@@ -75,6 +76,8 @@ include:
     - mode: 750
     - user: nagios
     - group: nagios
+    - require:
+      - user: nagios
 
 {{ nagios_home }}/.ssh/nagios-hosts-access-key:
   file.managed:
@@ -85,6 +88,17 @@ include:
     - mode: 600
     - user: nagios
     - group: nagios
+    - require:
+      - user: nagios
+
+{{ var_dir }}/:
+  file.directory:
+    - create: True
+    - user: nagios
+    - group: nagios
+    - mode: 0755
+    - require:
+      - user: nagios
 
 {{ var_dir }}/rw/:
   file.directory:
@@ -93,7 +107,7 @@ include:
     - group: nagios
     - mode: 6755
     - require:
-      - user: nagios
+      - file: {{ var_dir }}/
 
 {{ var_dir }}/spool/:
   file.directory:
@@ -102,7 +116,7 @@ include:
     - group: nagios
     - mode: 750
     - require:
-      - user: nagios
+      - file: {{ var_dir }}/
 
 {{ var_dir }}/spool/checkresults/:
   file.directory:
@@ -112,6 +126,15 @@ include:
     - mode: 750
     - require:
       - file: {{ var_dir }}/spool/
+
+{{ var_dir }}/archives/:
+  file.directory:
+    - create: True
+    - user: nagios
+    - group: nagios
+    - mode: 750
+    - require:
+      - file: {{ var_dir }}/
 
 {% if False %}
 {{ var_dir }}/spool/graphios/:
@@ -135,9 +158,11 @@ nagios:
       - user: nagios
       - file: {{ conf_dir }}/
       - file: {{ conf_dir }}/nagios.cfg
+      - file: {{ var_dir }}/
       - file: {{ var_dir }}/rw/
       - file: {{ var_dir }}/spool/
       - file: {{ var_dir }}/spool/checkresults/
+      - file: {{ var_dir }}/archives/
       {% if False %}
       - file: {{ var_dir }}/spool/graphios/
       {% endif %}
