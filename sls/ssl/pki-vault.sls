@@ -17,7 +17,8 @@ def cert_key_expiration_state(
     pki_dname, vault_pillar, pki_path_default, role_default,
     user_pillar, user_default, group_pillar, group_default,
     SANs=[], IP_SANs=[], CN=minion_id, ttl_default="72h",
-    renew_threshold_default=86400):
+    renew_threshold_default=86400, manage_ca_chain=True,
+    require_list=[], require_in_list=[], watch_in_list=[]):
   '''
   This function creates File.directory states for pki_dir,
   File.managed states for fullchain, cert, ca_chain,
@@ -46,6 +47,8 @@ def cert_key_expiration_state(
   _CN = p_vault.get('CN', CN)
   _SANs = list_or_str(p_vault.get('SANs', SANs))
   _IP_SANs = list_or_str(p_vault.get('IP_SANs', IP_SANs))
+  _req_list = [File(pki_dir)]
+  _req_list.append(require_list)
 
   File.directory(
     pki_dir, create=True,
@@ -54,6 +57,7 @@ def cert_key_expiration_state(
 
   if p_vault.get('enable', False):
     pki_path = p_vault.get("pki-path", pki_path_default)
+    ca_chain_pki_path = p_vault.get("ca-chain-pki-path", pki_path)
     pki_role = p_vault.get("pki-role", role_default)
     ttl = p_vault.get("ttl", "72h")
     min_remains = p_vault.get("renew-threshold", 86400)
@@ -69,7 +73,7 @@ def cert_key_expiration_state(
     if (remaining <= min_remains
         or not path.isfile(fullchain_file)
         or not path.isfile(privkey_file)
-        or not path.isfile(ca_chain_file)
+        or (manage_ca_chain and not path.isfile(ca_chain_file))
         or not path.isfile(expiration_file)):
       cert_data = salt.vault.write_secret(
         "{0}/issue/{1}".format(pki_path, pki_role),
@@ -86,50 +90,60 @@ def cert_key_expiration_state(
           ("# Managed by Salt",
            cert_data["certificate"],
            cert_data["issuing_ca"])),
-        require=[File(pki_dir)])
+        require=_req_list, require_in=require_in_list,
+        watch_in=watch_in_list)
 
       File.managed(
         privkey_file,
         mode=600, user=user, group=group,
         contents='\n'.join(("# Managed by Salt", cert_data["private_key"])),
-        require=[File(pki_dir)])
+        require=_req_list, require_in=require_in_list,
+        watch_in=watch_in_list)
 
       File.managed(
         expiration_file,
         mode=644, user="root", group="root",
         contents=cert_data["expiration"],
-        require=[File(pki_dir)])
+        require=_req_list, require_in=require_in_list,
+        watch_in=watch_in_list)
     else:
       File.managed(
         fullchain_file, create=False, replace=False,
         mode=644, user=user, group=group,
-        require=[File(pki_dir)])
+        require=_req_list, require_in=require_in_list,
+        watch_in=watch_in_list)
 
       File.managed(
         privkey_file, create=False, replace=False,
         mode=600, user=user, group=group,
-        require=[File(pki_dir)])
+        require=_req_list, require_in=require_in_list,
+        watch_in=watch_in_list)
 
       File.managed(
         expiration_file, create=False, replace=False,
         mode=644, user="root", group="root",
-        require=[File(pki_dir)])
+        require=_req_list, require_in=require_in_list,
+        watch_in=watch_in_list)
 
-    ca_data = salt.vault.read_secret(
-      "{0}/cert/ca_chain".format(pki_path))
-    if not ca_data or not "ca_chain" in ca_data:
-      raise KeyError("Unable to get CA chain from Vault")
-    ca_chain = ca_data["ca_chain"]
+    if manage_ca_chain:
+      ca_data = salt.vault.read_secret(
+        "{0}/cert/ca_chain".format(ca_chain_pki_path))
+      if not ca_data or not "ca_chain" in ca_data:
+        raise KeyError("Unable to get CA chain from Vault")
 
-    File.managed(
-      ca_chain_file, mode=644, user=user, group=group,
-      contents=("# Managed by Salt\n" +
-        ('\n'.join(ca_chain) if type(ca_chain) == list else ca_chain)),
-      require=[File(pki_dir)])
+      ca_chain = ca_data["ca_chain"]
+
+      File.managed(
+        ca_chain_file, mode=644, user=user, group=group,
+        contents=("# Managed by Salt\n" +
+                  ('\n'.join(ca_chain) if type(ca_chain) == list else ca_chain)),
+        require=_req_list, require_in=require_in_list,
+        watch_in=watch_in_list)
 
 def ca_chain_state(
     pki_dname, vault_pillar, pki_path_default,
-    user_pillar, user_default, group_pillar, group_default):
+    user_pillar, user_default, group_pillar, group_default,
+    require_list=[], require_in_list=[], watch_in_list=[]):
   '''
   This function creates File.directory states for pki_dir,
   File.managed state for ca_chain and requests new chain.
@@ -144,6 +158,8 @@ def ca_chain_state(
   if not pki_dir.endswith("/"):
     pki_dir += "/"
   ca_chain_file = pki_dir + "ca_chain.pem"
+  _req_list = [File(pki_dir)]
+  _req_list.append(require_list)
 
   File.directory(
     pki_dir, create=True,
@@ -164,4 +180,5 @@ def ca_chain_state(
       contents=(
         "# Managed by Salt\n" +
         ('\n'.join(ca_chain) if type(ca_chain) == list else ca_chain)),
-      require=[File(pki_dir)])
+      require=_req_list, require_in=require_in_list,
+      watch_in=watch_in_list)
