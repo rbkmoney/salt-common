@@ -18,7 +18,7 @@ def cert_key_expiration_state(
     user_pillar, user_default, group_pillar, group_default,
     SANs=[], IP_SANs=[], CN=minion_id, ttl_default="72h",
     renew_threshold_default=86400, manage_ca_chain=True,
-    require_list=[], require_in_list=None, watch_in_list=None):
+    require_list=[], require_in_list=[], watch_in_list=[]):
   '''
   This function creates File.directory states for pki_dir,
   File.managed states for fullchain, cert, ca_chain,
@@ -48,7 +48,7 @@ def cert_key_expiration_state(
   _SANs = list_or_str(p_vault.get('SANs', SANs))
   _IP_SANs = list_or_str(p_vault.get('IP_SANs', IP_SANs))
   _req_list = [File(pki_dir)]
-  _req_list.append(require_list)
+  _req_list.extend(require_list)
 
   File.directory(
     pki_dir, create=True,
@@ -143,7 +143,7 @@ def cert_key_expiration_state(
 def ca_chain_state(
     pki_dname, vault_pillar, pki_path_default,
     user_pillar, user_default, group_pillar, group_default,
-    require_list=[], require_in_list=None, watch_in_list=None):
+    require_list=[], require_in_list=[], watch_in_list=[]):
   '''
   This function creates File.directory states for pki_dir,
   File.managed state for ca_chain and requests new chain.
@@ -159,7 +159,7 @@ def ca_chain_state(
     pki_dir += "/"
   ca_chain_file = pki_dir + "ca_chain.pem"
   _req_list = [File(pki_dir)]
-  _req_list.append(require_list)
+  _req_list.extend(require_list)
 
   File.directory(
     pki_dir, create=True,
