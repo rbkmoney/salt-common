@@ -27,7 +27,7 @@ for username, data in users_present.items():
     system = data.get("system", False),
     uid = data.get("uid", None),
     gid = data.get("gid", None),
-    home = homedir,
+    home = homedir.rstrip("/"),
     createhome = createhome,
     shell = data.get("shell", "/bin/bash"),
     password = data.get("passwd", ""),
