@@ -1,110 +1,111 @@
-{% set users_present = salt.pillar.get('users:present', {}) %}
-{% set users_present_list = users_present.keys() %}
-{% set users_absent = salt.pillar.get('users:absent', []) %}
+#!pyobjects
+# -*- mode: python -*-
 
-{% for groupname, data in salt.pillar.get('groups:present', {}).items() %}
-group_{{ groupname }}:
-  group.present:
-    - name: {{ groupname }}
-    {% if data and data.get('gid', False) != False %}
-    - gid: {{ data.gid }}
-    {% endif %}
-{% endfor %}
+from os import path
 
-{% for username, data in users_present.items() %}
-{% set homedir = data.get('home', '/home/' + username) %}
-user_{{ username }}:
-  user.present:
-    - name: {{ username }}
-    - fullname: {{ data.get('fullname', '') }}
-    - system: {{ data.get('system', False) }}
-    {% if data.get('uid', False) != False %}
-    - uid: {{ data['uid'] }}
-    {% endif %}
-    {% if data.get('gid', False) != False %}
-    - gid: {{ data['gid'] }}
-    {% endif %}
-    - home: "{{ homedir }}"
-    - createhome: {{ data.get('createhome', True) }}
-    - shell: "{{ data.get('shell', '/bin/bash') }}"
-    - password: "{{ data.get('passwd', '') }}"
-    - groups: {{ data.get('groups', []) }}
-    - optional_groups: {{ data.get('optional_groups', []) }}
+users_present = salt.pillar.get("users:present", {})
+users_present_list = users_present.keys()
+users_absent = salt.pillar.get("users:absent", [])
+groups_present = salt.pillar.get("groups:present", {})
 
-{% if data.get('createhome', True) %}
-{{ homedir }}/:
-  file.directory:
-    - create: True
-    - mode: {{ data.get('homedir_mode', '755') }}
-    - user: {{ data.get('homedir_user', username) }}
-    - group: {{ data.get('homedir_group', username) }}
-    - require:
-      - user: {{ username }}
+for groupname, data in groups_present.items():
+  Group.present(
+    "group_"+ groupname,
+    name = groupname,
+    gid = data.get("gid", None))
 
-{% if data.get('keys', False) %}
-{{ homedir }}/.ssh/:
-  file.directory:
-    - create: True
-    - mode: 700
-    - user: {{ username }}
-    - group: {{ username }}
-    - require:
-      - file: {{ homedir }}/
+for username, data in users_present.items():
+  homedir = data.get("home", "/home/" + username).rstrip("/") + "/"
+  createhome = data.get("createhome", True)
+  user_stid = "user_"+ username
+  home_dep = File(homedir) if createhome else User(user_stid)
 
-{{ homedir }}/.ssh/authorized_keys:
-  file.managed:
-    - source: salt://users/files/authorized_keys.tpl
-    - template: jinja
-    - context:
-        user: {{ username }}
-    - mode: 600
-    - user: {{ username }}
-    - group: {{ username }}
-    - require:
-      - file: {{ homedir }}/.ssh/
-{% endif %}
+  User.present(
+    user_stid,
+    name = username,
+    fullname = data.get("fullname", ""),
+    system = data.get("system", False),
+    uid = data.get("uid", None),
+    gid = data.get("gid", None),
+    home = homedir,
+    createhome = createhome,
+    shell = data.get("shell", "/bin/bash"),
+    password = data.get("passwd", ""),
+    groups = data.get("groups", []),
+    optional_groups = data.get("optional_groups", []))
 
-{% if 'pgpass' in data %}
-{{ homedir }}/.pgpass:
-  file.managed:
-    - template: jinja
-    - mode: 600
-    - user: {{ username }}
-    - group: {{ username }}
-    - require:
-      - file: {{ homedir }}/
-    - content: |
-       {% for l in data.pgpass %}
-       {{ ':'.join((l.get('host', '*'),l.get('port', '*')|string,l.get('database', '*'),l.user,l.passwd)) }}
-       {% endfor -%}
-{% endif %}
+  if createhome:
+    File.directory(
+      homedir,
+      create = True,
+      mode = data.get("homedir_mode", "755"),
+      user = data.get("homedir_user", username),
+      group = data.get("homedir_group", username),
+      require = [User(user_stid)])
 
-{% if 'files' in data %}{% for f, d in data.files.items() %}
-{{ homedir }}/{{ f }}:
-  file.managed:
-    {% if 'source' in d %}
-    - source: {{ d }}
-    {% else %}
-    - contents_pillar: users:present:{{ username }}:files:{{ f }}:contents
-    {% endif %}
-    {% if 'template' in d %}
-    - template: {{ d.template }}
-    {% endif %}
-    - makedirs: {{ d.get('makedirs', False) }}
-    - mode: {{ d.get('mode', '644') }}
-    - user: {{ username }}
-    - group: {{ username }}
-    - require:
-      - file: {{ homedir }}/
-{% endfor %}{% endif %}
+  if "keys" in data:
+    ssh_path = path.join(homedir, ".ssh/")
+    File.directory(
+      ssh_path,
+      create = True,
+      mode = "700",
+      user = username,
+      group = username,
+      require = [home_dep])
 
-{% endif %}
-{% endfor %}
+    File.managed(
+      path.join(ssh_path, "authorized_keys"),
+      source = "salt://users/files/authorized_keys.tpl",
+      template = "jinja",
+      context = {"user": username},
+      mode = "600",
+      user = username,
+      group = username,
+      require = [File(ssh_path)])
 
-{% for user in users_absent %}
-{% if user not in users_present_list %}
-{{ user }}:
-  user.absent:
-    - purge: True
-{% endif %}
-{% endfor %}
+  if "pgpass" in data:
+    File.managed(
+      path.join(homedir, ".pgpass"),
+      template = "jinja",
+      mode = "600",
+      user = username,
+      group = username,
+      require = [home_dep],
+      content = "\n".join([
+        ":".join((l.get("host", "*"), l.get("port", "*")|string, l.get("database", "*"), l.user, l.passwd))
+        for l in data.pgpass]))
+
+    if "dirs" in data:
+      for f, d in data["dirs"].items():
+        File.directory(
+          path.join(homedir, f),
+          create = True,
+          mode = d.get("mode", "755"),
+          user = d.get("user", username),
+          group = d.get("group", username),
+          require = [home_dep])
+
+    if "files" in data:
+      for f, d in data["files"].items():
+        _source = d.get("source", None)
+        _mode = d.get("mode", "644")
+
+        File.managed(
+          path.join(homedir, f),
+          source = _source,
+          contents_pillar = (
+            None if _source else
+            "users:present:"+ username +":files:"+ f +":contents"),
+          template = d.get("template", None),
+          show_changes = d.get("show_changes", False if str(_mode) else None),
+          makedirs = d.get("makedirs", False),
+          mode = _mode,
+          user = username,
+          group = username,
+          require = [home_dep])
+
+for user in users_absent:
+  if user not in users_present_list:
+    user_stid = "user_"+ user
+
+    User.absent(user_stid, purge=True)
