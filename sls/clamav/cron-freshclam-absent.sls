@@ -1,7 +1,7 @@
 include:
   - cron
 
-cron-clamscan:
+cron-freshclam:
   cron.absent:
-    - identifier: clamscan
+    - identifier: freshclam
     - user: root
