@@ -75,34 +75,34 @@ for username, data in users_present.items():
         ":".join((l.get("host", "*"), l.get("port", "*")|string, l.get("database", "*"), l.user, l.passwd))
         for l in data.pgpass]))
 
-    if "dirs" in data:
-      for f, d in data["dirs"].items():
-        File.directory(
-          path.join(homedir, f),
-          create = True,
-          mode = d.get("mode", "755"),
-          user = d.get("user", username),
-          group = d.get("group", username),
-          require = [home_dep])
+  if "dirs" in data:
+    for f, d in data["dirs"].items():
+      File.directory(
+        path.join(homedir, f),
+        create = True,
+        mode = d.get("mode", "755"),
+        user = d.get("user", username),
+        group = d.get("group", username),
+        require = [home_dep])
 
-    if "files" in data:
-      for f, d in data["files"].items():
-        _source = d.get("source", None)
-        _mode = d.get("mode", "644")
+  if "files" in data:
+    for f, d in data["files"].items():
+      _source = d.get("source", None)
+      _mode = d.get("mode", "644")
 
-        File.managed(
-          path.join(homedir, f),
-          source = _source,
-          contents_pillar = (
-            None if _source else
-            "users:present:"+ username +":files:"+ f +":contents"),
-          template = d.get("template", None),
-          show_changes = d.get("show_changes", False if str(_mode) else None),
-          makedirs = d.get("makedirs", False),
-          mode = _mode,
-          user = username,
-          group = username,
-          require = [home_dep])
+      File.managed(
+        path.join(homedir, f),
+        source = _source,
+        contents_pillar = (
+          None if _source else
+          "users:present:"+ username +":files:"+ f +":contents"),
+        template = d.get("template", None),
+        show_changes = d.get("show_changes", False if str(_mode) else None),
+        makedirs = d.get("makedirs", False),
+        mode = _mode,
+        user = username,
+        group = username,
+        require = [home_dep])
 
 for user in users_absent:
   if user not in users_present_list:
