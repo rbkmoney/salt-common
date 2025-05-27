@@ -20,20 +20,20 @@ manage-collectd-plugins:
 
 app-metrics/collectd:
   pkg.latest:
+    {% if grains.os == 'Gentoo' %}
     - pkgs:
-      {% if grains.os == 'Gentoo' %}
       - {{ pkg.gen_atom('app-metrics/collectd') }}
-      {% elif grains.os_family == 'Debian' %}
+    - watch:
+      - augeas: manage-collectd-plugins
+    {% elif grains.os_family == 'Debian' %}
+    - pkgs:
       - collectd-core
       - collectd-utils
       - libyajl2 # json parsers
       - libprotobuf-c1
       - python3-protobuf
       - libmicrohttpd12 # write_prometheus
-      {% endif %}
-    {% if grains.os == 'Gentoo' %}
-    - watch:
-      - augeas: manage-collectd-plugins
+    - install_recommends: False
     {% endif %}
     - require:
       {{ libc.pkg_dep() }}
