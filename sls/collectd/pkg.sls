@@ -25,6 +25,7 @@ app-metrics/collectd:
       - {{ pkg.gen_atom('app-metrics/collectd') }}
       {% elif grains.os_family == 'Debian' %}
       - collectd-core
+      - collectd-utils
       - libyajl2 # json parsers
       - libprotobuf-c1
       - python3-protobuf
