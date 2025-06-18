@@ -63,10 +63,12 @@ for out in config["output"].keys():
     out_ssl["enabled"] = tls[out].get("enabled", True)
     if tls[out].get("vault", False):
       pki_path = "/etc/pki/filebeat-"+ out +"/"
+
       cert_key_expiration_state(
         "filebeat-"+ out, "filebeat:tls:"+ out +":vault",
         "pki/elasticsearch", "filebeat",
         "filebeat:user", "root", "filebeat:group", "root")
+
       out_ssl["certificate"] = pki_path + "fullchain.pem"
       out_ssl["key"] = pki_path + "privkey.pem"
       out_ssl["certificate_authorities"] = [pki_path + "ca_chain.pem"]
