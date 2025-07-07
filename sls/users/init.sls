@@ -108,4 +108,4 @@ for user in users_absent:
   if user not in users_present_list:
     user_stid = "user_"+ user
 
-    User.absent(user_stid, purge=True)
+    User.absent(user_stid, name=user, purge=True)
