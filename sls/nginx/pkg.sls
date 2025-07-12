@@ -4,11 +4,12 @@
 {% set makeconf_nginx = salt.pillar.get('makeconf:nginx', {}) -%}
 {% set modules_http = makeconf_nginx.get('modules_http',
 ['access', 'auth_basic', 'autoindex', 'browser', 'cache_purge', 'charset', 'empty_gif',
-'map', 'geo', 'geoip', 'gzip', 'gzip_static', 'headers_more', 'limit_req', 'limit_zone',
-'memc', 'metrics', 'referer', 'rewrite', 'realip', 'proxy', 'scgi', 'uwsgi', 'fastcgi',
-'ssi', 'ssl', 'reqstat','limit_conn',  'stub_status', 'vhost_traffic_status',
-'userid', 'split_clients', 'sticky', 'upstream_zone', 'upstream_check',
-'upstream_hash', 'upstream_keepalive', 'upstream_least_conn', 'upstream_ip_hash']) -%}
+ 'v2', 'v3',
+ 'map', 'geo', 'geoip', 'gzip', 'gzip_static', 'limit_req', 'limit_zone',
+ 'memc', 'referer', 'rewrite', 'realip', 'proxy', 'scgi', 'uwsgi', 'fastcgi',
+ 'ssi', 'ssl', 'reqstat','limit_conn',  'stub_status', 'vhost_traffic_status',
+ 'userid', 'split_clients', 'sticky', 'upstream_zone', 'upstream_check',
+ 'upstream_hash', 'upstream_keepalive', 'upstream_least_conn', 'upstream_ip_hash']) -%}
 {% set modules_mail = makeconf_nginx.get('modules_mail', ['smtp', 'imap', 'pop3']) -%}
 {% set modules_stream = makeconf_nginx.get('modules_stream', []) -%}
 {% set custom_packages = salt.pillar.get('nginx:custom-packages', False) %}
@@ -36,6 +37,7 @@ www-servers/nginx:
     {% if grains.os == 'Gentoo' %}
     - pkgs:
       - {{ pkg.gen_atom('www-servers/nginx') }}
+      - {{ pkg.gen_atom('www-nginx/ngx-headers-more') }}
     - watch:
       - augeas: manage-nginx-modules
     - require:
