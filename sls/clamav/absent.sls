@@ -8,14 +8,13 @@ clamd:
     {% if grains.os_family == 'Debian' %}
     - name: clamav-daemon
     {% endif %}
-    - enable: False
 
 freshclam:
   service.dead:
+    - enable: False
     {% if grains.os_family == 'Debian' %}
     - name: clamav-freshclam
     {% endif %}
-    - enable: True
 
 clamav-onacc:
   service.dead:
