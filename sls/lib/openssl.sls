@@ -12,7 +12,7 @@ dev-libs/openssl:
   {% elif grains['os_family'] == 'Debian' %}
   {% set pkg_prefix = 'apt:packages:openssl:' %}
   {% set openssl_version = salt.pillar.get(pkg_prefix + 'version', '') %}
-  {% set libssl3_version = salt.pillar.get('apt:packages:libssl3:version', '') %}
+  {% set libssl3_version = salt.pillar.get('apt:packages:libssl3:version', openssl_version) %}
   {% set hold_default = True if openssl_version else False %}
   {% if openssl_version %}
   pkg.installed:
