@@ -79,7 +79,7 @@ for username, data in users_present.items():
     for f, d in data["dirs"].items():
       File.directory(
         path.join(homedir, f),
-        create = True,
+        create = d.get("create", True),
         mode = d.get("mode", "755"),
         user = d.get("user", username),
         group = d.get("group", username),
