@@ -170,11 +170,15 @@ include:
       - service: openvpn.{{ instance }}
 {% endif %}
 
+{% if grains['init'] == 'openrc' %}
 /etc/init.d/openvpn.{{ instance }}:
   file.symlink:
     - target: openvpn
     - watch_in:
       - service: openvpn.{{ instance }}
+{% elif grains['init'] == 'systemd' %}
+/etc/init.d/openvpn.{{ instance }}: file.absent
+{% endif %}
 
 openvpn.{{ instance }}:
   {% if data.get("enabled", False) %}
@@ -182,6 +186,9 @@ openvpn.{{ instance }}:
     - enable: true
   {% else %}
   service.dead:
+  {% endif %}
+  {% if grains['init'] == 'systemd' %}
+    - name: openvpn@{{ instance }}.service
   {% endif %}
     - watch:
       - file: /etc/openvpn/{{ instance }}.conf
