@@ -146,6 +146,26 @@ include:
     - require:
       - file: /etc/openvpn/{{ instance }}/
 
+{% if "tls-crypt" in data %}
+{% if data["tls-crypt"] == "vault" %}{% set tls_crypt_pillar = False %}{% set tls_crypt_vault = True %}
+{% else %}{% set tls_crypt_pillar = True %}{% set tls_crypt_vault = False %}{% endif %}
+{% else %}{% set tls_crypt_pillar = False %}{% set tls_crypt_vault = False %}{% endif %}
+/etc/openvpn/{{ instance }}/tls-crypt.pem:
+  {% if data.get("tls-crypt", False) and data["tls-crypt"] != "vault" %}
+  file.managed:
+    - contents_pillar: openvpn:instance:{{ instance }}:tls-crypt
+    - show_changes: False
+    - mode: 640
+    - user: root
+    - group: root
+    - watch_in:
+      - service: openvpn.{{ instance }}
+  {% else %}
+  file.absent:
+  {% endif %}
+    - require:
+      - file: /etc/openvpn/{{ instance }}/
+
 /etc/openvpn/{{ instance }}/ipp.txt:
   file.managed:
     - replace: False
