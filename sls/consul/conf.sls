@@ -90,6 +90,9 @@ include:
     - mode: 755
     - user: consul
     - group: consul
+    - recurse:
+      - user
+      - group
     - require:
       - file: /etc/consul.d/
 {% endif %}
