@@ -1,26 +1,27 @@
 {% import 'pkg/common' as pkg %}
-{% if grains.os == 'Gentoo' %}
+{% import 'lib/libc.sls' as libc %}
 include:
-  - gentoo.portage.packages
-{% endif %}
-
-{% if grains.os == 'Ubuntu' %}
-pkgrepo_suricata_stable:
-  pkgrepo.managed:
-    - ppa: oisf/suricata-stable
-{% endif %}
+  - lib.libc
 
 net-analyzer/suricata:
+  {% if grains.os == 'Gentoo' %}
   pkg.installed:
-    {% if grains.os == 'Gentoo' %}
     - pkgs: 
       - {{ pkg.gen_atom('net-analyzer/suricata') }}
     - require:
-      - file: gentoo.portage.packages
-    {% elif grains.os == 'Ubuntu' %}
+      {{ libc.pkg_dep() }}
+  {% elif grains.os_family == 'Debian' %}
+  {% set pkg_prefix = 'apt:packages:suricata:' %}
+  {% set suricata_version = salt.pillar.get(pkg_prefix + 'version', '') %}
+  {% set hold_default = True if suricata_version else False %}
+  {% if suricata_version %}
+  pkg.installed:
+  {% else %}
+  pkg.latest:
+  {% endif %}
     - pkgs:
-      - suricata
+      - suricata: {{ suricata_version }}
+    - hold: {{ salt.pillar.get(pkg_prefix + 'hold', hold_default) }}
+    - update_holds: {{ salt.pillar.get(pkg_prefix + 'update_holds', hold_default) }}
     - refresh: true
-    - require:
-        - pkgrepo: pkgrepo_suricata_stable
-    {% endif %}
+  {% endif %}
