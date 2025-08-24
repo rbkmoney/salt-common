@@ -7,6 +7,12 @@ Documentation=man:suricata(8) man:suricatasc(8)
 Documentation=https://suricata.readthedocs.io/
 
 [Service]
+User={{ user }}
+Group={{ group }}
+AmbientCapabilities=CAP_NET_ADMIN
+CapabilityBoundingSet=CAP_NET_ADMIN
+NoNewPrivileges=yes
+# ProtectSystem=strict
 PIDFile=/run/suricata/suricata-%i.pid
 ExecStart=/usr/bin/suricata -c /etc/suricata/suricata-%i.yaml --pidfile /run/suricata/suricata-%i.pid -D ${OPTS}
 ExecReload=/bin/kill -HUP $MAINPID
