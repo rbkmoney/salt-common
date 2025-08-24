@@ -68,6 +68,7 @@ for name, data in instances.items():
       'git-suricata-rules-' + name,
       name=rules_repo,
       target=rules_dir,
+      user="suricata",
       rev='master',
       force_clone=True,
       force_checkout=True,
