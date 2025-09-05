@@ -13,6 +13,7 @@ AmbientCapabilities=CAP_NET_ADMIN
 CapabilityBoundingSet=CAP_NET_ADMIN
 NoNewPrivileges=yes
 # ProtectSystem=strict
+RuntimeDirectory=suricata
 PIDFile=/run/suricata/suricata-%i.pid
 ExecStart=/usr/bin/suricata -c /etc/suricata/suricata-%i.yaml --pidfile /run/suricata/suricata-%i.pid -D ${OPTS}
 ExecReload=/bin/kill -HUP $MAINPID
