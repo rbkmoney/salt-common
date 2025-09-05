@@ -3,6 +3,7 @@
         missingok
         create
         sharedscripts
+	su {{ user }} {{ group }}
         postrotate
 	        {% for name in instances %}
 		{% if grains.os == "Gentoo" %}

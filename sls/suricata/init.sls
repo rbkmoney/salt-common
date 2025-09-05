@@ -1,15 +1,21 @@
 #!pyobjects
 # -*- mode: python -*-
 import yaml
+from os import path
 
 suricata = pillar('suricata', {})
 instances = suricata.get('instances', {})
 rules_repo = pillar('suricata:rules:remote', '')
 rules_commit = pillar('suricata:rules:commit', '')
-identity_file = '/root/.ssh/suricata-rules-access'
-g_init = grains('init')
+g_init = grains("init")
+p_u_suricata = pillar('users:present:suricata', {})
+manage_home = False if p_u_suricata else True
+suricata_home = p_u_suricata.get("home", "/var/lib/suricata/")
+suricata_dotssh = path.join(suricata_home, ".ssh/")
+identity_file = path.join(suricata_dotssh, "suricata-rules-access")
 
-include('suricata.pkg')
+include("suricata.pkg")
+include("users")
 
 suricata_confd='/etc/conf.d/suricata'
 if g_init == 'openrc':
@@ -78,9 +84,26 @@ for name, data in instances.items():
       require=(File(rules_dir), File(identity_file)))
 
 File.managed(
-  '/etc/logrotate.d/suricata', source='salt://suricata/files/suricata.logrotate',
-  template='jinja', defaults={'instances': list(instances.keys())},
+  '/etc/logrotate.d/suricata', source='salt://suricata/files/suricata.logrotate.tpl',
+  template='jinja',
+  defaults={'instances': list(instances.keys()), "user": "suricata", "group": "suricata"},
   mode=644, user='root', group='root')
+
+if manage_home:
+  File.directory(
+    suricata_home,
+    create=True,
+    mode=750,
+    user="suricata",
+    group="suricata")
+
+  File.directory(
+    suricata_dotssh,
+    create=True,
+    mode=750,
+    user="suricata",
+    group="suricata",
+    require=[File(suricata_home)])
 
 File.managed(
   identity_file,
@@ -88,5 +111,6 @@ File.managed(
   template='jinja',
   context={'privkey_key': 'suricata-rules-access'},
   mode=600,
-  user='root',
-  group='root')
+  user="suricata",
+  group="suricata",
+  require=[File(suricata_dotssh)])
