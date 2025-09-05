@@ -51,9 +51,16 @@ for name, data in instances.items():
   rules_dir = '/etc/suricata/rules-' + name
   suricata_service = 'suricata' +('@' if g_init == 'systemd' else '.')+ name
   suricata_yaml = '/etc/suricata/suricata-'+ name +'.yaml'
+  git_state_id = 'git-suricata-rules-' + name
   initd_symlink = '/etc/init.d/' + suricata_service
-  Service.running(suricata_service, enable=True, reload=True,
-                  watch=(File(suricata_confd), Pkg('net-analyzer/suricata')))
+  service_watch = [Pkg('net-analyzer/suricata')]
+  if g_init == 'openrc':
+    service_watch.append(File(suricata_confd))
+  elif g_init == 'systemd':
+    service_watch.append(File('/etc/systemd/system/suricata@.service'))
+    service_watch.append(File('/etc/systemd/system/suricata@'+ name+ '.service.d/override.conf'))
+
+  Service.running(suricata_service, enable=True, reload=True, watch=service_watch)
 
   File.directory(rules_dir, create=True,
                  file_mode=644, dir_mode=755,
@@ -71,7 +78,7 @@ for name, data in instances.items():
         data['conf'] if 'conf' in data else suricata['conf']))
 
     Git.latest(
-      'git-suricata-rules-' + name,
+      git_state_id,
       name=rules_repo,
       target=rules_dir,
       user="suricata",

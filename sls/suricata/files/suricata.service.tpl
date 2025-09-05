@@ -11,6 +11,7 @@ User={{ user }}
 Group={{ group }}
 AmbientCapabilities=CAP_NET_ADMIN
 CapabilityBoundingSet=CAP_NET_ADMIN
+LimitNICE=-20
 NoNewPrivileges=yes
 # ProtectSystem=strict
 RuntimeDirectory=suricata
