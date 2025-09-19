@@ -30,13 +30,15 @@ extend:
     - watch_in:
       - service: salt-minion
     - contents: |
+        [Unit]
+        StartLimitIntervalSec=0
+        StartLimitBurst=0
+        StartLimitAction=none
+
         [Service]
         Restart=always
         RestartSec=10s
         # WatchdogSec=60s
-        StartLimitIntervalSec=0
-        StartLimitBurst=0
-        StartLimitAction=none
 {% else %}
 /etc/systemd/system/salt-minion.service.d/override.conf:
   file.absent
