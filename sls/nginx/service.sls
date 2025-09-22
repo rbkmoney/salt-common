@@ -244,3 +244,10 @@ nginx-reload:
     - group: {{ nginx_group }}
     - watch_in:
       - service: nginx
+
+/var/www/:
+    file.directory:
+    - create: True
+    - mode: 755
+    - user: {{ nginx_user }}
+    - group: {{ nginx_group }}
