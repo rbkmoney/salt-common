@@ -6,6 +6,7 @@
 {% endif %}
 {% set nginx_user = nginx.get('user', nginx_default_user) %}
 {% set nginx_group = nginx.get('group', nginx_user) %}
+{% set g_init = grains.get("init", "openrc") %}
 
 {% set worker_processes = salt.pillar.get(
   'nginx:worker:processes', grains.get('num_cpus', 2)) -%}
@@ -38,6 +39,48 @@ nginx:
     - watch:
       - file: /etc/nginx/nginx.conf
 
+nginx-reload:
+  # This is for watch_in reloads
+  service.running:
+    - name: nginx
+    - reload: True
+    - require:
+      - file: /etc/nginx/nginx.conf
+
+{% if g_init == "systemd" %}
+/etc/systemd/system/nginx.service.d/:
+  file.directory:
+    - create: True
+    - user: root
+    - group: root
+    - mode: 755
+    # - require:
+    #   - file: /etc/systemd/system/
+
+/etc/systemd/system/nginx.service.d/override.conf:
+  file.managed:
+    - user: root
+    - group: root
+    - mode: 640
+    - require:
+      - file: /etc/systemd/system/nginx.service.d/
+    - watch_in:
+      - service: nginx
+    - contents: |
+        [Unit]
+        StartLimitIntervalSec=60
+        StartLimitBurst=5
+        StartLimitAction=none
+
+        [Service]
+        Restart=on-failure
+        RestartSec=1s
+        # WatchdogSec=60s
+{% else %}
+/etc/systemd/system/nginx.service.d/override.conf:
+  file.absent
+{% endif %}
+
 nginx_user:
   user.present:
     - name: {{ nginx_user }}
@@ -47,14 +90,6 @@ nginx_user:
     - password_lock: True
     - watch_in:
       - service: nginx
-
-nginx-reload:
-  # This is for watch_in reloads
-  service.running:
-    - name: nginx
-    - reload: True
-    - require:
-      - file: /etc/nginx/nginx.conf
 
 /etc/nginx/:
   file.directory:
