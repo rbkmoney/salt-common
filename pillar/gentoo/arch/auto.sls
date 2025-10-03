@@ -7,8 +7,7 @@ arch_conf:
   CFLAGS: '-march=native -O2 -pipe -mfpmath=sse'
   CXXFLAGS: '${CFLAGS}'
 {% if 'avx2' in cpu_flags %}
-  # There's no corei7-avx2 buildhost yet.
-  mirror_arch: 'amd64/corei7-avx'
+  mirror_arch: 'amd64/haswell'
 {% elif 'avx' in cpu_flags %}
   mirror_arch: 'amd64/corei7-avx'
 {% elif 'sse4_2' in cpu_flags %}
