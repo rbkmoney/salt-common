@@ -85,7 +85,6 @@ for username, data in users_present.items():
       else:
         _id = fp + "/"
         bdname = path.dirname(fp)
-      dirs[_id] = d
 
       req_list = []
       if bdname in dirs:
@@ -93,13 +92,19 @@ for username, data in users_present.items():
       else:
         req_list.append(home_dep)
 
-      File.directory(
-        _id,
-        create = d.get("create", True),
-        mode = d.get("mode", "755"),
-        user = d.get("user", username),
-        group = d.get("group", username),
-        require = req_list)
+      if "absent" in d:
+        if d["absent"]:
+          dirs[_id] = d
+          File.absent(_id, require=req_list)
+      else:
+        dirs[_id] = d
+        File.directory(
+          _id,
+          create = d.get("create", True),
+          mode = d.get("mode", "755"),
+          user = d.get("user", username),
+          group = d.get("group", username),
+          require = req_list)
 
   if "files" in data:
     for f, d in data["files"].items():
@@ -115,19 +120,23 @@ for username, data in users_present.items():
         req_list.append(home_dep)
         makedirs = True
 
-      File.managed(
-        fp,
-        source = _source,
-        contents_pillar = (
-          None if _source else
-          "users:present:"+ username +":files:"+ f +":contents"),
-        template = d.get("template", None),
-        show_changes = d.get("show_changes", False if str(_mode) else None),
-        makedirs = d.get("makedirs", makedirs),
-        mode = _mode,
-        user = username,
-        group = username,
-        require = req_list)
+      if "absent" in d:
+        if d["absent"]:
+          File.absent(fp, require=req_list)
+      else:
+        File.managed(
+          fp,
+          source = _source,
+          contents_pillar = (
+            None if _source else
+            "users:present:"+ username +":files:"+ f +":contents"),
+          template = d.get("template", None),
+          show_changes = d.get("show_changes", False if str(_mode) else None),
+          makedirs = d.get("makedirs", makedirs),
+          mode = _mode,
+          user = username,
+          group = username,
+          require = req_list)
 
 for user in users_absent:
   if user not in users_present_list:
