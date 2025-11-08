@@ -75,34 +75,59 @@ for username, data in users_present.items():
         ":".join((l.get("host", "*"), l.get("port", "*")|string, l.get("database", "*"), l.user, l.passwd))
         for l in data.pgpass]))
 
+  dirs = {}
   if "dirs" in data:
     for f, d in data["dirs"].items():
+      fp = path.join(homedir, f)
+      if fp.endswith("/"):
+        _id = fp
+        bdname = path.dirname(fp.rstrp("/"))
+      else:
+        _id = fp + "/"
+        bdname = path.dirname(fp)
+      dirs[_id] = d
+
+      req_list = []
+      if bdname in dirs:
+        req_list.append(File(bdname))
+      else:
+        req_list.append(home_dep)
+
       File.directory(
-        path.join(homedir, f),
+        _id,
         create = d.get("create", True),
         mode = d.get("mode", "755"),
         user = d.get("user", username),
         group = d.get("group", username),
-        require = [home_dep])
+        require = req_list)
 
   if "files" in data:
     for f, d in data["files"].items():
       _source = d.get("source", None)
       _mode = d.get("mode", "644")
+      fp = path.join(homedir, f).rstrip("/")
+      dname = path.dirname(fp) + "/"
+      makedirs = False
+      req_list = []
+      if dname in dirs:
+        req_list.append(File(dname))
+      else:
+        req_list.append(home_dep)
+        makedirs = True
 
       File.managed(
-        path.join(homedir, f),
+        fp,
         source = _source,
         contents_pillar = (
           None if _source else
           "users:present:"+ username +":files:"+ f +":contents"),
         template = d.get("template", None),
         show_changes = d.get("show_changes", False if str(_mode) else None),
-        makedirs = d.get("makedirs", False),
+        makedirs = d.get("makedirs", makedirs),
         mode = _mode,
         user = username,
         group = username,
-        require = [home_dep])
+        require = req_list)
 
 for user in users_absent:
   if user not in users_present_list:
