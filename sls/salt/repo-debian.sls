@@ -21,7 +21,7 @@ include:
 /etc/apt/sources.list.d/salt.list:
   file.managed:
     - contents: |
-        deb [signed-by=/etc/apt/keyrings/salt-archive-keyring.pgp arch={{ grains.osarch }}] https://packages.broadcom.com/artifactory/saltproject-deb stable main
+        deb [signed-by=/etc/apt/keyrings/salt-archive-keyring.pgp arch={{ grains.osarch }}] https://mirror.yandex.ru/mirrors/saltproject-deb/ stable main
     - mode: 644
     - user: root
     - group: root
