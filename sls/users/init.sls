@@ -43,45 +43,13 @@ for username, data in users_present.items():
       group = data.get("homedir_group", username),
       require = [User(user_stid)])
 
-  if "keys" in data:
-    ssh_path = path.join(homedir, ".ssh/")
-    File.directory(
-      ssh_path,
-      create = True,
-      mode = "700",
-      user = username,
-      group = username,
-      require = [home_dep])
-
-    File.managed(
-      path.join(ssh_path, "authorized_keys"),
-      source = "salt://users/files/authorized_keys.tpl",
-      template = "jinja",
-      context = {"user": username},
-      mode = "600",
-      user = username,
-      group = username,
-      require = [File(ssh_path)])
-
-  if "pgpass" in data:
-    File.managed(
-      path.join(homedir, ".pgpass"),
-      template = "jinja",
-      mode = "600",
-      user = username,
-      group = username,
-      require = [home_dep],
-      content = "\n".join([
-        ":".join((l.get("host", "*"), l.get("port", "*")|string, l.get("database", "*"), l.user, l.passwd))
-        for l in data.pgpass]))
-
   dirs = {}
   if "dirs" in data:
     for f, d in data["dirs"].items():
       fp = path.join(homedir, f)
       if fp.endswith("/"):
         _id = fp
-        bdname = path.dirname(fp.rstrp("/"))
+        bdname = path.dirname(fp.rstrip("/"))
       else:
         _id = fp + "/"
         bdname = path.dirname(fp)
@@ -137,6 +105,41 @@ for username, data in users_present.items():
           user = username,
           group = username,
           require = req_list)
+
+
+  if "keys" in data:
+    ssh_path = path.join(homedir, ".ssh/")
+    if not ssh_path in dirs:
+      File.directory(
+        ssh_path,
+        create = True,
+        mode = "700",
+        user = username,
+        group = username,
+        require = [home_dep])
+
+    File.managed(
+      path.join(ssh_path, "authorized_keys"),
+      source = "salt://users/files/authorized_keys.tpl",
+      template = "jinja",
+      context = {"user": username},
+      mode = "600",
+      user = username,
+      group = username,
+      require = [File(ssh_path)])
+
+  if "pgpass" in data:
+    File.managed(
+      path.join(homedir, ".pgpass"),
+      template = "jinja",
+      mode = "600",
+      user = username,
+      group = username,
+      require = [home_dep],
+      content = "\n".join([
+        ":".join((l.get("host", "*"), l.get("port", "*")|string, l.get("database", "*"), l.user, l.passwd))
+        for l in data.pgpass]))
+
 
 for user in users_absent:
   if user not in users_present_list:
