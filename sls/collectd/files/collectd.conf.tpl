@@ -3,6 +3,7 @@
 {% set extra_plugins = collectd.get('extra-plugins', []) %}
 {% set extra_plugin_config = collectd.get('extra-plugin-config', []) %}
 {% set p_network = collectd.get('network', False) %}
+{% set p_statsd = collectd.get('statsd', False) %}
 {% set p_aggregation = collectd.get('aggregation', False) %}
 {% set p_write_graphite = collectd.get('write_graphite', False) %}
 {% set p_write_riemann = collectd.get('write_riemann', False) %}
@@ -159,7 +160,9 @@ LoadPlugin processes
 #LoadPlugin rrdtool
 #LoadPlugin serial
 #LoadPlugin sigrok
+{% if p_statsd %}
 LoadPlugin statsd
+{% endif %}
 #LoadPlugin swap
 #LoadPlugin table
 LoadPlugin tail
@@ -755,15 +758,17 @@ LoadPlugin write_riemann
 #</Plugin>
 {% endif %}
 
+{% if p_statsd %}
 <Plugin statsd>
-  Host "::"
-  Port "8125"
-  DeleteCounters true
-  DeleteTimers   true
-  DeleteGauges   true
-  DeleteSets     true
-  TimerPercentile 95.0
+  Host "{{ p_statsd.get('Host', '::') }}"
+  Port "{{ p_statsd.get('Port', '8125') }}"
+  DeleteCounters {{ p_statsd.get('DeleteCounters', 'true') }}
+  DeleteTimers   {{ p_statsd.get('DeleteTimers', 'true') }}
+  DeleteGauges   {{ p_statsd.get('DeleteGauges', 'true') }}
+  DeleteSets     {{ p_statsd.get('DeleteSets', 'true') }}
+  TimerPercentile {{ p_statsd.get('TimerPercentile', '95.0') }}
 </Plugin>
+{% endif %}
 
 {% if False %}
 #<Plugin "swap">
@@ -898,8 +903,8 @@ LoadPlugin write_riemann
 
 {% if p_zookeeper %}
 <Plugin "zookeeper">
-   Host "{{ p_zookeeper.get('host', '::1') }}"
-   Port "{{ p_zookeeper.get('port', '2181') }}"
+   Host "{{ p_zookeeper.get('Host', '::1') }}"
+   Port "{{ p_zookeeper.get('Port', '2181') }}"
 </Plugin>
 {% endif %}
 
@@ -921,8 +926,8 @@ LoadPlugin write_riemann
 
 {% if p_write_prometheus %}
 <Plugin "write_prometheus">
-  Host "{{ p_write_prometheus.get('host', '::1') }}"
-  Port "{{ p_write_prometheus.get('port', '9103') }}"
+  Host "{{ p_write_prometheus.get('Host', '::1') }}"
+  Port "{{ p_write_prometheus.get('Port', '9103') }}"
   StalenessDelta {{ p_write_prometheus.get('StalenessDelta', 300) }}
 </Plugin>
 {% endif %}
@@ -931,15 +936,15 @@ LoadPlugin write_riemann
 <Plugin write_riemann>
   {% for node in p_write_riemann['nodes'] %}
   <Node {{ node['name'] }}>
-    Host "{{ node['host'] }}"
-    Protocol "{{ node.get('protocol', 'UDP') }}"
-    Port "{{ node.get('port', '5555') }}"
-    StoreRates {{ 'true' if node.get('store-rates', True) else 'false' }}
-    AlwaysAppendDS {{ 'true' if node.get('always-append-ds', False) else 'false' }}
+    Host "{{ node['Host'] }}"
+    Protocol "{{ node.get('Protocol', 'UDP') }}"
+    Port "{{ node.get('Port', '5555') }}"
+    StoreRates {{ 'true' if node.get('StoreRates', True) else 'false' }}
+    AlwaysAppendDS {{ 'true' if node.get('AlwaysAppendDS', False) else 'false' }}
   </Node>
   {% endfor %}
   {% for tag in p_write_riemann.get('tags', []) %}
-  Tag "{{tag}}"
+  Tag "{{ tag }}"
   {% endfor %}
 </Plugin>
 {% endif %}
