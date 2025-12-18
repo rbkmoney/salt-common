@@ -18,14 +18,19 @@ def cert_key_expiration_state(
     user_pillar, user_default, group_pillar, group_default,
     SANs=[], IP_SANs=[], CN=minion_id, ttl_default="72h",
     renew_threshold_default=86400, manage_ca_chain=True,
-    require_list=[], require_in_list=[], watch_in_list=[]):
+    require_list=[], require_in_list=[], watch_in_list=[],
+    manage_directory=True,
+    fullchain_filename="fullchain.pem",
+    privkey_filename="privkey.pem",
+    ca_chain_filename="ca_chain.pem",
+    expiration_filename="expiration"):
   '''
   This function creates File.directory states for pki_dir,
   File.managed states for fullchain, cert, ca_chain,
   expiration files, checks for file presense and expiration,
   and requests new certificates if needed.
   Vault pillar keys example:
-  enabled: True # Defaults to False
+  enable: True # Defaults to False
   pki-path: "pki/prod/foo"
   pki-role: "foo"
   ttl: "72h"
@@ -40,20 +45,21 @@ def cert_key_expiration_state(
   pki_dir = path.join(pki_rdir, pki_dname,)
   if not pki_dir.endswith("/"):
     pki_dir += "/"
-  fullchain_file = pki_dir + "fullchain.pem"
-  privkey_file = pki_dir + "privkey.pem"
-  ca_chain_file = pki_dir + "ca_chain.pem"
-  expiration_file = pki_dir + "expiration"
+  fullchain_file = path.join(pki_dir, fullchain_filename)
+  privkey_file = path.join(pki_dir, privkey_filename)
+  ca_chain_file = path.join(pki_dir, ca_chain_filename)
+  expiration_file = path.join(pki_dir, expiration_filename)
   _CN = p_vault.get('CN', CN)
   _SANs = list_or_str(p_vault.get('SANs', SANs))
   _IP_SANs = list_or_str(p_vault.get('IP_SANs', IP_SANs))
   _req_list = [File(pki_dir)]
   _req_list.extend(require_list)
 
-  File.directory(
-    pki_dir, create=True,
-    mode=755, user="root", group="root",
-    require=[File(pki_rdir)])
+  if manage_directory:
+    File.directory(
+      pki_dir, create=True,
+      mode=755, user="root", group="root",
+      require=[File(pki_rdir)])
 
   if p_vault.get('enable', False):
     pki_path = p_vault.get("pki-path", pki_path_default)
@@ -143,12 +149,14 @@ def cert_key_expiration_state(
 def ca_chain_state(
     pki_dname, vault_pillar, pki_path_default,
     user_pillar, user_default, group_pillar, group_default,
-    require_list=[], require_in_list=[], watch_in_list=[]):
+    require_list=[], require_in_list=[], watch_in_list=[],
+    manage_directory=True,
+    ca_chain_filename="ca_chain.pem"):
   '''
   This function creates File.directory states for pki_dir,
   File.managed state for ca_chain and requests new chain.
   Vault pillar keys example:
-  enabled: True # Defaults to False
+  enable: True # Defaults to False
   pki-path: "pki/prod/foo"
   '''
   p_vault = pillar(vault_pillar, {})
@@ -157,14 +165,15 @@ def ca_chain_state(
   pki_dir = path.join(pki_rdir, pki_dname)
   if not pki_dir.endswith("/"):
     pki_dir += "/"
-  ca_chain_file = pki_dir + "ca_chain.pem"
+  ca_chain_file = path.join(pki_dir, ca_chain_filename)
   _req_list = [File(pki_dir)]
   _req_list.extend(require_list)
 
-  File.directory(
-    pki_dir, create=True,
-    mode=755, user="root", group="root",
-    require=[File(pki_rdir)])
+  if manage_directory:
+    File.directory(
+      pki_dir, create=True,
+      mode=755, user="root", group="root",
+      require=[File(pki_rdir)])
 
   if p_vault.get('enable', False):
     pki_path = p_vault.get("pki-path", pki_path_default)
