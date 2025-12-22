@@ -1,0 +1,392 @@
+groups:
+  # Pod-level metrics (from kube-state-metrics)
+  - name: kube.pod.resources.rules
+    interval: 30s
+    rules:
+    # Memory requests aggregation
+    - record: cluster:namespace:pod_memory:active:kube_pod_container_resource_requests
+      expr: |
+        sum by(cluster, namespace, pod, container) (
+          kube_pod_container_resource_requests{resource="memory"}
+        )
+    
+    # CPU requests aggregation  
+    - record: cluster:namespace:pod_cpu:active:kube_pod_container_resource_requests
+      expr: |
+        sum by(cluster, namespace, pod, container) (
+          kube_pod_container_resource_requests{resource="cpu"}
+        )
+    
+    # Memory limits aggregation
+    - record: cluster:namespace:pod_memory:usage:kube_pod_container_resource_limits
+      expr: |
+        sum by(cluster, namespace, pod, container) (
+          kube_pod_container_resource_limits{resource="memory"}
+        )
+    
+    # CPU limits aggregation
+    - record: cluster:namespace:pod_cpu:usage:kube_pod_container_resource_limits
+      expr: |
+        sum by(cluster, namespace, pod, container) (
+          kube_pod_container_resource_limits{resource="cpu"}
+        )
+    
+    # Resource usage ratio (requests)
+    - record: cluster:namespace:pod_memory:usage_ratio:requests
+      expr: |
+        # This requires actual memory usage metric which you might get from cAdvisor
+        # Adjust based on what metrics you actually have
+        sum by(cluster, namespace, pod) (
+          container_memory_working_set_bytes{container!="", container!="POD"}
+        )
+        /
+        sum by(cluster, namespace, pod) (
+          kube_pod_container_resource_requests{resource="memory"}
+        )
+    
+    # Pod status aggregation
+    - record: cluster:namespace:pod_status:phase
+      expr: |
+        sum by(cluster, namespace, phase) (
+          kube_pod_status_phase
+        )
+    
+    # Pod count by namespace
+    - record: cluster:namespace:pod_count:sum
+      expr: |
+        count by(cluster, namespace) (
+          kube_pod_info
+        )
+    
+    # Pod restart count
+    - record: cluster:namespace:pod_restarts:total
+      expr: |
+        sum by(cluster, namespace, pod) (
+          kube_pod_container_status_restarts_total
+        )
+
+  # Node metrics (from kube-state-metrics)
+  - name: kube.node.rules
+    interval: 30s
+    rules:
+    # Node conditions
+    - record: cluster:node_condition:ready
+      expr: |
+        max by(cluster, node) (
+          kube_node_status_condition{condition="Ready", status="true"}
+        )
+    
+    - record: cluster:node_condition:memory_pressure
+      expr: |
+        max by(cluster, node) (
+          kube_node_status_condition{condition="MemoryPressure", status="true"}
+        )
+    
+    - record: cluster:node_condition:disk_pressure
+      expr: |
+        max by(cluster, node) (
+          kube_node_status_condition{condition="DiskPressure", status="true"}
+        )
+    
+    - record: cluster:node_condition:pid_pressure
+      expr: |
+        max by(cluster, node) (
+          kube_node_status_condition{condition="PIDPressure", status="true"}
+        )
+    
+    # Node info
+    - record: cluster:node_count:total
+      expr: |
+        count by(cluster) (
+          kube_node_info
+        )
+    
+    - record: cluster:node:capacity_cpu_cores
+      expr: |
+        sum by(cluster, node) (
+          kube_node_status_capacity_cpu_cores
+        )
+    
+    - record: cluster:node:capacity_memory_bytes
+      expr: |
+        sum by(cluster, node) (
+          kube_node_status_capacity_memory_bytes
+        )
+    
+    - record: cluster:node:allocatable_cpu_cores
+      expr: |
+        sum by(cluster, node) (
+          kube_node_status_allocatable_cpu_cores
+        )
+    
+    - record: cluster:node:allocatable_memory_bytes
+      expr: |
+        sum by(cluster, node) (
+          kube_node_status_allocatable_memory_bytes
+        )
+
+  # Deployment/StatefulSet metrics (from kube-state-metrics)
+  - name: kube.workload.rules
+    interval: 30s
+    rules:
+    # Deployment status
+    - record: cluster:namespace:deployment_replicas:available
+      expr: |
+        sum by(cluster, namespace, deployment) (
+          kube_deployment_status_replicas_available
+        )
+    
+    - record: cluster:namespace:deployment_replicas:unavailable
+      expr: |
+        sum by(cluster, namespace, deployment) (
+          kube_deployment_status_replicas_unavailable
+        )
+    
+    - record: cluster:namespace:deployment_spec_replicas
+      expr: |
+        sum by(cluster, namespace, deployment) (
+          kube_deployment_spec_replicas
+        )
+    
+    # StatefulSet status
+    - record: cluster:namespace:statefulset_replicas:ready
+      expr: |
+        sum by(cluster, namespace, statefulset) (
+          kube_statefulset_status_replicas_ready
+        )
+    
+    - record: cluster:namespace:statefulset_spec_replicas
+      expr: |
+        sum by(cluster, namespace, statefulset) (
+          kube_statefulset_status_replicas
+        )
+    
+    # DaemonSet status
+    - record: cluster:namespace:daemonset_scheduled
+      expr: |
+        sum by(cluster, namespace, daemonset) (
+          kube_daemonset_status_number_scheduled
+        )
+    
+    - record: cluster:namespace:daemonset_misscheduled
+      expr: |
+        sum by(cluster, namespace, daemonset) (
+          kube_daemonset_status_number_misscheduled
+        )
+    
+    - record: cluster:namespace:daemonset_ready
+      expr: |
+        sum by(cluster, namespace, daemonset) (
+          kube_daemonset_status_number_ready
+        )
+
+  # Service and endpoint metrics (from kube-state-metrics)
+  - name: kube.service.rules
+    interval: 30s
+    rules:
+    # Endpoint status
+    - record: cluster:namespace:service_endpoints:ready
+      expr: |
+        sum by(cluster, namespace, service) (
+          kube_endpoint_address_available
+        )
+    
+    - record: cluster:namespace:service_endpoints:not_ready
+      expr: |
+        sum by(cluster, namespace, service) (
+          kube_endpoint_address_not_ready
+        )
+    
+    # Service selector mismatches
+    - record: cluster:namespace:service_selector_mismatch
+      expr: |
+        sum by(cluster, namespace, service) (
+          kube_endpointslice_slices_without_matching_service
+        )
+
+  # Persistent volume claim metrics (from kube-state-metrics)
+  - name: kube.pvc.rules
+    interval: 30s
+    rules:
+    # PVC status
+    - record: cluster:namespace:pvc_phase
+      expr: |
+        sum by(cluster, namespace, phase) (
+          kube_persistentvolumeclaim_status_phase
+        )
+    
+    # PVC usage
+    - record: cluster:namespace:pvc_usage_bytes
+      expr: |
+        sum by(cluster, namespace, persistentvolumeclaim) (
+          kube_persistentvolumeclaim_resource_requests_storage_bytes
+        )
+    
+    # PVC request vs capacity
+    - record: cluster:namespace:pvc_capacity_bytes
+      expr: |
+        sum by(cluster, namespace, persistentvolumeclaim) (
+          kube_persistentvolumeclaim_status_capacity_bytes
+        )
+
+  # CoreDNS metrics
+  - name: coredns.rules
+    interval: 30s
+    rules:
+    # DNS request rate
+    - record: cluster:namespace:coredns_dns_requests_total:rate5m
+      expr: |
+        sum by(cluster, namespace, pod) (
+          rate(coredns_dns_requests_total[5m])
+        )
+    
+    - record: cluster:namespace:coredns_dns_responses_total:rate5m
+      expr: |
+        sum by(cluster, namespace, pod) (
+          rate(coredns_dns_responses_total[5m])
+        )
+    
+    # Response codes
+    - record: cluster:namespace:coredns_dns_responses:by_rcode:rate5m
+      expr: |
+        sum by(cluster, namespace, pod, rcode) (
+          rate(coredns_dns_responses_total[5m])
+        )
+    
+    # Request types
+    - record: cluster:namespace:coredns_dns_requests:by_type:rate5m
+      expr: |
+        sum by(cluster, namespace, pod, type) (
+          rate(coredns_dns_requests_total[5m])
+        )
+    
+    # Cache hits/misses
+    - record: cluster:namespace:coredns_cache_hits_total:rate5m
+      expr: |
+        sum by(cluster, namespace, pod) (
+          rate(coredns_cache_hits_total[5m])
+        )
+    
+    - record: cluster:namespace:coredns_cache_misses_total:rate5m
+      expr: |
+        sum by(cluster, namespace, pod) (
+          rate(coredns_cache_misses_total[5m])
+        )
+    
+    # Forward requests
+    - record: cluster:namespace:coredns_forward_requests_total:rate5m
+      expr: |
+        sum by(cluster, namespace, pod) (
+          rate(coredns_forward_requests_total[5m])
+        )
+    
+    - record: cluster:namespace:coredns_forward_responses_total:rate5m
+      expr: |
+        sum by(cluster, namespace, pod) (
+          rate(coredns_forward_responses_total[5m])
+        )
+    
+    # Errors
+    - record: cluster:namespace:coredns_errors_total:rate5m
+      expr: |
+        sum by(cluster, namespace, pod) (
+          rate(coredns_errors_total[5m])
+        )
+    
+    # Panics
+    - record: cluster:namespace:coredns_panics_total:rate5m
+      expr: |
+        sum by(cluster, namespace, pod) (
+          rate(coredns_panics_total[5m])
+        )
+    
+    # Request duration (if available)
+    - record: cluster:namespace:coredns_request_duration_seconds:quantile
+      expr: |
+        histogram_quantile(0.95, 
+          sum by(cluster, namespace, pod, le) (
+            rate(coredns_dns_request_duration_seconds_bucket[5m])
+          )
+        )
+    
+    # Cache size (gauge)
+    - record: cluster:namespace:coredns_cache_size:sum
+      expr: |
+        sum by(cluster, namespace, pod) (
+          coredns_cache_size
+        )
+
+  # ===========================================
+  # Cluster-wide aggregates (kube-state-metrics only)
+  # ===========================================
+  - name: cluster.aggregations.rules
+    interval: 1m
+    rules:
+    # Total pod count across cluster
+    - record: cluster:pod_count:total
+      expr: |
+        sum(cluster:namespace:pod_count:sum)
+    
+    # Total node count
+    - record: cluster:node_count:total
+      expr: |
+        sum(cluster:node_count:total)
+    
+    # Total CPU requests across cluster
+    - record: cluster:cpu_requests:total_cores
+      expr: |
+        sum(
+          sum by(cluster, namespace, pod, container) (
+            kube_pod_container_resource_requests{resource="cpu"}
+          )
+        )
+    
+    # Total memory requests across cluster
+    - record: cluster:memory_requests:total_bytes
+      expr: |
+        sum(
+          sum by(cluster, namespace, pod, container) (
+            kube_pod_container_resource_requests{resource="memory"}
+          )
+        )
+    
+    # Total CPU limits across cluster
+    - record: cluster:cpu_limits:total_cores
+      expr: |
+        sum(
+          sum by(cluster, namespace, pod, container) (
+            kube_pod_container_resource_limits{resource="cpu"}
+          )
+        )
+    
+    # Total memory limits across cluster
+    - record: cluster:memory_limits:total_bytes
+      expr: |
+        sum(
+          sum by(cluster, namespace, pod, container) (
+            kube_pod_container_resource_limits{resource="memory"}
+          )
+        )
+    
+    # Available vs requested resources (requires node allocatable metrics)
+    - record: cluster:resource_utilization:cpu_ratio
+      expr: |
+        # CPU requested / allocatable
+        sum(
+          sum by(cluster, namespace, pod, container) (
+            kube_pod_container_resource_requests{resource="cpu"}
+          )
+        )
+        /
+        sum(kube_node_status_allocatable_cpu_cores)
+    
+    - record: cluster:resource_utilization:memory_ratio
+      expr: |
+        # Memory requested / allocatable  
+        sum(
+          sum by(cluster, namespace, pod, container) (
+            kube_pod_container_resource_requests{resource="memory"}
+          )
+        )
+        /
+        sum(kube_node_status_allocatable_memory_bytes)
