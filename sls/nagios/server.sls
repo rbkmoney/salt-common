@@ -1,181 +1,166 @@
-{% set nagios = salt['pillar.get']('nagios') -%}
-{% set objects_remote_uri = salt['pillar.get']('nagios:objects:remote') -%}
-{% set var_dir = salt.pillar.get("nagios:conf:dirs:var", "/var/lib/nagios") %}
-{% set conf_dir = salt.pillar.get("nagios:conf:dirs:conf", "/etc/nagios") %}
-{% set conf_main = salt.pillar.get("nagios:conf:main", {}) %}
-{% set nagios_home = var_dir + "/home" %}
-include:
-  - users
-  - nagios.server-pkg
+#!pyobjects
+# -*- mode: python -*-
+from os import path
+from salt.utils import dictupdate
 
-{{ conf_dir }}/:
-  file.directory:
-    - create: True
-    - mode: 755
-    - user: nagios
-    - group: nagios
-    - require:
-      - user: nagios
+from salt://nagios/common.py import p_nagios,p_user,p_group
+from salt://nagios/common.py import g_init
+from salt://nagios/common.py import conf_path,pki_path,log_path,var_path
+from salt://nagios/common.py import objects_path,identity_path,nagios_home
+from salt://nagios/common.py import spool_path,archives_path
+
+include("users")
+include("ssl.dirs")
+include(".server-pkg")
+
+p_extra_vault_states = p_nagios.get("extra-vault-states", {})
+
+File.directory(conf_path,
+               create=True,
+               mode=755,
+               user=p_user,
+               group=p_group,
+               require=[User(p_user)])
     
-{{ conf_dir }}/nagios.cfg:
-  file.managed:
-    - source: salt://nagios/files/nagios.cfg.tpl
-    - template: jinja
-    - mode: 644
-    - user: nagios
-    - group: nagios
-    - require:
-      - file: {{ conf_dir }}/
+File.managed(path.join(conf_path, "nagios.cfg"),
+             source="salt://nagios/files/nagios.cfg.tpl",
+             template="jinja",
+             mode="644",
+             user=p_user
+             group=p_group,
+             require=[File(conf_path)])
     
-{{ conf_dir }}/resource.cfg:
-  file.managed:
-    - source: salt://nagios/files/resource.cfg.tpl
-    - template: jinja
-    - mode: 600
-    - user: nagios
-    - group: nagios
-    - require:
-      - file: {{ conf_dir }}/
+File.managed(path.join(conf_path, "resource.cfg"),
+             source="salt://nagios/files/resource.cfg.tpl",
+             template="jinja",
+             mode="600",
+             user=p_user,
+             group=p_group,
+             require=[File(conf_path)])
 
-/root/.ssh/nagios-objects-access:
-  file.managed:
-    - source: salt://ssl/openssh-privkey.tpl
-    - template: jinja
-    - context:
-        privkey_key: nagios-objects-access
-    - mode: 600
-    - user: root
+File.managed(identity_path, 
+             source="salt://ssl/openssh-privkey.tpl",
+             template="jinja",
+             context={"privkey_key": "nagios-objects-access"},
+             mode="600",
+             user="root",
+             group="root")
 
-{{ conf_dir }}/objects/:
-  file.directory:
-    - create: False
-    - user: nagios
-    - group: nagios
-    - file_mode: 640
-    - dir_mode: 750
-    - recurse:
-      - user
-      - group
-      - mode
-    - require:
-      - git: {{ conf_dir }}/objects/
-  git.latest:
-    - name: {{ objects_remote_uri }}
-    - target: {{ conf_dir }}/objects
-    - rev: master
-    - force_clone: True
-    - force_checkout: True
-    - identity: /root/.ssh/nagios-objects-access
-    - require:
-      - file: /root/.ssh/nagios-objects-access
-      - file: {{ conf_dir }}/
+File.directory(
+  objects_path,
+  create=False,
+  user=p_user,
+  group=p_group,
+  file_mode="640",
+  dir_mode="750",
+  recurse=["user", "group", "mode"],
+  require=[Git(objects_path)])
 
-{{ nagios_home }}/.ssh/config:
-  file.managed:
-    - source: salt://nagios/files/ssh-config
-    - mode: 750
-    - user: nagios
-    - group: nagios
-    - require:
-      - user: nagios
+Git.latest(
+  objects_path,
+  name=objects_remote_uri,
+  target=objects_path.rstrip('/'),
+  rev="master",
+  force_clone=True,
+  force_checkout=True,
+  identity=identity_path,
+  require=[File(identity_path), File(conf_path)])
 
-{{ nagios_home }}/.ssh/nagios-hosts-access-key:
-  file.managed:
-    - source: salt://ssl/openssh-privkey.tpl
-    - template: jinja
-    - context:
-        privkey_key: nagios-hosts-access
-    - mode: 600
-    - user: nagios
-    - group: nagios
-    - require:
-      - user: nagios
+File.managed(
+  path.join(nagios_home, ".ssh/config"),
+  source="salt://nagios/files/ssh-config",
+  mode="750",
+  user=p_user,
+  group=p_group,
+  require=[User(p_user)])
 
-{{ var_dir }}/:
-  file.directory:
-    - create: True
-    - user: nagios
-    - group: nagios
-    - mode: 0755
-    - require:
-      - user: nagios
+File.managed(
+  path.join(nagios_home, ".ssh/nagios-hosts-access-key"),
+  source="salt://ssl/openssh-privkey.tpl",
+  template="jinja",
+  context={"privkey_key": "nagios-hosts-access"},
+  mode="600",
+  user=p_user,
+  group=p_group,
+  require=[User(p_user)])
 
-{{ var_dir }}/rw/:
-  file.directory:
-    - create: True
-    - user: nagios
-    - group: nagios
-    - mode: 6755
-    - require:
-      - file: {{ var_dir }}/
+File.managed(var_path,
+             create=True,
+             mode="0755"
+             user=p_user,
+             group=p_group,
+             require=[User(p_user)])
 
-{{ var_dir }}/spool/:
-  file.directory:
-    - create: True
-    - user: nagios
-    - group: nagios
-    - mode: 750
-    - require:
-      - file: {{ var_dir }}/
+File.directory(path.join(var_path, "rw/"),
+               create=True,
+               mode="6755",
+               user=p_user,
+               group=p_group,
+               require=[File(var_path)])
 
-{{ var_dir }}/spool/checkresults/:
-  file.directory:
-    - create: True
-    - user: nagios
-    - group: nagios
-    - mode: 750
-    - require:
-      - file: {{ var_dir }}/spool/
+File.directory(spool_path,
+               create=True,
+               mode="0750",
+               user=p_user,
+               group=p_group,
+               require=[File(var_path)])
 
-{{ var_dir }}/archives/:
-  file.directory:
-    - create: True
-    - user: nagios
-    - group: nagios
-    - mode: 750
-    - require:
-      - file: {{ var_dir }}/
+File.directory(path.join(spool_path, "checkresults/"),
+               create=True,
+               mode="0750",
+               user=p_user,
+               group=p_group,
+               require=[File(spool_path)])
 
-{% if False %}
-{{ var_dir }}/spool/graphios/:
-  file.directory:
-    - create: True
-    - user: nagios
-    - group: nagios
-    - mode: 750
-    - require:
-      - file: {{ var_dir }}/spool/
-{% endif %}
+File.directory(archives_path,
+               create=True,
+               mode="0750",
+               user=p_user,
+               group=p_group,
+               require=[File(var_path)])
 
-nagios:
-  service.running:
-    - enable: True
-    {% if grains.os_family == 'Debian' %}
-    - name: nagios4
-    {% endif %}
-    - watch:
-      - pkg: nagios_pkg
-      - user: nagios
-      - file: {{ conf_dir }}/
-      - file: {{ conf_dir }}/nagios.cfg
-      - file: {{ var_dir }}/
-      - file: {{ var_dir }}/rw/
-      - file: {{ var_dir }}/spool/
-      - file: {{ var_dir }}/spool/checkresults/
-      - file: {{ var_dir }}/archives/
-      {% if False %}
-      - file: {{ var_dir }}/spool/graphios/
-      {% endif %}
+File.directory(
+  pki_path, create=True,
+  mode=700, user=p_user, group="root",
+  require=[File("/etc/pki/")])
 
-nagios-reload:
-  # This is for watch_in reloads
-  service.running:
-    {% if grains.os_family == 'Debian' %}
-    - name: nagios4
-    {% else %}
-    - name: nagios
-    {% endif %}
-    - reload: True
-    - watch:
-      - git: {{ conf_dir }}/objects/
-      - file: {{ conf_dir }}/resource.cfg
+for k in p_extra_vault_states.keys():
+  cert_key_expiration_state(
+        "nagios", "nagios:vault-"+ k, "pki/nagios", "nagios-"+ k,
+        "nagios:user", p_user, "nagios:group", p_group,
+        require_list=[User(p_user)],
+        watch_in_list=[Service("nagios-reload")],
+        manage_directory=False,
+        fullchain_filename= k +"_fullchain.pem",
+        privkey_filename= k +"_privkey.pem",
+        ca_chain_filename= k + "_ca_chain",
+        expiration_filename= k +"_expiration")
+
+g_os = grains("os")
+g_os_family = grains("os_family")
+service_name = ("nagios" if g_os_family == "Gentoo"
+                else "nagios4" if g_os_family == "Debian"
+                else "nagios")
+
+Service.running(
+  "nagios",
+  name=service_name,
+  enable=True,
+  watch=[
+    Pkg(nagios_pkg),
+    User(p_user),
+    File(conf_path),
+    File(path.join(conf_path, "nagios.cfg")),
+    File(var_path),
+    File(path.join(var_path, "rw/")),
+    File(spool_path),
+    File(path.join(spool_path, "checkresults/")),
+    File(archives_path)])
+
+# This is for watch_in reloads
+Service.running(
+  "nagios-reload",
+  name=service_name,
+  reload=True,
+  watch=[Git(objects_path),
+         File(path.join(conf_path, "resource.cfg"))])
