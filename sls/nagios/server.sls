@@ -14,10 +14,11 @@ include("ssl.dirs")
 include(".server-pkg")
 
 p_extra_vault_states = p_nagios.get("extra-vault-states", {})
+objects_remote_uri = pillar("nagios:objects:remote")
 
 File.directory(conf_path,
                create=True,
-               mode=755,
+               mode="755",
                user=p_user,
                group=p_group,
                require=[User(p_user)])
@@ -26,7 +27,7 @@ File.managed(path.join(conf_path, "nagios.cfg"),
              source="salt://nagios/files/nagios.cfg.tpl",
              template="jinja",
              mode="644",
-             user=p_user
+             user=p_user,
              group=p_group,
              require=[File(conf_path)])
     
@@ -84,12 +85,12 @@ File.managed(
   group=p_group,
   require=[User(p_user)])
 
-File.managed(var_path,
-             create=True,
-             mode="0755"
-             user=p_user,
-             group=p_group,
-             require=[User(p_user)])
+File.directory(var_path,
+               create=True,
+               mode="0755",
+               user=p_user,
+               group=p_group,
+               require=[User(p_user)])
 
 File.directory(path.join(var_path, "rw/"),
                create=True,
@@ -147,7 +148,7 @@ Service.running(
   name=service_name,
   enable=True,
   watch=[
-    Pkg(nagios_pkg),
+    Pkg("nagios_pkg"),
     User(p_user),
     File(conf_path),
     File(path.join(conf_path, "nagios.cfg")),

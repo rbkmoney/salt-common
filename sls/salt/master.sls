@@ -22,7 +22,7 @@ salt-master:
     - template: jinja
     - defaults:
         salt_opts: {{ salt.pillar.get("salt:master:opts", "--log-level=warning") }}
-        l_nofile: {{ limits.get("nofile, ""1048576") }}
+        l_nofile: {{ limits.get("nofile", "1048576") }}
         l_nproc: {{ limits.get("nproc", "4096") }}
     - mode: 644
     - user: root
