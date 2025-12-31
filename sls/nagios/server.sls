@@ -8,6 +8,7 @@ from salt://nagios/common.py import g_init
 from salt://nagios/common.py import conf_path,pki_path,log_path,var_path
 from salt://nagios/common.py import objects_path,identity_path,nagios_home
 from salt://nagios/common.py import spool_path,archives_path
+from salt://ssl/pki-vault.sls import cert_key_expiration_state,ca_chain_state
 
 include("users")
 include("ssl.dirs")
