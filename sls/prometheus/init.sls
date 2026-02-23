@@ -94,12 +94,12 @@ if vault_enable_p:
 else:
     File.directory(
         pki_path, create=True,
-        mode=700, user=p_user, group="root",
+        mode=750, user=p_user, group="root",
         require=[File("/etc/pki/")])
 
     File.managed(
         cert_path,
-        mode=600, user=p_user, group=p_group,
+        mode=640, user=p_user, group=p_group,
         contents=p_tls.get("certificate", ""),
         require=[File(pki_path)],
         watch_in=[Service("prometheus")])

@@ -10,6 +10,7 @@
 {% set p_write_prometheus = collectd.get('write_prometheus', False) %}
 {% set p_ceph = collectd.get('ceph', False) %}
 {% set p_mysql = collectd.get('mysql', False) %}
+{% set p_postgresql = collectd.get('postgresql', False) %}
 {% set p_processes = collectd.get('processes', {}) %}
 {% set p_interface = collectd.get('interface', {}) %}
 {% set p_zookeeper = collectd.get('zookeeper', False) %}
@@ -55,7 +56,6 @@ WriteThreads {{ collectd_conf.get('WriteThreads', 5) }}
 # messages generated when loading or configuring other plugins can be        #
 # accessed.                                                                  #
 ##############################################################################
-
 LoadPlugin syslog
 
 <Plugin syslog>
@@ -133,6 +133,9 @@ LoadPlugin memory
 #LoadPlugin multimeter
 {% if p_mysql %}
 LoadPlugin mysql
+{% endif %}
+{% if p_postgresql %}
+LoadPlugin postgresql
 {% endif %}
 #LoadPlugin netapp
 #LoadPlugin netlink
@@ -497,20 +500,66 @@ LoadPlugin write_riemann
 {% endif %}
 {% if p_mysql %}
 <Plugin mysql>
-	{% for database in p_mysql.get('databases') %}
-	<Database {{ database['instance'] }}>
-		Host "{{ database['host'] }}"
-		{{ 'Socket "' + database['socket'] + '"' if database.get('socket', False) else '# Socket ""' }}
-		User "{{ database['user'] }}"
-		Password "{{ database['password'] }}"
-		{{ 'Database "' + database['database'] + '"' if database.get('database', False) else '# Database ""' }}
-		MasterStats {{ 'true' if database.get('master-stats', False) else 'false' }}
-		SlaveStats {{ 'true' if database.get('slave-stats', False) else 'false' }}
-		SlaveNotifications {{ 'true' if database.get('slave-notification', False) else 'false' }}
-	</Database>
-	{% endfor %}
+  {% for database in p_mysql.get('databases') %}
+  <Database "{{ database['instance'] }}">
+    Host "{{ database['host'] }}"
+    {{ 'Socket "' + database['socket'] + '"' if database.get('socket', False) else '# Socket ""' }}
+    User "{{ database['user'] }}"
+    Password "{{ database['password'] }}"
+    {{ 'Database "' + database['database'] + '"' if database.get('database', False) else '# Database ""' }}
+    MasterStats {{ 'true' if database.get('master-stats', False) else 'false' }}
+    SlaveStats {{ 'true' if database.get('slave-stats', False) else 'false' }}
+    SlaveNotifications {{ 'true' if database.get('slave-notification', False) else 'false' }}
+  </Database>
+  {% endfor %}
 </Plugin>
 {% endif %}
+
+{% if p_postgresql %}
+<Plugin postgresql>
+  {% for instance, database in p_postgresql['databases'].items() %}
+  <Database "{{ instance }}">
+    Host "{{ database['host'] }}"
+    {{ 'Port "' + database['port'] + '"' if database.get("port", False) else '# Port' }}
+    {{ 'Socket "' + database['socket'] + '"' if database.get("socket", False) else '# Socket' }}
+    {{ 'User "' + database['user'] + '"' if database.get("user", False) else '# User' }}
+    {{ 'Password "' + database['password'] + '"' if database.get("password", False) else '# Password' }}
+    {{ 'SSLMode "' + database['ssl-mode'] + '"' if database.get("ssl-mode", False) else '# SSLMode' }}
+
+    {{ 'Plugin "' + database['plugin'] + '"' if database.get("plugin", False) else '# Plugin' }}
+    {{ 'Instance "' + database['instance'] + '"' if database.get("instance", False) else '# Instance' }}
+    {{ 'Interval "' + database['interval'] + '"' if database.get("interval", False) else '# Interval' }}
+    {% for query in database.get('queries', ["backends", "transactions", "queries", "query_plans", "table_states", "disk_io", "disk_usage"]) %}
+    Query {{ query }}
+    {% endfor %}
+  </Database>
+  {% endfor %}
+
+  {% for _name, query in p_postgresql.get("queries", {}).items() %}
+  <Query "{{ _name }}">
+    Statement "{{ query['statement'] }}"
+    {% for param in query.get('params', []) %}
+    Param {{ param }}
+    {% endfor %}
+    {{ 'PluginInstanceFrom "' + query['Plugin-instance-from'] + '"' if query.get("plugin-instance-from", False) else '# PluginInstanceFrom' }}
+    {{ 'MinVersion "' + query['min-version'] + '"' if query.get("min-version", False) else '# MinVersion' }}
+    {{ 'MaxVersion "' + query['max-version'] + '"' if query.get("max-version", False) else '# MaxVersion' }}
+    {% for result in query['results'] %}
+    <Result>
+      Type {{ result.get("type", "gauge") }}
+      {% if "instances-from" in result %}
+      InstancesFrom {{ result['instances-from'] }}
+      {% elif "instance-prefix" in result %}
+      InstancePrefix {{ result['instance-prefix'] }}
+      {% endif %}
+      ValuesFrom {{ result['values-from'] }}
+    </Result>
+    {% endfor %}
+  </Query>
+  {% endfor %}
+</Plugin>
+{% endif %}
+
 {% if False %}
 #<Plugin netapp>
 #	<Host "netapp1.example.com">
