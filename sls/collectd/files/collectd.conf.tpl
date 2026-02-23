@@ -517,24 +517,6 @@ LoadPlugin write_riemann
 
 {% if p_postgresql %}
 <Plugin postgresql>
-  {% for instance, database in p_postgresql['databases'].items() %}
-  <Database "{{ instance }}">
-    Host "{{ database['host'] }}"
-    {{ 'Port "' + database['port'] + '"' if database.get("port", False) else '# Port' }}
-    {{ 'Socket "' + database['socket'] + '"' if database.get("socket", False) else '# Socket' }}
-    {{ 'User "' + database['user'] + '"' if database.get("user", False) else '# User' }}
-    {{ 'Password "' + database['password'] + '"' if database.get("password", False) else '# Password' }}
-    {{ 'SSLMode "' + database['ssl-mode'] + '"' if database.get("ssl-mode", False) else '# SSLMode' }}
-
-    {{ 'Plugin "' + database['plugin'] + '"' if database.get("plugin", False) else '# Plugin' }}
-    {{ 'Instance "' + database['instance'] + '"' if database.get("instance", False) else '# Instance' }}
-    {{ 'Interval "' + database['interval'] + '"' if database.get("interval", False) else '# Interval' }}
-    {% for query in database.get('queries', ["backends", "transactions", "queries", "query_plans", "table_states", "disk_io", "disk_usage"]) %}
-    Query {{ query }}
-    {% endfor %}
-  </Database>
-  {% endfor %}
-
   {% for _name, query in p_postgresql.get("queries", {}).items() %}
   <Query "{{ _name }}">
     Statement "{{ query['statement'] }}"
@@ -556,6 +538,24 @@ LoadPlugin write_riemann
     </Result>
     {% endfor %}
   </Query>
+  {% endfor %}
+
+  {% for instance, database in p_postgresql['databases'].items() %}
+  <Database "{{ instance }}">
+    Host "{{ database['host'] }}"
+    {{ 'Port "' + database['port'] + '"' if database.get("port", False) else '# Port' }}
+    {{ 'Socket "' + database['socket'] + '"' if database.get("socket", False) else '# Socket' }}
+    {{ 'User "' + database['user'] + '"' if database.get("user", False) else '# User' }}
+    {{ 'Password "' + database['password'] + '"' if database.get("password", False) else '# Password' }}
+    {{ 'SSLMode "' + database['ssl-mode'] + '"' if database.get("ssl-mode", False) else '# SSLMode' }}
+
+    {{ 'Plugin "' + database['plugin'] + '"' if database.get("plugin", False) else '# Plugin' }}
+    {{ 'Instance "' + database['instance'] + '"' if database.get("instance", False) else '# Instance' }}
+    {{ 'Interval "' + database['interval'] + '"' if database.get("interval", False) else '# Interval' }}
+    {% for query in database.get('queries', ["backends", "transactions", "queries", "query_plans", "table_states", "disk_io", "disk_usage"]) %}
+    Query {{ query }}
+    {% endfor %}
+  </Database>
   {% endfor %}
 </Plugin>
 {% endif %}
