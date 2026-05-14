@@ -89,12 +89,72 @@ if arch_conf:
   chap('CHOST', arch_conf['CHOST'])
   chap('CFLAGS', arch_conf['CFLAGS'])
   chap('CXXFLAGS', arch_conf.get('CXXFLAGS', '${CFLAGS}'))
-  if arch_conf.get('mirror_arch', False):
+
+# Binary repository configuration: /etc/portage/binrepos.conf as a single file
+# See man 5 portage for full attribute reference.
+#
+# Pillar schema:
+#+begin_src yaml
+# gentoo:
+#   binrepos_auto: true          # default, salt-auto repo from arch_conf
+#   binrepos_default:            # optional DEFAULT section attributes
+#     frozen: false
+#   binrepos:                    # repo sections (name = INI section header)
+#     my-repo:
+#       sync-uri: https://...    # required
+#       priority: 50             # higher = preferred
+#       location: /var/cache/binhost/my-repo
+#       verify-signature: true
+#       fetchcommand: ...
+#       resumecommand: ...
+#+end_src
+
+binrepos_pillar = pillar('gentoo:binrepos', {})
+binrepos_auto = pillar('gentoo:binrepos_auto', True)
+
+binrepos = {}
+if arch_conf.get('mirror_arch', False) and binrepos_auto:
     binhost = arch_conf.get('binhost-host', mirror_host)
-    chap('PORTAGE_BINHOST',
-         arch_conf.get('portage_binhost',
-                       'https://' + binhost + '/gentoo-packages/'
-                       + arch_conf['mirror_arch'] + '/packages'))
+    binrepos['salt-auto'] = {
+        'sync-uri': arch_conf.get('portage_binhost',
+                                   'https://' + binhost + '/gentoo-packages/'
+                                   + arch_conf['mirror_arch'] + '/packages'),
+        'priority': '9999',
+    }
+
+binrepos.update(binrepos_pillar)
+
+# Prepend DEFAULT section if specified
+binrepos_default = pillar('gentoo:binrepos_default', None)
+if binrepos_default:
+    from collections import OrderedDict
+    ordered = OrderedDict()
+    ordered['DEFAULT'] = binrepos_default
+    ordered.update(binrepos)
+    binrepos = ordered
+
+if binrepos:
+    # Remove deprecated PORTAGE_BINHOST from make.conf
+    changes.append('rm PORTAGE_BINHOST')
+
+    # Remove /etc/portage/binrepos.conf if it's a directory
+    Cmd.run('migrate-binrepos-conf-to-file',
+            name='rm -rf /etc/portage/binrepos.conf',
+            onlyif='test -d /etc/portage/binrepos.conf')
+
+    # Build INI contents manually (salt has no ini serializer for file.serialize)
+    binrepos_lines = []
+    for section, opts in binrepos.items():
+        binrepos_lines.append('[{}]'.format(section))
+        for k, v in opts.items():
+            binrepos_lines.append('{} = {}'.format(k, v))
+        binrepos_lines.append('')
+    binrepos_contents = '\n'.join(binrepos_lines)
+
+    File.managed('/etc/portage/binrepos.conf',
+                 contents=binrepos_contents,
+                 mode=644, user='root', group='root',
+                 require=[Cmd('migrate-binrepos-conf-to-file')])
 
 Augeas.change('manage-make-conf',
   context='/files/etc/portage/make.conf',
