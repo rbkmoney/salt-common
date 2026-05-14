@@ -75,7 +75,10 @@ import pprint
 
 # Import salt libs
 import salt.returners
-from salt.utils.versions import LooseVersion as _LooseVersion
+try:
+    from packaging.version import Version as _Version
+except ImportError:
+    from salt.utils.versions import LooseVersion as _Version
 
 HAS_LIBS = False
 try:
@@ -123,8 +126,8 @@ def __virtual__():
     min_version = '1.4.0'
     if HAS_LIBS:
         import slixmpp  # pylint: disable=3rd-party-module-not-gated
-        slixmpp_version = _LooseVersion(slixmpp.__version__)
-        valid_version = _LooseVersion(min_version)
+        slixmpp_version = _Version(slixmpp.__version__)
+        valid_version = _Version(min_version)
         if slixmpp_version >= valid_version:
             return __virtualname__
     return False, 'Could not import xmpp returner; slixmpp python client is not ' \

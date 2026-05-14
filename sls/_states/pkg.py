@@ -74,11 +74,11 @@ state module
 '''
 
 # Import python libs
-from __future__ import absolute_import, print_function, unicode_literals
 import fnmatch
 import logging
 import os
 import re
+from collections import OrderedDict as _OrderedDict
 
 # Import Salt libs
 import salt.utils.pkg
@@ -86,7 +86,6 @@ import salt.utils.platform
 import salt.utils.versions
 from salt.output import nested
 from salt.utils.functools import namespaced_function as _namespaced_function
-from salt.utils.odict import OrderedDict as _OrderedDict
 from salt.exceptions import (
     CommandExecutionError, MinionError, SaltInvocationError
 )

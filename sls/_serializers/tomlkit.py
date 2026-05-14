@@ -7,6 +7,8 @@
 
 """
 
+import io
+
 from salt.serializers import DeserializationError, SerializationError
 
 try:
@@ -30,7 +32,7 @@ def deserialize(stream_or_string):
 
     try:
         s = ""
-        if isinstance(stream_or_string, file):
+        if isinstance(stream_or_string, io.IOBase):
             s = stream_or_string.read().decode("utf-8")
 
         if not isinstance(stream_or_string, (bytes, str)):
@@ -61,10 +63,10 @@ def serialize(obj, file_out=False):
 
     if file_out:
         if isinstance(file_out, (bytes, str)):
-            with open(options["file_out"], 'wb') as f:
+            with open(file_out, 'wb') as f:
                 f.write(t.as_string())
             return True
-        elif isinstance(file_out, file):
+        elif isinstance(file_out, io.IOBase):
             file_out.write(t.as_string())
             return True
         else:

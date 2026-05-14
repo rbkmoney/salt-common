@@ -13,9 +13,8 @@ Support for Portage
 For now all package names *MUST* include the package category,
 i.e. ``'vim'`` will not work, ``'app-editors/vim'`` will.
 '''
-from __future__ import absolute_import, print_function, unicode_literals
-
 # Import python libs
+import importlib
 import os
 import copy
 import logging
@@ -24,7 +23,6 @@ import datetime
 
 # Import salt libs
 import salt.utils.args
-import salt.utils.compat
 import salt.utils.data
 import salt.utils.functools
 import salt.utils.path
@@ -82,13 +80,13 @@ def __virtual__():
 
 def _vartree():
     import portage  # pylint: disable=3rd-party-module-not-gated
-    portage = salt.utils.compat.reload(portage)
+    portage = importlib.reload(portage)
     return portage.db[portage.root]['vartree']
 
 
 def _porttree():
     import portage  # pylint: disable=3rd-party-module-not-gated
-    portage = salt.utils.compat.reload(portage)
+    portage = importlib.reload(portage)
     return portage.db[portage.root]['porttree']
 
 
