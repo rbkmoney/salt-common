@@ -171,3 +171,39 @@ collectd:
     - require_in:
       - file: /etc/collectd/conf.d/20-python-consul-health.conf
 {% endif %}
+
+/etc/collectd/conf.d/30-python-nagios-perfdata.conf:
+  {% if extra_plugin_config.get('nagios_perfdata', False) %}
+  file.managed:
+    - source: salt://{{ slspath }}/files/conf.d/30-python-nagios-perfdata.conf
+    - mode: 640
+    - user: root
+    - group: collectd
+  {% else %}
+  file.absent:
+  {% endif %}
+    - require:
+      - file: /etc/collectd/conf.d/
+    - watch_in:
+      - service: collectd
+
+{% if extra_plugin_config.get('nagios_perfdata', False) %}
+/usr/share/collectd/nagios-perfdata/:
+  file.directory:
+    - create: True
+    - mode: 755
+    - user: root
+    - group: collectd
+    - require:
+      - user: collectd
+/usr/share/collectd/nagios-perfdata/nagios_perfdata.py:
+  file.managed:
+    - source: salt://{{ slspath }}/files/nagios_perfdata.py
+    - mode: 640
+    - user: root
+    - group: collectd
+    - require:
+      - file: /usr/share/collectd/nagios-perfdata/
+    - require_in:
+      - file: /etc/collectd/conf.d/30-python-nagios-perfdata.conf
+{% endif %}
