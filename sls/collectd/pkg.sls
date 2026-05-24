@@ -6,9 +6,17 @@ include:
   - gentoo.makeconf
   {% endif %}
 
-{%- set extra_plugins = salt.pillar.get('collectd:extra-plugins', []) %}
-{% set makeconf_collectd_plugins = 'aggregation cgroups chrony contextswitch conntrack cpu cpufreq csv curl curl_json curl_xml dbi df disk entropy ethstat exec filecount fscache interface iptables ipvs irq load logfile memcached memory nfs netlink network nginx numa hugepages processes python swap syslog log_logstash statsd table tail target_notification threshold unixsock uptime users vmem write_graphite write_riemann write_prometheus ' + ' '.join(extra_plugins) %}
-{% if grains.os == 'Gentoo' %}
+{% set collectd = salt.pillar.get('collectd', {}) -%}
+{% set extra_plugin_config = collectd.get('extra-plugin-config', {}) %}
+
+{% set extra_plugins = [] %}
+{% if "md" in extra_plugin_config %}{% do extra_plugins.append("md") %}{% endif %}
+{% if "apcups" in extra_plugin_config %}{% do extra_plugins.append("apcups") %}{% endif %}
+{% if "nginx" in extra_plugin_config %}{% do extra_plugins.append("nginx") %}{% endif %}
+{% if "postfix" in extra_plugin_config %}{% do extra_plugins.append("postfix") %}{% endif %}
+
+{% set makeconf_collectd_plugins = "aggregation cgroups chrony contextswitch conntrack cpu cpufreq csv curl curl_json curl_xml dbi df disk entropy ethstat exec filecount fscache interface iptables ipvs irq load logfile memcached memory nfs netlink network nginx numa hugepages processes python swap syslog log_logstash statsd table tail target_notification threshold unixsock uptime users vmem write_graphite write_riemann write_prometheus " + " ".join(extra_plugins) %}
+{% if grains.os == "Gentoo" %}
 manage-collectd-plugins:
   augeas.change:
     - context: /files/etc/portage/make.conf

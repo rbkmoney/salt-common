@@ -1,7 +1,6 @@
 {% set collectd = salt.pillar.get('collectd', {}) %}
 {% set collectd_conf = collectd.get('conf', {}) %}
-{% set extra_plugins = collectd.get('extra-plugins', []) %}
-{% set extra_plugin_config = collectd.get('extra-plugin-config', []) %}
+{% set extra_plugin_config = collectd.get('extra-plugin-config', {}) %}
 {% set p_network = collectd.get('network', False) %}
 {% set p_statsd = collectd.get('statsd', False) %}
 {% set p_aggregation = collectd.get('aggregation', False) %}
