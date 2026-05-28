@@ -1,26 +1,14 @@
-{% set os_family = grains.get('os_family') %}
-{% if os_family == 'Gentoo' %}
 {% import 'pkg/common' as pkg %}
 include:
   - gentoo.portage.packages
-{% endif %}
 
 ceph:
   pkg.installed:
-{% if os_family == 'Gentoo' %}
     - binhost: force
     - pkgs:
       - {{ pkg.gen_atom('sys-cluster/ceph') }}
     - require:
       - file: gentoo.portage.packages
-{% elif os_family == 'Debian' %}
-    - pkgs:
-      - ceph
-      - radosgw
-{% else %}
-    - pkgs:
-      - ceph
-{% endif %}
   user.present:
     - system: True
     - home: /var/lib/ceph
