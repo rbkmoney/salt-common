@@ -1,4 +1,4 @@
-{% set py3_slot = pillar.get("python3:slot", '3.11') %}
+{% set py3_slot = pillar.get("python3:slot", '3.14') %}
 {% set py3_slot_nodot = py3_slot.replace('.', '') %}
 {% import 'pkg/common' as pkg %}
 include:
