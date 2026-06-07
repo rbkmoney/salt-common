@@ -5,6 +5,15 @@ on top of the upstream salt.states.gpg.
 
 import logging
 
+TRUST_MAP = {
+    "expired": "Expired",
+    "unknown": "Unknown",
+    "not_trusted": "Not Trusted",
+    "marginally": "Marginally",
+    "fully": "Fully Trusted",
+    "ultimately": "Ultimately Trusted",
+}
+
 log = logging.getLogger(__name__)
 
 
@@ -106,15 +115,28 @@ def sign_key(name, fingerprint=None, gnupghome=None, trust=None,
         ret["comment"] = result["message"]
 
     if trust:
-        trust_result = __salt__["gpg.trust_key"](
-            fingerprint=fingerprint,
-            trust_level=trust,
-            gnupghome=gnupghome)
+        current_key = __salt__["gpg.get_key"](
+            fingerprint=fingerprint, gnupghome=gnupghome)
 
-        if not trust_result["res"]:
-            ret["result"] = False
-            ret["comment"] += "; trust failed: {}".format(trust_result["message"])
-        elif trust_result.get("fingerprint"):
-            ret["changes"]["trust"] = trust
+        if current_key and current_key.get("ownerTrust") == TRUST_MAP.get(trust):
+            ret["comment"] += "; trust already at {}".format(trust)
+        else:
+            if __opts__["test"]:
+                ret["result"] = None
+                ret["comment"] += "; would set trust to {}".format(trust)
+                ret["changes"]["trust"] = trust
+                return ret
+
+            trust_result = __salt__["gpg.trust_key"](
+                fingerprint=fingerprint,
+                trust_level=trust,
+                gnupghome=gnupghome)
+
+            if not trust_result["res"]:
+                ret["result"] = False
+                ret["comment"] += "; trust failed: {}".format(trust_result["message"])
+            else:
+                ret["changes"]["trust"] = trust
+                ret["comment"] += "; trust set to {}".format(trust)
 
     return ret
