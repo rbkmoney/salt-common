@@ -1,31 +1,34 @@
 {% import 'pkg/common' as pkg with context %}
-{% if grains.os == 'Gentoo' %}
+{%- set g_elibc = grains.get('elibc', None) -%}
+{%- set g_os = grains.os -%}
+{%- set g_os_family = grains.os_family -%}
+{% if g_os == 'Gentoo' %}
 include:
   - gentoo.portage.packages
 {% endif %}
 
 {% macro pkg_dep() -%}
-{%- if grains['elibc'] == 'glibc' -%}
+{%- if g_elibc == 'glibc' -%}
 - pkg: sys-libs/glibc
-{%- elif grains['elibc'] == 'musl' %}
+{%- elif g_elibc == 'musl' -%}
 - pkg: sys-libs/musl
-{% endif %}
+{%- endif -%}
 {%- endmacro -%}
 
-{% if grains['elibc'] == 'glibc' %}
+{% if g_elibc == 'glibc' %}
 sys-libs/glibc:
   pkg.latest:
-    {% if grains.os == 'Gentoo' %}
+    {% if g_os == 'Gentoo' %}
     - oneshot: True
     - pkgs:
       - {{ pkg.gen_atom('sys-libs/glibc') }}
-    {% elif grains.os_family == 'Debian' %}
+    {% elif g_os_family == 'Debian' %}
     - pkgs:
       - libc6
       - libc-bin
     {% endif %}
     - require:
-      {% if grains.os == 'Gentoo' %}
+      {% if g_os == 'Gentoo' %}
       - file: gentoo.portage.packages
       {% endif %}
       - file: /etc/locale.gen
@@ -46,7 +49,7 @@ locale-gen:
     - watch:
       - file: /etc/locale.gen
 
-{% if grains.os == 'Gentoo' %}
+{% if g_os == 'Gentoo' %}
 eselect-locale:
   eselect.set:
     - name: locale
@@ -64,17 +67,23 @@ eselect-locale:
       - set LC_TIME "{{ salt.pillar.get('locale:LC_TIME','en_IE.UTF-8') }}"
       - set LC_ALL "{{ salt.pillar.get('locale:LC_ALL','en_IE.UTF-8') }}"
 {% endif %}
-{% elif grains['elibc'] == 'musl' %}
+
+{% elif g_elibc == 'musl' %}
 sys-libs/musl:
   pkg.latest:
-    {% if grains.os == 'Gentoo' %}
+    {% if g_os == 'Gentoo' %}
     - oneshot: True
     - pkgs:
       - {{ pkg.gen_atom('sys-libs/musl') }}
     - require:
       - file: gentoo.portage.packages
-    {% elif grains.os_family == 'Debian' %}
+    {% elif g_os_family == 'Debian' %}
     - pkgs:
       - musl
     {% endif %}
+
+{% elif g_elibc == None %}
+run-sync-all:
+  module.run:
+    - name: saltutil.sync_all
 {% endif %}

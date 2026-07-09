@@ -1,6 +1,8 @@
+{% import 'lib/libc.sls' as libc %}
 include:
-  - unbound.pkg
+  - lib.libc
   - lib.dnssec-root
+  - .pkg
 
 unbound:
   service.running:
@@ -10,9 +12,7 @@ unbound:
       - pkg: net-dns/dnssec-root
       - file: /etc/unbound/unbound.conf
       - file: /var/lib/unbound/root-anchors.txt
-      {% if grains['elibc'] == 'glibc' %}
-      - pkg: sys-libs/glibc
-      {% endif %}
+      {{ libc.pkg_dep() }}
 
 /etc/unbound/:
   file.directory:
