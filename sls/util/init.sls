@@ -5,6 +5,6 @@ include:
   - lib.ldns
   - .net
   - .disk
-  - .jq
+  - .markup
   - .mailutils
   - .curl
