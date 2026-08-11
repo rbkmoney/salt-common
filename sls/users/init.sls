@@ -106,6 +106,33 @@ for username, data in users_present.items():
           group = username,
           require = req_list)
 
+  if "git-repos" in data:
+    for f, d in data["git-repos"].items():
+      _source = d.get("remote_uri")
+      _identity = d.get("identity", None)
+      if _identity and _identity.startswith("~/"):
+        _identity = _identity.replace("~/", homedir)
+      fp = path.join(homedir, f).rstrip("/")
+      dname = path.dirname(fp) + "/"
+      makedirs = False
+      req_list = []
+      if dname in dirs:
+        req_list.append(File(dname))
+      else:
+        req_list.append(home_dep)
+        makedirs = True
+
+      Git.latest(
+        fp,
+        name = _source,
+        target = fp,
+        user = username,
+        identity = _identity,
+        force_checkout = d.get("force_checkout", False),
+        force_clone = d.get("force_clone", False),
+        force_fetch = d.get("force_fetch", False),
+        force_reset = d.get("force_reset", False),
+        require = req_list)
 
   if "keys" in data:
     ssh_path = path.join(homedir, ".ssh/")
