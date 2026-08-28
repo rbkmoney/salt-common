@@ -1,14 +1,14 @@
 ;; -*- mode: conf -*-
 {% set conf = salt['pillar.get']("pgbouncer", {}) %}
 [pgbouncer]
-pidfile = /var/run/postgresql/pgbouncer.pid
+pidfile = /run/postgresql/pgbouncer.pid
 ; IP address or * which means all IP-s
-listen_addr = {{ conf.get("listen_addr", "0.0.0.0") }}
-listen_port = {{ conf.get("listen_port", "6432") }}
+listen_addr = {{ conf.get("listen-addr", "*") }}
+listen_port = {{ conf.get("listen-port", "6432") }}
 ; unix socket is also used for -R.
-unix_socket_dir = /run/postgresql
-unix_socket_mode = 0777
-unix_socket_group = postgres
+unix_socket_dir = {{ conf.get("unix-socket-dir", "/run/postgresql") }}
+unix_socket_mode = {{ conf.get("unix-socket-mode", "0770") }}
+unix_socket_group = {{ conf.get("unix-socket-group", "postgres") }}
 
 ;;; Authentication settings
 auth_type = {{ conf.get('auth-type', 'hba') }}
@@ -51,7 +51,7 @@ pool_mode = {{ conf.get('pool-mode', 'session') }}
 ; Query for 8.3+:
 ;   DISCARD ALL;
 ; Empty if transaction pooling is in use.
-server_reset_query = DISCARD ALL;
+server_reset_query = {{ conf.get('server-reset-query', 'DISCARD ALL;') }}
 
 ; Whether server_reset_query should run in all pooling modes.
 ; If it is off, server_reset_query is used only for session-pooling.
