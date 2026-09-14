@@ -109,7 +109,7 @@ if arch_conf:
 #       resumecommand: ...
 #+end_src
 
-binrepos_pillar = pillar('gentoo:binrepos', {})
+binrepos_pillar = pillar('gentoo:binrepos', {}) or {}
 binrepos_auto = pillar('gentoo:binrepos_auto', True)
 
 binrepos = {}
